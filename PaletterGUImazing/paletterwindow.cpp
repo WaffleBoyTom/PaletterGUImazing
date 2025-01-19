@@ -2,6 +2,7 @@
 
 #include "paletterwindow.h"
 
+
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
     paletterLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -15,7 +16,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     // testing adding a button and connecting an action to it
     QHBoxLayout *buttonsLayout = new QHBoxLayout;
-    newTestButton = new QPushButton(tr("Just a chill button"), this);
+    newTestButton = new QPushButton(tr("Open Image to Palette"), this);
     connect(newTestButton, &QPushButton::clicked, this, &PaletterGUI::buttonTestAction);
     buttonsLayout->addWidget(newTestButton);
     mainLayout->addLayout(buttonsLayout);
@@ -32,5 +33,15 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 void 
 PaletterGUI::buttonTestAction()
 {
-    QMessageBox::warning(this, tr("I'm just a chill guy"), tr("hello there"));  
+    QString fileName;
+    
+    fileName = QFileDialog::getOpenFileName(
+        this,
+        tr("Open Image to Palette"), /* title of fileDialog */
+        "/home", /* where to start the search */ 
+        tr("Image Files (*.png *.jpg)") /* file filter */
+    ); 
+
+    // print selected file to console
+    qDebug() << fileName;
 }

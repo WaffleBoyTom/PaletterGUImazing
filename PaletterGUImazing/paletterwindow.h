@@ -1,7 +1,6 @@
 #ifndef PALETTERWINDOW_H
 #define PALETTERWINDOW_H
 
-#include <QPixmap>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
