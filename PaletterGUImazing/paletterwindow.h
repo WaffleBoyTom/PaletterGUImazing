@@ -1,23 +1,37 @@
 #ifndef PALETTERWINDOW_H
 #define PALETTERWINDOW_H
 
-#include <QMainWindow>
+#include <QPixmap>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class PaletterWindow;
-}
+class QCheckBox;
+class QGridLayout;
+class QGroupBox;
+class QHBoxLayout;
+class QLabel;
+class QPushButton;
+class QSpinBox;
+class QVBoxLayout;
 QT_END_NAMESPACE
 
-class PaletterWindow : public QMainWindow
+class PaletterGUI : public QWidget
 {
     Q_OBJECT
 
 public:
-    PaletterWindow(QWidget *parent = nullptr);
-    ~PaletterWindow();
+    PaletterGUI();
+
+protected:
+    //void resizeEvent(QResizeEvent *event) override;
+
+private slots:
+    void buttonTestAction();
 
 private:
-    Ui::PaletterWindow *ui;
+
+    QLabel *paletterLabel;
+    QPushButton *newTestButton;
 };
+
 #endif // PALETTERWINDOW_H
