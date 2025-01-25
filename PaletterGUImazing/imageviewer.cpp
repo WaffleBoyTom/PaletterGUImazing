@@ -21,10 +21,15 @@ ImageViewer::ImageViewer(QWidget *parent)
         this, 
         &ImageViewer::openNautilus
     );
+
+    myImageHolder = new QLabel(
+        tr("I hold the image"),
+        this
+    );
     
     myLayout->addWidget(myLineEdit);
     myLayout->addWidget(myNautilusButton);
-
+    myLayout->addWidget(myImageHolder);
 }
 
 void
@@ -42,4 +47,10 @@ ImageViewer::openNautilus()
     // print selected file to console
     qDebug() << fileName;
     myLineEdit->setText(fileName);
+    if (myImageDisplay->load(fileName))
+    {
+        // loaded image successfully
+        myImageHolder->setPixmap(*myImageDisplay);
+    }
 }
+

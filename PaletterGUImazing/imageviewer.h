@@ -32,6 +32,7 @@ private:
 
     QHBoxLayout *myLayout;
     QLineEdit *myLineEdit;
+    QLabel *myImageHolder;
     QPixmap *myImageDisplay;
     QPushButton *myNautilusButton; 
     
