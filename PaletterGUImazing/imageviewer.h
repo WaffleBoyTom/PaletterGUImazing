@@ -10,7 +10,9 @@ class QLabel;
 class QMenu;
 class QScrollArea;
 class QScrollBar;
+class QHBoxLayout;
 class QLineEdit;
+class QPixmap;
 QT_END_NAMESPACE
 
 class ImageViewer : public QWidget
@@ -24,7 +26,10 @@ private slots:
 
 private:
 
-    QLineEdit *lineEdit;
+    QHBoxLayout *myLayout;
+    QLineEdit *myLineEdit;
+    QPixmap *myImageDisplay; 
+    
 };
 
 #endif
