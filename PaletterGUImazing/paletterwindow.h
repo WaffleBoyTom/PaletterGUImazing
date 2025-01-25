@@ -2,6 +2,7 @@
 #define PALETTERWINDOW_H
 
 #include <QWidget>
+#include "imageviewer.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -12,6 +13,7 @@ class QLabel;
 class QPushButton;
 class QSpinBox;
 class QVBoxLayout;
+class QLineEdit;
 QT_END_NAMESPACE
 
 class PaletterGUI : public QWidget
@@ -31,6 +33,8 @@ private:
 
     QLabel *paletterLabel;
     QPushButton *newTestButton;
+    QLineEdit *newLineEdit;
+    ImageViewer *myImgViewer;
 };
 
 #endif // PALETTERWINDOW_H

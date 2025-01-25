@@ -16,7 +16,9 @@ set(PROJECT_SOURCES
         main.cpp
         paletterwindow.cpp
         paletterwindow.h
-        paletterwindow.ui
+        #paletterwindow.ui
+        imageviewer.cpp
+        imageviewer.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

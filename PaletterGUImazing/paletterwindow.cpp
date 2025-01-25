@@ -1,7 +1,7 @@
 #include <QtWidgets>
 
 #include "paletterwindow.h"
-
+#include "imageviewer.h"
 
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
@@ -14,15 +14,22 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(paletterLabel);
 
-    // testing adding a button and connecting an action to it
-    QHBoxLayout *buttonsLayout = new QHBoxLayout;
+    // try adding the image viewer here
+
+    QHBoxLayout *imgviewerLayout = new QHBoxLayout();
+    myImgViewer = new ImageViewer(this);
+    imgviewerLayout->addWidget(myImgViewer);
     newTestButton = new QPushButton(tr("Open Image to Palette"), this);
+    newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
     connect(newTestButton, &QPushButton::clicked, this, &PaletterGUI::buttonTestAction);
-    buttonsLayout->addWidget(newTestButton);
-    mainLayout->addLayout(buttonsLayout);
+    // buttonsLayout->addWidget(newTestButton);
+    imgviewerLayout->addWidget(newTestButton);
+    imgviewerLayout->addWidget(newLineEdit);
+    mainLayout->addLayout(imgviewerLayout);
+    //mainLayout->addLayout(buttonsLayout);
 
     setWindowTitle(tr("PaletterGUImazing"));
-    resize(300, 200);
+    resize(600, 300);
 }
 
 // resive event override
