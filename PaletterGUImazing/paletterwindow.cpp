@@ -14,19 +14,16 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(paletterLabel);
 
-    // try adding the image viewer here
+    // add the image viewer here
 
     QHBoxLayout *imgviewerLayout = new QHBoxLayout();
     myImgViewer = new ImageViewer(this);
     imgviewerLayout->addWidget(myImgViewer);
     mainLayout->addLayout(imgviewerLayout);
     
+    // add something random to assert my dominance
     QVBoxLayout *buttonsLayout = new QVBoxLayout();
-    newTestButton = new QPushButton(tr("Open Image to Palette"), this);
     newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
-    connect(newTestButton, &QPushButton::clicked, this, &PaletterGUI::buttonTestAction);
-    
-    buttonsLayout->addWidget(newTestButton);
     buttonsLayout->addWidget(newLineEdit);
     mainLayout->addLayout(buttonsLayout);
 
@@ -39,18 +36,3 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 // {
 // }
 
-void 
-PaletterGUI::buttonTestAction()
-{
-    QString fileName;
-    
-    fileName = QFileDialog::getOpenFileName(
-        this,
-        tr("Open Image to Palette"), /* title of fileDialog */
-        "/home", /* where to start the search */ 
-        tr("Image Files (*.png *.jpg)") /* file filter */
-    ); 
-
-    // print selected file to console
-    qDebug() << fileName;
-}

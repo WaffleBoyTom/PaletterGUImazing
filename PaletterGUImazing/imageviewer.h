@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QImage>
+#include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -12,6 +13,7 @@ class QScrollArea;
 class QScrollBar;
 class QHBoxLayout;
 class QLineEdit;
+class QPushButton;
 class QPixmap;
 QT_END_NAMESPACE
 
@@ -24,11 +26,14 @@ public:
 
 private slots:
 
+    void openNautilus();
+
 private:
 
     QHBoxLayout *myLayout;
     QLineEdit *myLineEdit;
-    QPixmap *myImageDisplay; 
+    QPixmap *myImageDisplay;
+    QPushButton *myNautilusButton; 
     
 };
 
