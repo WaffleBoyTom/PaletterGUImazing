@@ -4,7 +4,10 @@
 
 ImageViewer::ImageViewer(QWidget *parent)
 {
-    myLayout = new QHBoxLayout(this); 
+    // keep in touch with your parent
+    myCreator = parent;
+    
+    myLayout = new QVBoxLayout(this); 
     myLineEdit = new QLineEdit(
         tr("Ethan so sexy"), 
         this
@@ -46,11 +49,36 @@ ImageViewer::openNautilus()
 
     // print selected file to console
     qDebug() << fileName;
-    myLineEdit->setText(fileName);
-    if (myImageDisplay->load(fileName))
-    {
-        // loaded image successfully
-        myImageHolder->setPixmap(*myImageDisplay);
-    }
+    if (!loadImage(&fileName))
+        // should handle this more gracefully
+        qDebug() << "Nope";
+    
 }
 
+bool
+ImageViewer::loadImage(const QString *filename)
+{
+
+    myLineEdit->setText(*filename);
+
+    if (!myImageDisplay->load(*filename))
+        return false;
+    
+    // by default images are pretty big
+    // unlike other things...
+    // this probably should scale based on
+    // main window size
+    // dividing by 2 for now, idk
+    
+    QPixmap scaled = myImageDisplay->scaled(
+        myCreator->height() / 2, /* width */
+        myCreator->width() / 2, /* height */
+        Qt::KeepAspectRatio /* ar */
+    );
+
+    // loaded image successfully
+    myImageHolder->setPixmap(scaled);
+
+    return true;
+            
+}

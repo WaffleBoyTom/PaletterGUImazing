@@ -28,7 +28,9 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     mainLayout->addLayout(buttonsLayout);
 
     setWindowTitle(tr("PaletterGUImazing"));
-    resize(600, 300);
+    // this resizing is weird ...
+    // why is main window mostly blank space
+    resize(400, 400);
 }
 
 // resive event override

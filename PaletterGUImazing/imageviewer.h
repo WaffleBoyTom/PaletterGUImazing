@@ -11,10 +11,11 @@ class QLabel;
 class QMenu;
 class QScrollArea;
 class QScrollBar;
-class QHBoxLayout;
+class QVBoxLayout;
 class QLineEdit;
 class QPushButton;
 class QPixmap;
+class QWidget;
 QT_END_NAMESPACE
 
 class ImageViewer : public QWidget
@@ -27,14 +28,15 @@ public:
 private slots:
 
     void openNautilus();
-
+    bool loadImage(const QString *filename);
 private:
 
-    QHBoxLayout *myLayout;
+    QVBoxLayout *myLayout;
     QLineEdit *myLineEdit;
     QLabel *myImageHolder;
     QPixmap *myImageDisplay;
     QPushButton *myNautilusButton; 
+    QWidget *myCreator;
     
 };
 
