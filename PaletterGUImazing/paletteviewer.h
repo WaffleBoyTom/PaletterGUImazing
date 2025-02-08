@@ -4,11 +4,11 @@
 #include <QMainWindow>
 #include <QImage>
 #include <QWidget>
+#include "sickslider.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
 class QWidget;
-class QSlider;
 class QVBoxLayout;
 QT_END_NAMESPACE
 
@@ -27,7 +27,7 @@ private:
     QVBoxLayout *myLayout;
     // pointer to paletter window
     QWidget *myCreator;
-    QSlider *mySlider;
+    SickSlider *mySlider;
 };
 
 #endif

@@ -16,13 +16,14 @@ set(PROJECT_SOURCES
         main.cpp
         paletterwindow.cpp
         paletterwindow.h
-        #paletterwindow.ui
         imageviewer.cpp
         imageviewer.h
         imageprocessor.cpp
         imageprocessor.h
         paletteviewer.cpp
         paletteviewer.h
+        sickslider.cpp
+        sickslider.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
