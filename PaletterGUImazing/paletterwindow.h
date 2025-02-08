@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "imageviewer.h"
+#include "paletteviewer.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -34,6 +35,7 @@ private:
     QPushButton *newTestButton;
     QLineEdit *newLineEdit;
     ImageViewer *myImgViewer;
+    PaletteViewer *myPaletteViewer;
 };
 
 #endif // PALETTERWINDOW_H

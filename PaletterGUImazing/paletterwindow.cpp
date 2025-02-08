@@ -2,6 +2,7 @@
 
 #include "paletterwindow.h"
 #include "imageviewer.h"
+#include "paletteviewer.h"
 
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
@@ -36,6 +37,12 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     
     buttonsLayout->addWidget(newLineEdit);
     mainLayout->addLayout(buttonsLayout);
+
+    QVBoxLayout *paletteviewerlayout = new QVBoxLayout();
+    // add the paletteviewer
+    myPaletteViewer = new PaletteViewer(this);
+    paletteviewerlayout->addWidget(myPaletteViewer);
+    mainLayout->addLayout(paletteviewerlayout);
 
     setWindowTitle(tr("PaletterGUImazing"));
     // this resizing is weird ...
