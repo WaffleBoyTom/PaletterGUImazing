@@ -42,7 +42,7 @@ private slots:
     void processImage();
 
     // resizes image based on myCreator size;
-    QPixmap resizeImage();
+    QPixmap resizeImage(QPixmap *image);
     
 
 private:
@@ -51,7 +51,11 @@ private:
     QLineEdit *myLineEdit;
     
     QLabel *myImageHolder;
-    QPixmap *myImageDisplay;
+    // keep reference to original image otherwise
+    // we iteratively scale the pixmap
+    // and end up with mashed pixeloes
+    // and they aint delicious...
+    QPixmap myLoadedImage;
     
     // calls openNautilus
     QPushButton *myNautilusButton; 
@@ -61,6 +65,7 @@ private:
     
     // pointer to paletter window
     QWidget *myCreator;
+    // deals with processing the pixmap
     ImageProcessor myImageProcessor;
     
 };

@@ -12,6 +12,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     paletterLabel->setAlignment(Qt::AlignCenter);
 
     const QRect screenGeometry = screen()->geometry();
+    
     // how small you can resize the window
     paletterLabel->setMinimumSize(
         screenGeometry.width() / 16, 
@@ -30,7 +31,9 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     
     // add something random to assert my dominance
     QVBoxLayout *buttonsLayout = new QVBoxLayout();
-    newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
+    newLineEdit = new QLineEdit(
+        tr("I'm a 10x programmer"), this);
+    
     buttonsLayout->addWidget(newLineEdit);
     mainLayout->addLayout(buttonsLayout);
 

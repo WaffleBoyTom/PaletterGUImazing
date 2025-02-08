@@ -17,9 +17,6 @@ ImageViewer::ImageViewer(QWidget *parent)
         this
     );
 
-    // pixmap holder -- not a widget
-    myImageDisplay = new QPixmap();
-
     // nautilus button
     myNautilusButton = new QPushButton(
         tr("Open Image"),  
@@ -67,6 +64,10 @@ ImageViewer::openNautilus()
 {
     QString fileName;
     
+    // I wonder if /home resolves correctly on windows >?
+    // not that I want to support that awful os but 
+    // you know...
+    
     fileName = QFileDialog::getOpenFileName(
         this,
         tr("Palettize this geezer"), /* title of fileDialog */
@@ -88,7 +89,9 @@ ImageViewer::loadImage(const QString *filename)
 
     myLineEdit->setText(*filename);
 
-    if (!myImageDisplay->load(*filename))
+    QPixmap image_display;
+
+    if (!image_display.load(*filename))
         return false;
     
     // by default images are pretty big
@@ -97,7 +100,9 @@ ImageViewer::loadImage(const QString *filename)
     // main window size
     // dividing by 2 for now, idk
     
-    QPixmap scaled = resizeImage();
+    myLoadedImage = image_display;
+    
+    QPixmap scaled = resizeImage(&image_display);
 
     // loaded image successfully
     myImageHolder->setPixmap(scaled);
@@ -109,11 +114,9 @@ ImageViewer::loadImage(const QString *filename)
 QImage
 ImageViewer::getImage()
 {
-
-    QPixmap pixmap = myImageHolder->pixmap();
-    return pixmap.toImage();
-
-    
+    // we want to load in the original image
+    // not the resized one
+    return myLoadedImage.toImage();  
 }
 
 void
@@ -122,16 +125,20 @@ ImageViewer::processImage()
 
     myImageProcessor.loadImage(getImage());
     myImageProcessor.pixelStuff();   
-    myImageHolder->setPixmap(
-        myImageProcessor.getPixmap()
-    );
+    QPixmap processed = myImageProcessor.getPixmap();
+    // override orig with processed to make sure
+    // result stays the same when we resize
+    myLoadedImage = processed;
+    myImageHolder->setPixmap(resizeImage(&processed));
 }
 
 QPixmap
-ImageViewer::resizeImage()
+ImageViewer::resizeImage(QPixmap *imagedisplay)
 {
-
-    return myImageDisplay->scaled(
+    // scaling factor hardcoded to 1/2 right now
+    // might wanna change that innit
+    
+    return imagedisplay->scaled(
         myCreator->height() / 2, /* width */
         myCreator->width() / 2, /* height */
         Qt::KeepAspectRatio /* ar */
@@ -141,9 +148,9 @@ ImageViewer::resizeImage()
 
 void
 ImageViewer::handleResizing()
-{
-    if (myImageDisplay->isNull())
+{   
+    if (myLoadedImage.isNull())
         return;
-    QPixmap scaled = resizeImage();
+    QPixmap scaled = resizeImage(&myLoadedImage);
     myImageHolder->setPixmap(scaled);
 }
