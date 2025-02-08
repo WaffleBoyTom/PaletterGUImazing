@@ -25,3 +25,14 @@ SickSlider::SickSlider(QWidget *parent) : QSlider(parent)
     setSingleStep(1);
 }
 
+
+// this should then update the label we use to display
+// which value the slider is currently on
+void 
+SickSlider::sliderChange(QAbstractSlider::SliderChange change)
+{
+    QSlider::sliderChange(change);
+
+    qDebug()<<value();
+
+}

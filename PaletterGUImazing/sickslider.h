@@ -18,7 +18,10 @@ public:
     explicit SickSlider(QWidget *parent);
 
 private slots:
-    
+
+protected:
+
+    virtual void sliderChange(SliderChange change);
 
 private:
 
