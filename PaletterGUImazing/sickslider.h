@@ -1,16 +1,17 @@
 #ifndef SICKSLIDER_H
 #define SICKSLIDER_H
 
-#include <QWidget>
-#include <QSlider>
+#include <QtWidgets>
 
 QT_BEGIN_NAMESPACE
 class QAction;
 class QWidget;
 class QSlider;
+class QLabel;
+class QHBoxLayout;
 QT_END_NAMESPACE
 
-class SickSlider : public QSlider
+class SickSlider : public QWidget
 {
     Q_OBJECT
 
@@ -19,13 +20,19 @@ public:
 
 private slots:
 
+    void onSliderValueChanged();
+
 protected:
 
-    virtual void sliderChange(SliderChange change);
+    void setSliderProperties();
+
 
 private:
 
     QWidget *myCreator; 
+    QHBoxLayout *myLayout;
+    QSlider *mySlider;
+    QLabel *mySliderValueDisplay;
 
 };
 

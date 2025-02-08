@@ -32,7 +32,7 @@ ImageViewer::ImageViewer(QWidget *parent)
 
     // image holder
     myImageHolder = new QLabel(
-        tr("I hold the image"),
+        tr(""),
         this
     );
 

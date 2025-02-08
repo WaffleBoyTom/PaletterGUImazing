@@ -1,6 +1,7 @@
 #include "sickslider.h"
 
 #include <QtWidgets>
+#include <QString>
 
 /*
 Custom slider because base qt slider is more cheeks
@@ -9,30 +10,48 @@ houdini has spoiled me for too long i guess >?
 
 */
 
-SickSlider::SickSlider(QWidget *parent) : QSlider(parent)
+SickSlider::SickSlider(QWidget *parent)
 {
     // keep in touch with your parent
     myCreator = parent;
+    myLayout = new QHBoxLayout(this);
     
-    setOrientation(Qt::Horizontal);
-    setTickInterval(6);
-    setTickPosition(QSlider::TicksBothSides);
-    setMinimum(2);
-    // what makes sense here -- if anything ?
-    setMaximum(50);
-    // should a default like this be defined elsewhere >?
-    setValue(6);
-    setSingleStep(1);
+    mySlider = new QSlider(this);
+    setSliderProperties();
+    
+    mySliderValueDisplay = new QLabel("6", this);
+    connect(
+        mySlider,
+        &QSlider::valueChanged,
+        this,
+        &SickSlider::onSliderValueChanged
+    );
+
+    myLayout->addWidget(mySlider);
+    myLayout->addWidget(mySliderValueDisplay);
+    
+
 }
 
-
-// this should then update the label we use to display
-// which value the slider is currently on
-void 
-SickSlider::sliderChange(QAbstractSlider::SliderChange change)
+void
+SickSlider::setSliderProperties()
 {
-    QSlider::sliderChange(change);
+    // bunch of magic numbers here
+    
+    mySlider->setOrientation(Qt::Horizontal);
+    mySlider->setTickInterval(2);
+    mySlider->setTickPosition(QSlider::TicksBothSides);
+    mySlider->setMinimum(2);
+    mySlider->setMaximum(50);
+    mySlider->setValue(6);
+    mySlider->setSingleStep(1);
+}
 
-    qDebug()<<value();
-
+void
+SickSlider::onSliderValueChanged()
+{
+    // update Label when user drags slider
+    mySliderValueDisplay->setText(
+        QString::number(mySlider->value())
+    );
 }

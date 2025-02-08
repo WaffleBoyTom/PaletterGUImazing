@@ -6,14 +6,9 @@
 
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
-    paletterLabel->setSizePolicy(
-        QSizePolicy::Expanding, 
-        QSizePolicy::Expanding
-    );
-    paletterLabel->setAlignment(Qt::AlignCenter);
-
-    const QRect screenGeometry = screen()->geometry();
     
+    const QRect screenGeometry = screen()->geometry();
+    const QSize screenSize = screen()->size();
     // how small you can resize the window
     paletterLabel->setMinimumSize(
         screenGeometry.width() / 16, 
@@ -21,7 +16,6 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     );
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(paletterLabel);
 
     // add the image viewer here
 
@@ -45,9 +39,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     mainLayout->addLayout(paletteviewerlayout);
 
     setWindowTitle(tr("PaletterGUImazing"));
-    // this resizing is weird ...
-    // why is main window mostly blank space
-    resize(400, 400);
+    resize(screenSize.width(), screenSize.height());
 }
 
 // resive event override
