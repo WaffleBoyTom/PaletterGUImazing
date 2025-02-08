@@ -24,7 +24,7 @@ public:
     PaletterGUI();
 
 protected:
-    //void resizeEvent(QResizeEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 
 private slots:
 

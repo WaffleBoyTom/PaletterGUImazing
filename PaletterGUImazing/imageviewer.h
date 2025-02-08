@@ -25,6 +25,7 @@ class ImageViewer : public QWidget
 
 public:
     explicit ImageViewer(QWidget *parent);
+    void handleResizing();
 
 private slots:
     
@@ -37,7 +38,11 @@ private slots:
     // get QImage from image holder
     QImage getImage();
 
+    // load into image processor and get output
     void processImage();
+
+    // resizes image based on myCreator size;
+    QPixmap resizeImage();
     
 
 private:

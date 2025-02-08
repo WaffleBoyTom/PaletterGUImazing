@@ -5,11 +5,18 @@
 
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
-    paletterLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    paletterLabel->setSizePolicy(
+        QSizePolicy::Expanding, 
+        QSizePolicy::Expanding
+    );
     paletterLabel->setAlignment(Qt::AlignCenter);
 
     const QRect screenGeometry = screen()->geometry();
-    paletterLabel->setMinimumSize(screenGeometry.width() / 8, screenGeometry.height() / 8);
+    // how small you can resize the window
+    paletterLabel->setMinimumSize(
+        screenGeometry.width() / 16, 
+        screenGeometry.height() / 16
+    );
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(paletterLabel);
@@ -34,7 +41,10 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 }
 
 // resive event override
-// void PaletterGUI::resizeEvent(QResizeEvent * /* event */)
-// {
-// }
+// this should handle resizing the image
+void PaletterGUI::resizeEvent(QResizeEvent *event)
+{
+    // scale image with window
+    myImgViewer->handleResizing();
+}
 

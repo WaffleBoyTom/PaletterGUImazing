@@ -97,11 +97,7 @@ ImageViewer::loadImage(const QString *filename)
     // main window size
     // dividing by 2 for now, idk
     
-    QPixmap scaled = myImageDisplay->scaled(
-        myCreator->height() / 2, /* width */
-        myCreator->width() / 2, /* height */
-        Qt::KeepAspectRatio /* ar */
-    );
+    QPixmap scaled = resizeImage();
 
     // loaded image successfully
     myImageHolder->setPixmap(scaled);
@@ -129,4 +125,25 @@ ImageViewer::processImage()
     myImageHolder->setPixmap(
         myImageProcessor.getPixmap()
     );
+}
+
+QPixmap
+ImageViewer::resizeImage()
+{
+
+    return myImageDisplay->scaled(
+        myCreator->height() / 2, /* width */
+        myCreator->width() / 2, /* height */
+        Qt::KeepAspectRatio /* ar */
+    );
+
+}
+
+void
+ImageViewer::handleResizing()
+{
+    if (myImageDisplay->isNull())
+        return;
+    QPixmap scaled = resizeImage();
+    myImageHolder->setPixmap(scaled);
 }
