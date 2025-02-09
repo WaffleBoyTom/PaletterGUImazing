@@ -7,7 +7,7 @@ QT_BEGIN_NAMESPACE
 class QAction;
 class QWidget;
 class QSlider;
-class QLabel;
+class QLineEdit;
 class QHBoxLayout;
 QT_END_NAMESPACE
 
@@ -22,6 +22,7 @@ public:
 private slots:
 
     void onSliderValueChanged();
+    void onLineEditValueChanged();
 
 protected:
 
@@ -33,7 +34,7 @@ private:
     QWidget *myCreator; 
     QHBoxLayout *myLayout;
     QSlider *mySlider;
-    QLabel *mySliderValueDisplay;
+    QLineEdit *mySliderValueDisplay;
 
 };
 

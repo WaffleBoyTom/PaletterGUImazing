@@ -19,12 +19,18 @@ SickSlider::SickSlider(QWidget *parent)
     mySlider = new QSlider(this);
     setSliderProperties();
     
-    mySliderValueDisplay = new QLabel("6", this);
+    mySliderValueDisplay = new QLineEdit("6", this);
     connect(
         mySlider,
         &QSlider::valueChanged,
         this,
         &SickSlider::onSliderValueChanged
+    );
+    connect(
+        mySliderValueDisplay,
+        &QLineEdit::textChanged,
+        this,
+        &SickSlider::onLineEditValueChanged  
     );
 
     myLayout->addWidget(mySlider);
@@ -53,6 +59,17 @@ SickSlider::onSliderValueChanged()
     // update Label when user drags slider
     mySliderValueDisplay->setText(
         QString::number(mySlider->value())
+    );
+    // forces paintEvent to get called on PaletteViewer
+    myCreator->repaint();
+}
+
+void
+SickSlider::onLineEditValueChanged()
+{
+    // update slider
+    mySlider->setValue(
+        mySliderValueDisplay->text().toInt()
     );
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
