@@ -54,4 +54,12 @@ SickSlider::onSliderValueChanged()
     mySliderValueDisplay->setText(
         QString::number(mySlider->value())
     );
+    // forces paintEvent to get called on PaletteViewer
+    myCreator->repaint();
+}
+
+int
+SickSlider::getValue()
+{
+    return mySlider->value();
 }

@@ -36,6 +36,10 @@ ImageViewer::ImageViewer(QWidget *parent)
         this
     );
 
+    myImageHolder->setAlignment(
+      Qt::AlignHCenter | Qt::AlignVCenter  
+    );
+
     // processor button
     myProcessorButton = new QPushButton(
         tr("Process Image"),  

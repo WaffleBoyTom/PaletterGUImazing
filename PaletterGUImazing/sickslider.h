@@ -17,6 +17,7 @@ class SickSlider : public QWidget
 
 public:
     explicit SickSlider(QWidget *parent);
+    int getValue();
 
 private slots:
 
