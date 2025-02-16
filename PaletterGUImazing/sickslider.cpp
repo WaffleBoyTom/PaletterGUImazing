@@ -20,12 +20,14 @@ SickSlider::SickSlider(QWidget *parent)
     setSliderProperties();
     
     mySliderValueDisplay = new QLineEdit("6", this);
+    // adds callback to slider
     connect(
         mySlider,
         &QSlider::valueChanged,
         this,
         &SickSlider::onSliderValueChanged
     );
+    // adds callback to Line Edit
     connect(
         mySliderValueDisplay,
         &QLineEdit::textChanged,
@@ -36,7 +38,6 @@ SickSlider::SickSlider(QWidget *parent)
     myLayout->addWidget(mySlider);
     myLayout->addWidget(mySliderValueDisplay);
     
-
 }
 
 void

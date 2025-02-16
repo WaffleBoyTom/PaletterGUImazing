@@ -44,7 +44,8 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
 // resive event override
 // this should handle resizing the image
-void PaletterGUI::resizeEvent(QResizeEvent *event)
+void 
+PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
     myImgViewer->handleResizing();

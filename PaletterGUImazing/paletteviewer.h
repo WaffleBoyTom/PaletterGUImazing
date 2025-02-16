@@ -10,6 +10,7 @@ QT_BEGIN_NAMESPACE
 class QAction;
 class QWidget;
 class QVBoxLayout;
+class QPushButton;
 QT_END_NAMESPACE
 
 class PaletteViewer : public QWidget
@@ -30,6 +31,7 @@ private:
     // pointer to paletter window
     QWidget *myCreator;
     SickSlider *mySlider;
+    QPushButton *myExportButton;
 };
 
 #endif
