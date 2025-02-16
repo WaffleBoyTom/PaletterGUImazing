@@ -24,6 +24,7 @@ private slots:
     
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void exportPalette();
 
 private:
 

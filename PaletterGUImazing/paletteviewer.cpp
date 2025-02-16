@@ -12,6 +12,13 @@ PaletteViewer::PaletteViewer(QWidget *parent)
     mySlider = new SickSlider(this);
     myExportButton = new QPushButton(
         tr("Export Palette"), this);
+
+    connect(
+        myExportButton,
+        &QPushButton::clicked,
+        this,
+        &PaletteViewer::exportPalette    
+    );
         
     myLayout->addWidget(mySlider);
     myLayout->addWidget(myExportButton);
@@ -50,5 +57,11 @@ PaletteViewer::paintEvent(QPaintEvent *event)
         );
     }
 
+}
+
+void
+PaletteViewer::exportPalette()
+{
+    qDebug() << "balllls";
 }
 

@@ -127,6 +127,10 @@ void
 ImageViewer::processImage()
 {
 
+    if (myLoadedImage.isNull())
+    {
+        return;   
+    }
     myImageProcessor.loadImage(getImage());
     myImageProcessor.pixelStuff();   
     QPixmap processed = myImageProcessor.getPixmap();
