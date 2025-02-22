@@ -10,6 +10,7 @@ PaletteViewer::PaletteViewer(QWidget *parent)
     // main layout
     myLayout = new QVBoxLayout(this); 
     mySlider = new SickSlider(this);
+    
     myExportButton = new QPushButton(
         tr("Export Palette"), this);
 
@@ -45,6 +46,9 @@ PaletteViewer::paintEvent(QPaintEvent *event)
     int size = screen()->size().width() / num_boxes;
     int height = this->size().height() / 4;
 
+    // can we add text on mouse hover 
+    // that displays rgb and hex values >?
+    
         
     for(int i = 0; i < num_boxes; ++i)
     {
