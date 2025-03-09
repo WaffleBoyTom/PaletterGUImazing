@@ -20,7 +20,13 @@ PaletteViewer::PaletteViewer(QWidget *parent)
         this,
         &PaletteViewer::exportPalette    
     );
-        
+    connect(
+        mySlider,
+        &SickSlider::paletteCountChangedSignal,
+        this,
+        &PaletteViewer::onPaletteCountChanged
+    );
+    
     myLayout->addWidget(mySlider);
     myLayout->addWidget(myExportButton);
 }
@@ -67,5 +73,13 @@ void
 PaletteViewer::exportPalette()
 {
     qDebug() << "balllls";
+}
+
+void
+PaletteViewer::onPaletteCountChanged()
+{
+    int count = mySlider->getValue();
+    // qDebug() << count;
+    emit tellBossAboutPaletteCount(count);
 }
 

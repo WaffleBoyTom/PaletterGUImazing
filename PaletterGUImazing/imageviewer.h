@@ -26,6 +26,7 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent);
     void handleResizing();
+    void setProcessorPaletteCount(int count);
 
 private slots:
     

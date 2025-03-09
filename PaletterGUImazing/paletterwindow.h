@@ -27,7 +27,8 @@ public:
 protected:
     void resizeEvent(QResizeEvent *event) override;
 
-private slots:
+public slots:
+    void setPaletteCount(int count);
 
 private:
 

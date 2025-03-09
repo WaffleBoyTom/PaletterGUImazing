@@ -1,0 +1,16 @@
+signals and slots:
+
+connect takes as args:
+obj instance
+signal
+obj instance
+slot
+
+for example in the paletterwindow case
+tellBossAboutPaletteCount is a signal emitted
+by the PaletteViewer
+and setPaletteCount gets that signal because it's a slot
+signal -> slot
+
+signals must be emitted through emit keyword
+afaict signals are only defined in header file

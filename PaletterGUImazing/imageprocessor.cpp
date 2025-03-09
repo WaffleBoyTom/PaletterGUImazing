@@ -47,3 +47,8 @@ ImageProcessor::getPixmap()
 	return QPixmap::fromImage(myImage);
 }
 
+void
+ImageProcessor::setPaletteCount(int count)
+{
+	myPaletteCount = count;
+}

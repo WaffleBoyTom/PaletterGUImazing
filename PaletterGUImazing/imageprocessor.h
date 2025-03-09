@@ -15,9 +15,11 @@ class ImageProcessor
 		// test function you know
 		void pixelStuff();
 		QPixmap getPixmap();
+		void setPaletteCount(int count);
 	
 	private:
 		QImage myImage;
+		int myPaletteCount;
 
 };
 

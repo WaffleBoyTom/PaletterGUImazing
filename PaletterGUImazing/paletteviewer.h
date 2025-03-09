@@ -20,7 +20,13 @@ class PaletteViewer : public QWidget
 public:
     explicit PaletteViewer(QWidget *parent);
 
+public slots:
+    void onPaletteCountChanged();
+
 private slots:
+
+signals:
+    void tellBossAboutPaletteCount(int count);
     
 protected:
     void paintEvent(QPaintEvent *event) override;

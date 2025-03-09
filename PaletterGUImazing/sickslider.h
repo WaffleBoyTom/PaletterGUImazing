@@ -19,10 +19,17 @@ public:
     explicit SickSlider(QWidget *parent);
     int getValue();
 
-private slots:
+public slots:
 
     void onSliderValueChanged();
+
+private slots:
+    
     void onLineEditValueChanged();
+
+signals:
+
+    void paletteCountChangedSignal();
 
 protected:
 

@@ -20,7 +20,7 @@ SickSlider::SickSlider(QWidget *parent)
     setSliderProperties();
     
     mySliderValueDisplay = new QLineEdit("6", this);
-    // adds callback to slider
+    // adds callbackto slider
     connect(
         mySlider,
         &QSlider::valueChanged,
@@ -63,6 +63,7 @@ SickSlider::onSliderValueChanged()
     );
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
+    emit paletteCountChangedSignal();
 }
 
 void
@@ -74,6 +75,7 @@ SickSlider::onLineEditValueChanged()
     );
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
+    emit paletteCountChangedSignal();
 }
 
 int

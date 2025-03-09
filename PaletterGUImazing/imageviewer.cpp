@@ -162,3 +162,9 @@ ImageViewer::handleResizing()
     QPixmap scaled = resizeImage(&myLoadedImage);
     myImageHolder->setPixmap(scaled);
 }
+
+void 
+ImageViewer::setProcessorPaletteCount(int count)
+{
+    myImageProcessor.setPaletteCount(count); 
+}

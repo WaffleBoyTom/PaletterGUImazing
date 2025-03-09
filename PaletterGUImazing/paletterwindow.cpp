@@ -27,7 +27,9 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     // add something random to assert my dominance
     QVBoxLayout *buttonsLayout = new QVBoxLayout();
     newLineEdit = new QLineEdit(
-        tr("I'm a 10x programmer"), this);
+        tr("I'm a 10x programmer"), 
+        this
+    );
     
     buttonsLayout->addWidget(newLineEdit);
     mainLayout->addLayout(buttonsLayout);
@@ -35,6 +37,15 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     QVBoxLayout *paletteviewerlayout = new QVBoxLayout();
     // add the paletteviewer
     myPaletteViewer = new PaletteViewer(this);
+    // when the slider is changed, set the palette count
+    // on the image processor
+    connect(
+        myPaletteViewer,
+        &PaletteViewer::tellBossAboutPaletteCount,
+        this,
+        &PaletterGUI::setPaletteCount        
+    );
+    
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
@@ -49,5 +60,13 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
     myImgViewer->handleResizing();
+}
+
+void
+PaletterGUI::setPaletteCount(int count)
+{
+    myImgViewer->setProcessorPaletteCount(count);  
+    // qDebug() << "called from Paletter GUI";
+    // qDebug() << count;
 }
 
