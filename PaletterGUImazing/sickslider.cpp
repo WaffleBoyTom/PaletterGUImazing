@@ -83,3 +83,16 @@ SickSlider::getValue()
 {
     return mySlider->value();
 }
+
+void
+SickSlider::wheelEvent(QWheelEvent *event)
+{
+    QPoint numdegrees = event->angleDelta() / 8;
+    QPoint numsteps = numdegrees / 15;
+    int step = numsteps.y();
+    int currentvalue = mySlider->value();
+    mySlider->setValue(currentvalue + step);
+    onSliderValueChanged();
+    
+    
+}

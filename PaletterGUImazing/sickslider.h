@@ -34,6 +34,7 @@ signals:
 protected:
 
     void setSliderProperties();
+    void wheelEvent(QWheelEvent *event);
 
 
 private:
