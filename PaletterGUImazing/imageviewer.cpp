@@ -56,6 +56,11 @@ ImageViewer::ImageViewer(QWidget *parent)
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
 
+    setPaletteCount(6);
+    // I don't think I should have to make a copy here >?
+    QList<QColor> default_palette(50, QColor(0, 0, 0));
+    myColorPalette = default_palette;
+
     // populate layout
     myLayout->addWidget(myLineEdit);
     myLayout->addWidget(myNautilusButton);
@@ -128,16 +133,19 @@ ImageViewer::processImage()
 {
 
     if (myLoadedImage.isNull())
-    {
         return;   
-    }
     myImageProcessor.loadImage(getImage());
-    myImageProcessor.pixelStuff();   
+    myImageProcessor.fillColorPalette(
+        myColorPalette,
+        myPaletteCount
+    );   
+    qDebug() << "filled color palette";
     QPixmap processed = myImageProcessor.getPixmap();
     // override orig with processed to make sure
     // result stays the same when we resize
     myLoadedImage = processed;
     myImageHolder->setPixmap(resizeImage(&processed));
+    emit tellBossAboutPaletteFill(&myColorPalette);
 }
 
 QPixmap
@@ -164,7 +172,13 @@ ImageViewer::handleResizing()
 }
 
 void 
-ImageViewer::setProcessorPaletteCount(int count)
+ImageViewer::setPaletteCount(int count)
 {
-    myImageProcessor.setPaletteCount(count); 
+    myPaletteCount = count; 
+}
+
+QList<QColor>*
+ImageViewer::getPalette()
+{
+    return &myColorPalette;
 }

@@ -29,6 +29,7 @@ protected:
 
 public slots:
     void setPaletteCount(int count);
+    void drawPalette(QList<QColor> *palette);
 
 private:
 

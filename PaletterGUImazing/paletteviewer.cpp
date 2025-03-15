@@ -41,10 +41,15 @@ PaletteViewer::paintEvent(QPaintEvent *event)
     // the fuckin slider lmao
     // magic numbers galore...
     // and bad maths
+    if (!myPalettePtr)
+        return;
     
     QPainter painter(this);
     int start = 0;
     int num_boxes = mySlider->getValue();
+
+    if (!myPalettePtr->size() == num_boxes)
+        return;
 
     // the idea behind this padding is that
     // we get a bit of space between each rectangle
@@ -58,12 +63,13 @@ PaletteViewer::paintEvent(QPaintEvent *event)
         
     for(int i = 0; i < num_boxes; ++i)
     {
+        int index = qBound(0, i, 50);
         painter.fillRect(
             start + (size * i), // x
             height / 2, // y
             size - padding, // width
             height, // height
-            QColor(88, i*3, i*2) // color
+            myPalettePtr->at(index)
         );
     }
 
@@ -79,7 +85,12 @@ void
 PaletteViewer::onPaletteCountChanged()
 {
     int count = mySlider->getValue();
-    // qDebug() << count;
     emit tellBossAboutPaletteCount(count);
 }
 
+void
+PaletteViewer::drawPalette(QList<QColor> *paletteptr)
+{
+    myPalettePtr = paletteptr;
+    this->repaint();
+}

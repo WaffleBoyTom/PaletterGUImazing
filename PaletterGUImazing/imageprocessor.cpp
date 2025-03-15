@@ -3,6 +3,7 @@
 #include <QImage>
 #include <QRgb>
 #include <QPixmap>
+#include <QDebug>
 
 ImageProcessor::ImageProcessor(QImage image)
 {
@@ -26,7 +27,6 @@ ImageProcessor::pixelStuff()
 	for (int y = 0; y < myImage.height(); ++y) 
 	{
     QRgb *line = reinterpret_cast<QRgb*>(myImage.scanLine(y));
-    
     for (int x = 0; x < myImage.width(); ++x) 
     {
         QRgb &rgb = line[x];
@@ -35,10 +35,23 @@ ImageProcessor::pixelStuff()
           qGreen(0), 
           qBlue(rgb), 
           qAlpha(rgb)
-        );
-    }
+        ); 
+    }	
 	}
+}
 
+void
+ImageProcessor::fillColorPalette(QList<QColor> &palette, int count)
+{
+	qDebug() << count;
+	for (int y = 0; y < count; ++y) 
+	{
+    QRgb *line = reinterpret_cast<QRgb*>(
+    	myImage.scanLine(y)
+  	);
+    QColor col = QColor::fromRgb(*line);
+  	palette.insert(y, col);
+	}
 }
 
 QPixmap
@@ -47,8 +60,3 @@ ImageProcessor::getPixmap()
 	return QPixmap::fromImage(myImage);
 }
 
-void
-ImageProcessor::setPaletteCount(int count)
-{
-	myPaletteCount = count;
-}

@@ -22,6 +22,7 @@ public:
 
 public slots:
     void onPaletteCountChanged();
+    void drawPalette(QList<QColor> *palette);
 
 private slots:
 
@@ -39,6 +40,7 @@ private:
     QWidget *myCreator;
     SickSlider *mySlider;
     QPushButton *myExportButton;
+    QList<QColor> *myPalettePtr;
 };
 
 #endif

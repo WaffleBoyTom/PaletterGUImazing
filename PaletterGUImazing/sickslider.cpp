@@ -90,8 +90,22 @@ SickSlider::wheelEvent(QWheelEvent *event)
     QPoint numdegrees = event->angleDelta() / 8;
     QPoint numsteps = numdegrees / 15;
     int step = numsteps.y();
+
+    // increase step if modifier key is held
+    Qt::KeyboardModifiers mod = event->modifiers();
+    int modmult = 1;
+    switch (mod)
+    {
+        case Qt::ShiftModifier:
+            modmult = 2;
+            break;
+        case Qt::ControlModifier:
+            modmult = 5;
+            break;
+    }
+    
     int currentvalue = mySlider->value();
-    mySlider->setValue(currentvalue + step);
+    mySlider->setValue(currentvalue + (step * modmult));
     onSliderValueChanged();
     
     

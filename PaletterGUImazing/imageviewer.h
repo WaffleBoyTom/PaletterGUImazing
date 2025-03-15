@@ -26,7 +26,12 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent);
     void handleResizing();
-    void setProcessorPaletteCount(int count);
+    void setPaletteCount(int count);
+    QList<QColor>* getPalette();
+
+signals:
+
+    void tellBossAboutPaletteFill(QList<QColor> *palette);
 
 private slots:
     
@@ -68,6 +73,9 @@ private:
     QWidget *myCreator;
     // deals with processing the pixmap
     ImageProcessor myImageProcessor;
+    
+    QList<QColor> myColorPalette;
+    int myPaletteCount;
     
 };
 
