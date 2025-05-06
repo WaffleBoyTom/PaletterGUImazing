@@ -124,17 +124,15 @@ ImageViewer::processImage()
     if (myLoadedImage.isNull())
         return;
 
-    myImageProcessor.loadImage(getImage());
-    myImageProcessor.fillColorPalette(myColorPalette, myPaletteCount);
+    QImage image = getImage();
+    myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
     qDebug() << "filled color palette";
-
-    QPixmap processed = myImageProcessor.getPixmap();
 
     // override orig with processed to make sure
     // result stays the same when we resize
-    myLoadedImage = processed;
+    myLoadedImage = QPixmap::fromImage(image);
 
-    myImageHolder->setPixmap(resizeImage(&processed));
+    myImageHolder->setPixmap(resizeImage(&myLoadedImage));
     emit tellBossAboutPaletteFill(&myColorPalette);
 }
 

@@ -5,31 +5,22 @@
 #include <QPixmap>
 #include <QRgb>
 
-ImageProcessor::ImageProcessor(QImage image)
-{
-    myImage = image;
-}
-
 ImageProcessor::ImageProcessor()
 {
 }
 
 void
-ImageProcessor::loadImage(QImage image)
-{
-    myImage = image;
-}
-
-void
-ImageProcessor::pixelStuff()
+ImageProcessor::pixelStuff(QImage &image)
 {
     // straight up copy from the Qt docs
     // just for testing you know
     // great artists copy ...
-    for (int y = 0; y < myImage.height(); ++y)
+    // "The computer is the paypah, and Juicetin is the pen. But, we are the
+    // hands" - Gods (Gods)
+    for (int y = 0; y < image.height(); ++y)
     {
-        QRgb *line = reinterpret_cast<QRgb *>(myImage.scanLine(y));
-        for (int x = 0; x < myImage.width(); ++x)
+        QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
+        for (int x = 0; x < image.width(); ++x)
         {
             QRgb &rgb = line[x];
             rgb = qRgba(qRed(rgb), qGreen(0), qBlue(rgb), qAlpha(rgb));
@@ -38,19 +29,15 @@ ImageProcessor::pixelStuff()
 }
 
 void
-ImageProcessor::fillColorPalette(QList<QColor> &palette, int count)
+ImageProcessor::fillColorPalette(
+    QImage &image, QList<QColor> &palette, const int count
+)
 {
     qDebug() << count;
     for (int y = 0; y < count; ++y)
     {
-        QRgb *line = reinterpret_cast<QRgb *>(myImage.scanLine(y));
+        QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
         QColor col = QColor::fromRgb(*line);
         palette.insert(y, col);
     }
-}
-
-QPixmap
-ImageProcessor::getPixmap()
-{
-    return QPixmap::fromImage(myImage);
 }
