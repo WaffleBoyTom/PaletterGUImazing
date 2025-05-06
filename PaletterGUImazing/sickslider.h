@@ -24,7 +24,7 @@ public slots:
     void onSliderValueChanged();
 
 private slots:
-    
+
     void onLineEditValueChanged();
 
 signals:
@@ -32,18 +32,14 @@ signals:
     void paletteCountChangedSignal();
 
 protected:
-
     void setSliderProperties();
     void wheelEvent(QWheelEvent *event);
 
-
 private:
-
-    QWidget *myCreator; 
+    QWidget *myCreator;
     QHBoxLayout *myLayout;
     QSlider *mySlider;
     QLineEdit *mySliderValueDisplay;
-
 };
 
 #endif

@@ -2,6 +2,7 @@
 #define PALETTERWINDOW_H
 
 #include <QWidget>
+
 #include "imageviewer.h"
 #include "paletteviewer.h"
 
@@ -32,7 +33,6 @@ public slots:
     void drawPalette(QList<QColor> *palette);
 
 private:
-
     QLabel *paletterLabel;
     QPushButton *newTestButton;
     QLineEdit *newLineEdit;
@@ -40,4 +40,4 @@ private:
     PaletteViewer *myPaletteViewer;
 };
 
-#endif // PALETTERWINDOW_H
+#endif  // PALETTERWINDOW_H

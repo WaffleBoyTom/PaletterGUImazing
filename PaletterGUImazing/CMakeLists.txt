@@ -13,17 +13,17 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
-        main.cpp
-        paletterwindow.cpp
-        paletterwindow.h
-        imageviewer.cpp
-        imageviewer.h
-        imageprocessor.cpp
-        imageprocessor.h
-        paletteviewer.cpp
-        paletteviewer.h
-        sickslider.cpp
-        sickslider.h
+    main.cpp
+    paletterwindow.cpp
+    paletterwindow.h
+    imageviewer.cpp
+    imageviewer.h
+    imageprocessor.cpp
+    imageprocessor.h
+    paletteviewer.cpp
+    paletteviewer.h
+    sickslider.cpp
+    sickslider.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -57,6 +57,7 @@ target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 if(${QT_VERSION} VERSION_LESS 6.1.0)
   set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.PaletterGUImazing)
 endif()
+
 set_target_properties(PaletterGUImazing PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}

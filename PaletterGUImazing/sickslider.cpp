@@ -1,7 +1,7 @@
 #include "sickslider.h"
 
-#include <QtWidgets>
 #include <QString>
+#include <QtWidgets>
 
 /*
 Custom slider because base qt slider is more cheeks
@@ -15,11 +15,12 @@ SickSlider::SickSlider(QWidget *parent)
     // keep in touch with your parent
     myCreator = parent;
     myLayout = new QHBoxLayout(this);
-    
+
     mySlider = new QSlider(this);
     setSliderProperties();
-    
+
     mySliderValueDisplay = new QLineEdit("6", this);
+
     // adds callbackto slider
     connect(
         mySlider,
@@ -27,24 +28,24 @@ SickSlider::SickSlider(QWidget *parent)
         this,
         &SickSlider::onSliderValueChanged
     );
+
     // adds callback to Line Edit
     connect(
         mySliderValueDisplay,
         &QLineEdit::textChanged,
         this,
-        &SickSlider::onLineEditValueChanged  
+        &SickSlider::onLineEditValueChanged
     );
 
     myLayout->addWidget(mySlider);
     myLayout->addWidget(mySliderValueDisplay);
-    
 }
 
 void
 SickSlider::setSliderProperties()
 {
     // bunch of magic numbers here
-    
+
     mySlider->setOrientation(Qt::Horizontal);
     mySlider->setTickInterval(2);
     mySlider->setTickPosition(QSlider::TicksBothSides);
@@ -58,9 +59,8 @@ void
 SickSlider::onSliderValueChanged()
 {
     // update Label when user drags slider
-    mySliderValueDisplay->setText(
-        QString::number(mySlider->value())
-    );
+    mySliderValueDisplay->setText(QString::number(mySlider->value()));
+
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
     emit paletteCountChangedSignal();
@@ -70,9 +70,7 @@ void
 SickSlider::onLineEditValueChanged()
 {
     // update slider
-    mySlider->setValue(
-        mySliderValueDisplay->text().toInt()
-    );
+    mySlider->setValue(mySliderValueDisplay->text().toInt());
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
     emit paletteCountChangedSignal();
@@ -94,19 +92,18 @@ SickSlider::wheelEvent(QWheelEvent *event)
     // increase step if modifier key is held
     Qt::KeyboardModifiers mod = event->modifiers();
     int modmult = 1;
+
     switch (mod)
     {
-        case Qt::ShiftModifier:
-            modmult = 2;
-            break;
-        case Qt::ControlModifier:
-            modmult = 5;
-            break;
+    case Qt::ShiftModifier:
+        modmult = 2;
+        break;
+    case Qt::ControlModifier:
+        modmult = 5;
+        break;
     }
-    
+
     int currentvalue = mySlider->value();
     mySlider->setValue(currentvalue + (step * modmult));
     onSliderValueChanged();
-    
-    
 }
