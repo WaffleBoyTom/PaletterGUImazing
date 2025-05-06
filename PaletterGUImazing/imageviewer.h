@@ -27,7 +27,7 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent);
     void handleResizing();
-    void setPaletteCount(int count);
+    void setPaletteCount(const int count);
     QList<QColor> *getPalette();
 
 signals:
@@ -71,6 +71,7 @@ private:
 
     // pointer to paletter window
     QWidget *myCreator;
+
     // deals with processing the pixmap
     ImageProcessor myImageProcessor;
 
