@@ -33,7 +33,7 @@ ImageProcessor::fillColorPalette(
     QImage &image, QList<QColor> &palette, const int count
 )
 {
-    qDebug() << count;
+    qDebug() << "color palette count = " << count;
     for (int y = 0; y < count; ++y)
     {
         QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));

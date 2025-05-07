@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
     imageprocessor.h
     paletteviewer.cpp
     paletteviewer.h
+    paletterow.cpp
+    paletterow.h
     sickslider.cpp
     sickslider.h
 )
