@@ -15,11 +15,17 @@ SickSlider::SickSlider(QWidget *parent)
     // keep in touch with your parent
     myCreator = parent;
     myLayout = new QHBoxLayout(this);
+    myLayout->setContentsMargins(0, 0, 0, 0);
 
     mySlider = new QSlider(this);
     setSliderProperties();
 
     mySliderValueDisplay = new QLineEdit("6", this);
+
+    mySlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    mySliderValueDisplay->setSizePolicy(
+        QSizePolicy::Preferred, QSizePolicy::Fixed
+    );
 
     // adds callbackto slider
     connect(
@@ -71,8 +77,10 @@ SickSlider::onLineEditValueChanged()
 {
     // update slider
     mySlider->setValue(mySliderValueDisplay->text().toInt());
+
     // forces paintEvent to get called on PaletteViewer
     myCreator->repaint();
+
     emit paletteCountChangedSignal();
 }
 
