@@ -19,6 +19,8 @@ class PaletteRow : public QWidget
 public:
     explicit PaletteRow(QWidget *parent);
 
+    QSize sizeHint() const override;
+
 public slots:
     void onPaletteCountChanged(const int count);
     void drawPalette(QList<QColor> *palette);

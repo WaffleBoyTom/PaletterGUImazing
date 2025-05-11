@@ -2,6 +2,7 @@
 
 #include <QtWidgets>
 
+#include "debug.h"
 #include "sickslider.h"
 
 PaletteViewer::PaletteViewer(QWidget *parent)
@@ -15,8 +16,6 @@ PaletteViewer::PaletteViewer(QWidget *parent)
     myPaletteRow = new PaletteRow(this);
     mySlider = new SickSlider(this);
     myExportButton = new QPushButton(tr("Export Palette"), this);
-
-    myPaletteRow->setMinimumHeight(100);
 
     connect(
         mySlider,

@@ -13,6 +13,14 @@ PaletteRow::PaletteRow(QWidget *parent) : myBoxCount(6)
     this->setMouseTracking(true);
 }
 
+QSize
+PaletteRow::sizeHint() const
+{
+    const int boxWidth = 50;
+    const int height = 40;
+    return QSize(myBoxCount * boxWidth, height);
+}
+
 void
 PaletteRow::onPaletteCountChanged(const int count)
 {
