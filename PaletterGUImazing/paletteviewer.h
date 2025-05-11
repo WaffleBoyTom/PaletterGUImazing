@@ -1,9 +1,11 @@
 #ifndef PALETTEVIEWER_H
 #define PALETTEVIEWER_H
 
-#include <QMainWindow>
 #include <QImage>
+#include <QMainWindow>
 #include <QWidget>
+
+#include "paletterow.h"
 #include "sickslider.h"
 
 QT_BEGIN_NAMESPACE
@@ -24,23 +26,18 @@ public slots:
     void onPaletteCountChanged();
     void drawPalette(QList<QColor> *palette);
 
-private slots:
-
 signals:
     void tellBossAboutPaletteCount(int count);
-    
+
 protected:
-    void paintEvent(QPaintEvent *event) override;
     void exportPalette();
 
 private:
-
-    QVBoxLayout *myLayout;
-    // pointer to paletter window
     QWidget *myCreator;
+    QVBoxLayout *myLayout;
+    PaletteRow *myPaletteRow;
     SickSlider *mySlider;
     QPushButton *myExportButton;
-    QList<QColor> *myPalettePtr;
 };
 
 #endif

@@ -1,50 +1,47 @@
+#include "paletterwindow.h"
+
 #include <QtWidgets>
 
-#include "paletterwindow.h"
 #include "imageviewer.h"
 #include "paletteviewer.h"
 
+static const int theMinSizeScaleFactor = 4;
+
 PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 {
-    
     const QRect screenGeometry = screen()->geometry();
     const QSize screenSize = screen()->size();
+
     // how small you can resize the window
-    paletterLabel->setMinimumSize(
-        screenGeometry.width() / 16, 
-        screenGeometry.height() / 16
+    this->setMinimumSize(
+        screenGeometry.width() / theMinSizeScaleFactor,
+        screenGeometry.height() / theMinSizeScaleFactor
     );
 
+    // Outermost layout of the app.
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
     // add the image viewer here
-
-    QHBoxLayout *imgviewerLayout = new QHBoxLayout();
     myImgViewer = new ImageViewer(this);
-    imgviewerLayout->addWidget(myImgViewer);
-    mainLayout->addLayout(imgviewerLayout);
-    
-    
+    mainLayout->addWidget(myImgViewer);
+
     // add something random to assert my dominance
     QVBoxLayout *buttonsLayout = new QVBoxLayout();
-    newLineEdit = new QLineEdit(
-        tr("I'm a 10x programmer"), 
-        this
-    );
-    
+    newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
     buttonsLayout->addWidget(newLineEdit);
     mainLayout->addLayout(buttonsLayout);
 
+    // add the palette viewer here
     QVBoxLayout *paletteviewerlayout = new QVBoxLayout();
-    // add the paletteviewer
     myPaletteViewer = new PaletteViewer(this);
+
     // when the slider is changed, set the palette count
     // on the image processor
     connect(
         myPaletteViewer,
         &PaletteViewer::tellBossAboutPaletteCount,
         this,
-        &PaletterGUI::setPaletteCount        
+        &PaletterGUI::setPaletteCount
     );
 
     connect(
@@ -55,7 +52,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     );
 
     drawPalette(myImgViewer->getPalette());
-    
+
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
@@ -65,7 +62,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
 // resive event override
 // this should handle resizing the image
-void 
+void
 PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
@@ -75,14 +72,11 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 void
 PaletterGUI::setPaletteCount(int count)
 {
-    myImgViewer->setPaletteCount(count);  
+    myImgViewer->setPaletteCount(count);
 }
 
 void
 PaletterGUI::drawPalette(QList<QColor> *palette)
 {
-
     myPaletteViewer->drawPalette(palette);
- 
 }
-

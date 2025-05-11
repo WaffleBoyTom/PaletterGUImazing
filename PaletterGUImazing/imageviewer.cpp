@@ -1,7 +1,13 @@
 #include "imageviewer.h"
+
+#include <QMessageBox>
+#include <QtWidgets>
+
 #include "imageprocessor.h"
 
-#include <QtWidgets>
+// TODO: scaling factor hardcoded to 1/2 right now
+// might wanna change that innit
+static const int theImageScaleFactor = 2;
 
 ImageViewer::ImageViewer(QWidget *parent)
 {
@@ -9,54 +15,41 @@ ImageViewer::ImageViewer(QWidget *parent)
     myCreator = parent;
 
     // main layout
-    myLayout = new QVBoxLayout(this); 
+    myLayout = new QVBoxLayout(this);
 
     // my boy Ethan so good lookin'
-    myLineEdit = new QLineEdit(
-        tr("Ethan so sexy"), 
-        this
-    );
+    myLineEdit = new QLineEdit(tr("Ethan so sexy"), this);
 
     // nautilus button
-    myNautilusButton = new QPushButton(
-        tr("Open Image"),  
-        this   
-    );
-    
+    myNautilusButton = new QPushButton(tr("Open Image"), this);
+
     connect(
-        myNautilusButton, 
-        &QPushButton::clicked, 
-        this, 
+        myNautilusButton,
+        &QPushButton::clicked,
+        this,
         &ImageViewer::openNautilus
     );
 
     // image holder
-    myImageHolder = new QLabel(
-        tr(""),
-        this
-    );
+    myImageHolder = new QLabel(tr(""), this);
 
-    myImageHolder->setAlignment(
-      Qt::AlignHCenter | Qt::AlignVCenter  
-    );
+    myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     // processor button
-    myProcessorButton = new QPushButton(
-        tr("Process Image"),  
-        this   
-    );
-    
+    myProcessorButton = new QPushButton(tr("Process Image"), this);
+
     connect(
-        myProcessorButton, 
-        &QPushButton::clicked, 
-        this, 
+        myProcessorButton,
+        &QPushButton::clicked,
+        this,
         &ImageViewer::processImage
     );
-    
+
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
 
     setPaletteCount(6);
+
     // I don't think I should have to make a copy here >?
     QList<QColor> default_palette(50, QColor(0, 0, 0));
     myColorPalette = default_palette;
@@ -71,53 +64,50 @@ ImageViewer::ImageViewer(QWidget *parent)
 void
 ImageViewer::openNautilus()
 {
-    QString fileName;
-    
-    // I wonder if /home resolves correctly on windows >?
-    // not that I want to support that awful os but 
+    // TODO: I wonder if /home resolves correctly on windows >?
+    // not that I want to support that awful os but
     // you know...
-    
-    fileName = QFileDialog::getOpenFileName(
+
+    const QString fileName = QFileDialog::getOpenFileName(
         this,
-        tr("Palettize this geezer"), /* title of fileDialog */
-        "/home", /* where to start the search */ 
+        tr("Palettize this geezer"),    /* title of fileDialog */
+        QDir::homePath(),               /* where to start the search */
         tr("Image Files (*.png *.jpg)") /* file filter */
-    ); 
+    );
+
+    // User closed the dialog, so don't error out
+    if (fileName.isEmpty())
+        return;
 
     // print selected file to console
     qDebug() << fileName;
+
     if (!loadImage(&fileName))
-        // should handle this more gracefully
-        qDebug() << "Nope";
-    
+    {
+        qDebug() << "Failed to load image";
+        QMessageBox::information(
+            this,
+            QGuiApplication::applicationDisplayName(), /* title */
+            tr("Failed to load image: %1")
+                .arg(QDir::toNativeSeparators(fileName)) /* message text */
+        );
+    }
 }
 
 bool
 ImageViewer::loadImage(const QString *filename)
 {
-
     myLineEdit->setText(*filename);
 
-    QPixmap image_display;
-
-    if (!image_display.load(*filename))
+    if (!myLoadedImage.load(*filename))
         return false;
-    
-    // by default images are pretty big
-    // unlike other things...
-    // this probably should scale based on
-    // main window size
-    // dividing by 2 for now, idk
-    
-    myLoadedImage = image_display;
-    
-    QPixmap scaled = resizeImage(&image_display);
+
+    const QPixmap scaled = resizeImage(&myLoadedImage);
 
     // loaded image successfully
     myImageHolder->setPixmap(scaled);
 
     return true;
-            
 }
 
 QImage
@@ -125,59 +115,61 @@ ImageViewer::getImage()
 {
     // we want to load in the original image
     // not the resized one
-    return myLoadedImage.toImage();  
+    return myLoadedImage.toImage();
 }
 
 void
 ImageViewer::processImage()
 {
-
     if (myLoadedImage.isNull())
-        return;   
-    myImageProcessor.loadImage(getImage());
-    myImageProcessor.fillColorPalette(
-        myColorPalette,
-        myPaletteCount
-    );   
+        return;
+
+    QImage image = getImage();
+    myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
     qDebug() << "filled color palette";
-    QPixmap processed = myImageProcessor.getPixmap();
+
     // override orig with processed to make sure
     // result stays the same when we resize
-    myLoadedImage = processed;
-    myImageHolder->setPixmap(resizeImage(&processed));
+    myLoadedImage = QPixmap::fromImage(image);
+
+    myImageHolder->setPixmap(resizeImage(&myLoadedImage));
     emit tellBossAboutPaletteFill(&myColorPalette);
 }
 
 QPixmap
 ImageViewer::resizeImage(QPixmap *imagedisplay)
 {
-    // scaling factor hardcoded to 1/2 right now
-    // might wanna change that innit
-    
-    return imagedisplay->scaled(
-        myCreator->height() / 2, /* width */
-        myCreator->width() / 2, /* height */
-        Qt::KeepAspectRatio /* ar */
-    );
+    // by default images are pretty big
+    // unlike other things...
+    // this probably should scale based on
+    // main window size
+    // dividing by 2 for now, idk
 
+    return imagedisplay->scaled(
+        myCreator->height() / theImageScaleFactor, /* width */
+        myCreator->width() / theImageScaleFactor,  /* height */
+        Qt::KeepAspectRatio                        /* ar */
+    );
 }
 
 void
 ImageViewer::handleResizing()
-{   
+{
     if (myLoadedImage.isNull())
         return;
-    QPixmap scaled = resizeImage(&myLoadedImage);
+
+    const QPixmap scaled = resizeImage(&myLoadedImage);
+
     myImageHolder->setPixmap(scaled);
 }
 
-void 
-ImageViewer::setPaletteCount(int count)
+void
+ImageViewer::setPaletteCount(const int count)
 {
-    myPaletteCount = count; 
+    myPaletteCount = count;
 }
 
-QList<QColor>*
+QList<QColor> *
 ImageViewer::getPalette()
 {
     return &myColorPalette;

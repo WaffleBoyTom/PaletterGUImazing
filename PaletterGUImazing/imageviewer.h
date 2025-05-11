@@ -1,9 +1,10 @@
 #ifndef IMAGEVIEWER_H
 #define IMAGEVIEWER_H
 
-#include <QMainWindow>
 #include <QImage>
+#include <QMainWindow>
 #include <QWidget>
+
 #include "imageprocessor.h"
 
 QT_BEGIN_NAMESPACE
@@ -26,18 +27,18 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent);
     void handleResizing();
-    void setPaletteCount(int count);
-    QList<QColor>* getPalette();
+    void setPaletteCount(const int count);
+    QList<QColor> *getPalette();
 
 signals:
 
     void tellBossAboutPaletteFill(QList<QColor> *palette);
 
 private slots:
-    
+
     // opens file explorer
     void openNautilus();
-    
+
     // loads image from file explorer into window
     bool loadImage(const QString *filename);
 
@@ -49,34 +50,33 @@ private slots:
 
     // resizes image based on myCreator size;
     QPixmap resizeImage(QPixmap *image);
-    
 
 private:
-
     QVBoxLayout *myLayout;
     QLineEdit *myLineEdit;
-    
+
     QLabel *myImageHolder;
+
     // keep reference to original image otherwise
     // we iteratively scale the pixmap
     // and end up with mashed pixeloes
     // and they aint delicious...
     QPixmap myLoadedImage;
-    
+
     // calls openNautilus
-    QPushButton *myNautilusButton; 
+    QPushButton *myNautilusButton;
 
     // calls processImage
     QPushButton *myProcessorButton;
-    
+
     // pointer to paletter window
     QWidget *myCreator;
+
     // deals with processing the pixmap
     ImageProcessor myImageProcessor;
-    
+
     QList<QColor> myColorPalette;
     int myPaletteCount;
-    
 };
 
 #endif
