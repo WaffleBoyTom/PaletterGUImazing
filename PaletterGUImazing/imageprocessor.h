@@ -18,6 +18,9 @@ public:
     void fillColorPalette(
         QImage &image, QList<QColor> &palette, const int count
     );
+
+    void applyColorPalette(QImage &image, QList<QColor> *palette);
+    
 };
 
 #endif

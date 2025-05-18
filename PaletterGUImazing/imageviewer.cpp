@@ -9,7 +9,7 @@
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-ImageViewer::ImageViewer(QWidget *parent)
+ImageViewer::ImageViewer(QWidget *parent, bool paletteSource=true)
 {
     // keep in touch with your parent
     myCreator = parent;
@@ -36,15 +36,30 @@ ImageViewer::ImageViewer(QWidget *parent)
     myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     // processor button
-    myProcessorButton = new QPushButton(tr("Process Image"), this);
+    // temp solution to allow for a different button 
+    // between the two image viewers
+    if (paletteSource)
+    {
+        myProcessorButton = new QPushButton(tr("Process Image"), this);
 
-    connect(
-        myProcessorButton,
-        &QPushButton::clicked,
-        this,
-        &ImageViewer::processImage
-    );
+        connect(
+            myProcessorButton,
+            &QPushButton::clicked,
+            this,
+            &ImageViewer::processImage
+        );
+    }
+    else
+    {
+        myProcessorButton = new QPushButton(tr("Apply Palette to Image"), this);
 
+        connect(
+            myProcessorButton,
+            &QPushButton::clicked,
+            this,
+            &ImageViewer::askForPalette
+        );   
+    }
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
 
@@ -136,6 +151,21 @@ ImageViewer::processImage()
     emit tellBossAboutPaletteFill(&myColorPalette);
 }
 
+void 
+ImageViewer::askForPalette()
+{
+    emit askBossForPalette();
+}
+
+void ImageViewer::applyPalette(QList<QColor> *palette)
+{
+    QImage image = getImage();
+    myImageProcessor.applyColorPalette(image, palette);
+    myLoadedImage = QPixmap::fromImage(image);    
+    myImageHolder->setPixmap(resizeImage(&myLoadedImage));
+
+}
+
 QPixmap
 ImageViewer::resizeImage(QPixmap *imagedisplay)
 {
@@ -174,3 +204,4 @@ ImageViewer::getPalette()
 {
     return &myColorPalette;
 }
+

@@ -31,13 +31,15 @@ protected:
 public slots:
     void setPaletteCount(int count);
     void drawPalette(QList<QColor> *palette);
+    void applyPaletteToSecondViewer();
 
 private:
     QLabel *paletterLabel;
-    QPushButton *newTestButton;
-    QLineEdit *newLineEdit;
+    // QPushButton *newTestButton;
+    // QLineEdit *newLineEdit;
     ImageViewer *myImgViewer;
     PaletteViewer *myPaletteViewer;
+    ImageViewer *myConvertImgViewer;
 };
 
 #endif  // PALETTERWINDOW_H

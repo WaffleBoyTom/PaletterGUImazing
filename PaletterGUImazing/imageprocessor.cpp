@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QPixmap>
 #include <QRgb>
+#include <QtMath>
 
 ImageProcessor::ImageProcessor()
 {
@@ -40,4 +41,52 @@ ImageProcessor::fillColorPalette(
         QColor col = QColor::fromRgb(*line);
         palette.insert(y, col);
     }
+}
+
+void 
+ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
+{
+
+    // stop going through the palette if we're within .05
+    float threshold = .05;
+    
+    for (int y = 0; y < image.height(); ++y)
+    {
+        QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
+        for (int x = 0; x < image.width(); ++x)
+        {
+            QRgb &rgb = line[x];
+            
+            float paletter, paletteg, paletteb; 
+
+            float delta = 1000.0;
+            
+            for (int i = 0; i < palette->size(); ++i)
+
+            {
+                QColor currcolor = QColor(rgb);
+                palette->at(i).getRgbF(&paletter, &paletteg, &paletteb);
+                float length_delta = qSqrt(
+                    qPow(paletter - currcolor.redF(), 2) +
+                    qPow(paletteg - currcolor.greenF(), 2) +
+                    qPow(paletteb - currcolor.blueF(), 2)    
+                );
+
+                if (length_delta < delta)
+                {
+                    rgb = qRgba(
+                        int(paletter * 255), 
+                        int(paletteg * 255), 
+                        int(paletteb * 255), 
+                        255
+                    );    
+                }
+                if (length_delta < threshold)
+                    break; // optimization
+            }
+            
+            // rgb = qRgba(qRed(rgb), qGreen(0), qBlue(rgb), qAlpha(rgb));
+        }
+    }
+    
 }

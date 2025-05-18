@@ -25,14 +25,16 @@ class ImageViewer : public QWidget
     Q_OBJECT
 
 public:
-    explicit ImageViewer(QWidget *parent);
+    explicit ImageViewer(QWidget *parent, bool paletteSource);
     void handleResizing();
     void setPaletteCount(const int count);
     QList<QColor> *getPalette();
+    void applyPalette(QList<QColor> *palette);
 
 signals:
 
     void tellBossAboutPaletteFill(QList<QColor> *palette);
+    void askBossForPalette();
 
 private slots:
 
@@ -47,6 +49,11 @@ private slots:
 
     // load into image processor and get output
     void processImage();
+
+    void askForPalette();
+    
+    // applies palette to image
+    // void applyPalette();
 
     // resizes image based on myCreator size;
     QPixmap resizeImage(QPixmap *image);

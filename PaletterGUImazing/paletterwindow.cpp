@@ -21,15 +21,24 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     // Outermost layout of the app.
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
+    QHBoxLayout *viewersLayout = new QHBoxLayout();
+
     // add the image viewer here
-    myImgViewer = new ImageViewer(this);
-    mainLayout->addWidget(myImgViewer);
+    myImgViewer = new ImageViewer(this, true /*paletteSource*/);
+    viewersLayout->addWidget(myImgViewer);
+
+    // add the other image viewer here
+    // this is the one where you can apply the palette to an image
+    myConvertImgViewer = new ImageViewer(this, false /* paletteSource */);
+    viewersLayout->addWidget(myConvertImgViewer);
+
+    mainLayout->addLayout(viewersLayout);
 
     // add something random to assert my dominance
-    QVBoxLayout *buttonsLayout = new QVBoxLayout();
-    newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
-    buttonsLayout->addWidget(newLineEdit);
-    mainLayout->addLayout(buttonsLayout);
+    // QVBoxLayout *buttonsLayout = new QVBoxLayout();
+    // newLineEdit = new QLineEdit(tr("I'm a 10x programmer"), this);
+    // buttonsLayout->addWidget(newLineEdit);
+    // mainLayout->addLayout(buttonsLayout);
 
     // add the palette viewer here
     QVBoxLayout *paletteviewerlayout = new QVBoxLayout();
@@ -51,8 +60,16 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::drawPalette
     );
 
-    drawPalette(myImgViewer->getPalette());
+    connect(
+        myConvertImgViewer,
+        &ImageViewer::askBossForPalette,
+        this,
+        &PaletterGUI::applyPaletteToSecondViewer  
+    );
 
+
+    drawPalette(myImgViewer->getPalette());
+    
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
@@ -79,4 +96,14 @@ void
 PaletterGUI::drawPalette(QList<QColor> *palette)
 {
     myPaletteViewer->drawPalette(palette);
+}
+
+void
+PaletterGUI::applyPaletteToSecondViewer()
+{
+
+    myConvertImgViewer->applyPalette(
+        myImgViewer->getPalette()
+    );
+
 }
