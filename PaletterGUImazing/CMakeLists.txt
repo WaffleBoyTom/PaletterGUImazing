@@ -20,6 +20,8 @@ set(PROJECT_SOURCES
     imageviewer.h
     imageprocessor.cpp
     imageprocessor.h
+    quantizer.h
+    quantizer.cpp
     paletteviewer.cpp
     paletteviewer.h
     paletterow.cpp
