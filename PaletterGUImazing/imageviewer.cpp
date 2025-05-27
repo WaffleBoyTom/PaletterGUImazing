@@ -4,12 +4,13 @@
 #include <QtWidgets>
 
 #include "imageprocessor.h"
+#include "quantizer.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-ImageViewer::ImageViewer(QWidget *parent, bool paletteSource=true)
+ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 {
     // keep in touch with your parent
     myCreator = parent;
@@ -36,7 +37,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource=true)
     myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     // processor button
-    // temp solution to allow for a different button 
+    // temp solution to allow for a different button
     // between the two image viewers
     if (paletteSource)
     {
@@ -58,7 +59,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource=true)
             &QPushButton::clicked,
             this,
             &ImageViewer::askForPalette
-        );   
+        );
     }
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
@@ -140,7 +141,8 @@ ImageViewer::processImage()
         return;
 
     QImage image = getImage();
-    myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
+    // myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
+    myColorPalette = Quantizer(myPaletteCount).generatePalette(image);
     qDebug() << "filled color palette";
 
     // override orig with processed to make sure
@@ -151,19 +153,19 @@ ImageViewer::processImage()
     emit tellBossAboutPaletteFill(&myColorPalette);
 }
 
-void 
+void
 ImageViewer::askForPalette()
 {
     emit askBossForPalette();
 }
 
-void ImageViewer::applyPalette(QList<QColor> *palette)
+void
+ImageViewer::applyPalette(QList<QColor> *palette)
 {
     QImage image = getImage();
     myImageProcessor.applyColorPalette(image, palette);
-    myLoadedImage = QPixmap::fromImage(image);    
+    myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
-
 }
 
 QPixmap
@@ -204,4 +206,3 @@ ImageViewer::getPalette()
 {
     return &myColorPalette;
 }
-
