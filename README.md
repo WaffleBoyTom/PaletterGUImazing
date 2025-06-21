@@ -6,6 +6,15 @@ cmake --build .
 in build/Deslktop
 
 # TODO
-- k-means algo
-- CUDA apply
+- CUDA:
+  - Use to run K-Means for palette generation
+  - Use to apply palette to second image
+- Add Modes to apply:
+  - Added dropdown but does nothing right now.
+  - Applying should work on CPU even when we have CUDA and right now, no worko whatsoever...
 - color sorting options
+- Export:
+  - Json ?
+  - Export the image with the palette applied
+
+...
