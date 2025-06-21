@@ -49,6 +49,7 @@ ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
 
     // stop going through the palette if we're within .05
     float threshold = .05;
+    // FIXME: This shit is so fucked...
     
     for (int y = 0; y < image.height(); ++y)
     {

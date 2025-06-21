@@ -39,6 +39,10 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // processor button
     // temp solution to allow for a different button
     // between the two image viewers
+    // FIXME : we want a base class for these two viewers
+    // with overrides so we don't do this nasty if stuff ?
+    // FIXME : stuff this in a horizontal layout    
+    myModeDropdown = new SickDropDown(this, tr("Mode"));
     if (paletteSource)
     {
         myProcessorButton = new QPushButton(tr("Process Image"), this);
@@ -49,6 +53,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
             this,
             &ImageViewer::processImage
         );
+        myModeDropdown->setMenuItem(tr("Median Cut"));
+        myModeDropdown->setMenuItem(tr("K-Means"));
+    
     }
     else
     {
@@ -60,6 +67,10 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
             this,
             &ImageViewer::askForPalette
         );
+        myModeDropdown->setMenuItem(tr("Distance"));
+        myModeDropdown->setMenuItem(tr("Luminance"));
+        myModeDropdown->setMenuItem(tr("Hue"));
+        myModeDropdown->setMenuItem(tr("Saturation"));
     }
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
@@ -74,6 +85,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myLayout->addWidget(myLineEdit);
     myLayout->addWidget(myNautilusButton);
     myLayout->addWidget(myProcessorButton);
+    myLayout->addWidget(myModeDropdown);
     myLayout->addWidget(myImageHolder);
 }
 

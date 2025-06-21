@@ -6,9 +6,11 @@
 #include <QWidget>
 
 #include "imageprocessor.h"
+#include "sickdropdown.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
+class QComboBox;
 class QLabel;
 class QMenu;
 class QScrollArea;
@@ -75,6 +77,9 @@ private:
 
     // calls processImage
     QPushButton *myProcessorButton;
+
+    // dropdown for processing method
+    SickDropDown *myModeDropdown;
 
     // pointer to paletter window
     QWidget *myCreator;

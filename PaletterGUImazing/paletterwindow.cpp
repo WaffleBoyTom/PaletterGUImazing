@@ -84,6 +84,8 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
     myImgViewer->handleResizing();
+    // we have myConvertImgViewer, 
+    // it probably shoud be resized here
 }
 
 void
