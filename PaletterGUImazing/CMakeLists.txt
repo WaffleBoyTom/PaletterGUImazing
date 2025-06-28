@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
     paletteviewer.h
     paletterow.cpp
     paletterow.h
+    paletterutils.h
     sickdropdown.cpp
     sickdropdown.h
     sickslider.cpp

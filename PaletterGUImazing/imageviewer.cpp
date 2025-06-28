@@ -4,6 +4,7 @@
 #include <QtWidgets>
 
 #include "imageprocessor.h"
+#include "paletterutils.h"
 #include "quantizer.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
@@ -175,7 +176,11 @@ void
 ImageViewer::applyPalette(QList<QColor> *palette)
 {
     QImage image = getImage();
-    myImageProcessor.applyColorPalette(image, palette);
+    auto mode = PaletterUtils::PaletteApplyMode(
+        myModeDropdown->item()  
+    );
+    
+    myImageProcessor.applyColorPalette(image, palette, mode);
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
 }

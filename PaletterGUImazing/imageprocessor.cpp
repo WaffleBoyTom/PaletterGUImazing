@@ -44,11 +44,16 @@ ImageProcessor::fillColorPalette(
 }
 
 void 
-ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
+ImageProcessor::applyColorPalette(
+    QImage &image, 
+    QList<QColor>* palette,
+    PaletterUtils::PaletteApplyMode mode
+)
 {
-
+    // TODO:
+    // add handling by mode
     // stop going through the palette if we're within .05
-    float threshold = .05;
+    float threshold = .1;
     // FIXME: This shit is so fucked...
     
     for (int y = 0; y < image.height(); ++y)
@@ -57,7 +62,6 @@ ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
         for (int x = 0; x < image.width(); ++x)
         {
             QRgb &rgb = line[x];
-            
             float paletter, paletteg, paletteb; 
 
             float delta = 1000.0;
@@ -67,12 +71,12 @@ ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
             {
                 QColor currcolor = QColor(rgb);
                 palette->at(i).getRgbF(&paletter, &paletteg, &paletteb);
+                
                 float length_delta = qSqrt(
                     qPow(paletter - currcolor.redF(), 2) +
                     qPow(paletteg - currcolor.greenF(), 2) +
                     qPow(paletteb - currcolor.blueF(), 2)    
                 );
-
                 if (length_delta < delta)
                 {
                     rgb = qRgba(
@@ -80,9 +84,11 @@ ImageProcessor::applyColorPalette(QImage &image, QList<QColor>* palette)
                         int(paletteg * 255), 
                         int(paletteb * 255), 
                         255
-                    );    
+                    );  
+                    // update delta
+                    delta = length_delta;  
                 }
-                if (length_delta < threshold)
+                if (delta < threshold)
                     break; // optimization
             }
             

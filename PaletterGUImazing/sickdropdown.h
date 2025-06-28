@@ -22,6 +22,7 @@ public:
 	// FIXME this seems like a shit name because I would expect
 	// this method to take in an index....
 	void setMenuItem(QString item);
+    int item();
 	
 private:
     QWidget *myCreator;

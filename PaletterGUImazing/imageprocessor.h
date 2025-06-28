@@ -6,6 +6,8 @@
 #include <QList>
 #include <QPixmap>
 
+#include "paletterutils.h"
+
 class ImageProcessor
 {
 public:
@@ -16,11 +18,17 @@ public:
     void pixelStuff(QImage &image);
 
     void fillColorPalette(
-        QImage &image, QList<QColor> &palette, const int count
+        QImage &image, QList<QColor> &palette, 
+        const int count
     );
 
-    void applyColorPalette(QImage &image, QList<QColor> *palette);
-    
+    void applyColorPalette(
+        QImage &image, 
+        QList<QColor> *palette,
+        PaletterUtils::PaletteApplyMode mode
+    );
+
+
 };
 
 #endif

@@ -28,3 +28,8 @@ SickDropDown::setMenuItem(QString item)
 	myMenu->addItem(item);
 }
 
+int
+SickDropDown::item()
+{
+	return myMenu->currentIndex();
+}
