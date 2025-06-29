@@ -79,12 +79,12 @@ ImageProcessor::applyColorPalette(
                 );
                 if (length_delta < delta)
                 {
-                    rgb = qRgba(
-                        int(paletter * 255), 
-                        int(paletteg * 255), 
-                        int(paletteb * 255), 
-                        255
-                    );  
+                    // this is stupid
+                    rgb = QColor::fromRgbF(
+                            paletter, 
+                            paletteg, 
+                            paletteb
+                    ).rgb();  
                     // update delta
                     delta = length_delta;  
                 }
