@@ -14,3 +14,6 @@ signal -> slot
 
 signals must be emitted through emit keyword
 afaict signals are only defined in header file
+
+// multithreading stuff ...
+https://doc.qt.io/qt-6/qtconcurrentmap.html

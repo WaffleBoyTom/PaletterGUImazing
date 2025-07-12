@@ -52,6 +52,10 @@ ImageProcessor::applyColorPalette(
 {
     // TODO:
     // add handling by mode
+    // multithread this >?
+    // run this on the GuhPoo with CUDA
+    // turn this loop bs into a lambda
+    
     // stop going through the palette if we're within .05
     float threshold = .1;
     // FIXME: This shit is so fucked...
@@ -59,6 +63,7 @@ ImageProcessor::applyColorPalette(
     for (int y = 0; y < image.height(); ++y)
     {
         QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
+        
         for (int x = 0; x < image.width(); ++x)
         {
             QRgb &rgb = line[x];
@@ -90,10 +95,28 @@ ImageProcessor::applyColorPalette(
                 }
                 if (delta < threshold)
                     break; // optimization
-            }
-            
-            // rgb = qRgba(qRed(rgb), qGreen(0), qBlue(rgb), qAlpha(rgb));
+            }            
         }
     }
     
 }
+
+template <typename fun>
+void
+ImageProcessor::process(QImage& image, fun&& processor)
+{
+    
+    for (int y = 0; y < image.height(); ++y)
+    {
+        QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
+        
+        for (int x = 0; x < image.width(); ++x)
+        {
+            QRgb &rgb = line[x];
+    
+            processor(rgb);
+
+        }
+    }
+}
+

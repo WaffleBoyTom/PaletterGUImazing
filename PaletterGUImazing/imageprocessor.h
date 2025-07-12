@@ -28,6 +28,12 @@ public:
         PaletterUtils::PaletteApplyMode mode
     );
 
+    template <typename fun>
+    void process(
+        QImage &image,
+        fun&& processor
+    );
+
 
 };
 
