@@ -1,6 +1,8 @@
 #ifndef IMAGEPROCESSOR_H
 #define IMAGEPROCESSOR_H
 
+#include <functional>
+
 #include <QColor>
 #include <QImage>
 #include <QList>
@@ -28,10 +30,9 @@ public:
         PaletterUtils::PaletteApplyMode mode
     );
 
-    template <typename fun>
     void process(
         QImage &image,
-        fun&& processor
+        std::function<void(QRgb&)> processor
     );
 
 

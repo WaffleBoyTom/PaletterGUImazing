@@ -1,5 +1,7 @@
 #include "imageprocessor.h"
 
+#include <functional>
+
 #include <QDebug>
 #include <QImage>
 #include <QPixmap>
@@ -101,9 +103,8 @@ ImageProcessor::applyColorPalette(
     
 }
 
-template <typename fun>
 void
-ImageProcessor::process(QImage& image, fun&& processor)
+ImageProcessor::process(QImage& image, std::function<void(QRgb&)> processor)
 {
     
     for (int y = 0; y < image.height(); ++y)
