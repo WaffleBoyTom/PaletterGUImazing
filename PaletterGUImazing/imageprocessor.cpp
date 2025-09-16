@@ -56,8 +56,7 @@ ImageProcessor::applyColorPalette(
     // turn this loop bs into a lambda
 
     // stop going through the palette if we're within .05
-    float threshold = .1;
-    // FIXME: This shit is so fucked...
+    float threshold = 0.01;
 
     for (int y = 0; y < image.height(); ++y)
     {
@@ -92,8 +91,8 @@ ImageProcessor::applyColorPalette(
                     // update delta
                     delta = length_delta;
                 }
-                // if (delta < threshold)
-                //     break;  // optimization
+                if (delta < threshold)
+                    break;  // optimization
             }
             rgb = result;
         }
