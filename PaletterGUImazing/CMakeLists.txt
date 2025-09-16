@@ -9,6 +9,17 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if (CUDA_FOUND)
+    message(STATUS "CUDA toolkit found.")
+    enable_language(CUDA)
+    set(CMAKE_CUDA_STANDARD 17)
+    set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+elseif(APPLE)
+    message(STATUS "You're so metal :sunglasses:")
+else()
+    message(STATUS "Eat shit and die")
+endif()
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
@@ -54,6 +65,10 @@ else()
             ${PROJECT_SOURCES}
         )
     endif()
+endif()
+
+if(CUDA_FOUND)
+    set_target_properties(PaletterGUImazing PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
 endif()
 
 target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
