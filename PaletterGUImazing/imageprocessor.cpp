@@ -1,12 +1,11 @@
 #include "imageprocessor.h"
 
-#include <functional>
-
 #include <QDebug>
 #include <QImage>
 #include <QPixmap>
 #include <QRgb>
 #include <QtMath>
+#include <functional>
 
 ImageProcessor::ImageProcessor()
 {
@@ -45,79 +44,74 @@ ImageProcessor::fillColorPalette(
     }
 }
 
-void 
+void
 ImageProcessor::applyColorPalette(
-    QImage &image, 
-    QList<QColor>* palette,
-    PaletterUtils::PaletteApplyMode mode
+    QImage &image, QList<QColor> *palette, PaletterUtils::PaletteApplyMode mode
 )
 {
     // TODO:
     // add handling by mode
     // multithread this >?
-    // run this on the GuhPoo with CUDA
+    // run this on the GuhPoo with CUDA (or metal :> )
     // turn this loop bs into a lambda
-    
+
     // stop going through the palette if we're within .05
     float threshold = .1;
     // FIXME: This shit is so fucked...
-    
+
     for (int y = 0; y < image.height(); ++y)
     {
         QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
-        
+
         for (int x = 0; x < image.width(); ++x)
         {
             QRgb &rgb = line[x];
-            float paletter, paletteg, paletteb; 
+            QRgb result = rgb;
+
+            float paletter, paletteg, paletteb;
 
             float delta = 1000.0;
-            
+
+            QColor balls = QColor(rgb);
             for (int i = 0; i < palette->size(); ++i)
 
             {
                 QColor currcolor = QColor(rgb);
                 palette->at(i).getRgbF(&paletter, &paletteg, &paletteb);
-                
+
                 float length_delta = qSqrt(
                     qPow(paletter - currcolor.redF(), 2) +
                     qPow(paletteg - currcolor.greenF(), 2) +
-                    qPow(paletteb - currcolor.blueF(), 2)    
+                    qPow(paletteb - currcolor.blueF(), 2)
                 );
                 if (length_delta < delta)
                 {
                     // this is stupid
-                    rgb = QColor::fromRgbF(
-                            paletter, 
-                            paletteg, 
-                            paletteb
-                    ).rgb();  
+                    result =
+                        QColor::fromRgbF(paletter, paletteg, paletteb).rgb();
                     // update delta
-                    delta = length_delta;  
+                    delta = length_delta;
                 }
-                if (delta < threshold)
-                    break; // optimization
-            }            
+                // if (delta < threshold)
+                //     break;  // optimization
+            }
+            rgb = result;
         }
     }
-    
 }
 
 void
-ImageProcessor::process(QImage& image, std::function<void(QRgb&)> processor)
+ImageProcessor::process(QImage &image, std::function<void(QRgb &)> processor)
 {
-    
     for (int y = 0; y < image.height(); ++y)
     {
         QRgb *line = reinterpret_cast<QRgb *>(image.scanLine(y));
-        
+
         for (int x = 0; x < image.width(); ++x)
         {
             QRgb &rgb = line[x];
-    
-            processor(rgb);
 
+            processor(rgb);
         }
     }
 }
-

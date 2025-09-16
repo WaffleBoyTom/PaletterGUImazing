@@ -16,5 +16,6 @@ in build/Deslktop
 - Export:
   - Json ?
   - Export the image with the palette applied
+- put quantizer on a worker thread :)
 
 ...
