@@ -11,6 +11,8 @@
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
+#define TEST_GPU
+
 ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 {
     // keep in touch with your parent
@@ -179,8 +181,14 @@ ImageViewer::applyPalette(QList<QColor> *palette)
     auto mode = PaletterUtils::PaletteApplyMode(
         myModeDropdown->item()  
     );
-    
-    myImageProcessor.applyColorPalette(image, palette, mode);
+
+#ifdef TEST_GPU
+    myImageProcessor.applyColorPalette(image, palette, mode, 
+                                       PaletterUtils::PaletteProcessorDevice::GPU);
+#else
+    myImageProcessor.applyColorPalette(image, palette, mode, 
+                                       PaletterUtils::PaletteProcessorDevice::CPU);
+#endif
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
 }

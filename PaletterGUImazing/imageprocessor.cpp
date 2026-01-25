@@ -1,4 +1,5 @@
 #include "imageprocessor.h"
+#include "zoom.cuh"
 
 #include <QDebug>
 #include <QImage>
@@ -44,18 +45,13 @@ ImageProcessor::fillColorPalette(
     }
 }
 
-void
-ImageProcessor::applyColorPalette(
-    QImage &image, QList<QColor> *palette, PaletterUtils::PaletteApplyMode mode
+static void
+hostApplyColorPalette(
+    QImage &image, 
+    QList<QColor> *palette,
+    PaletterUtils::PaletteApplyMode mode
 )
 {
-    // TODO:
-    // add handling by mode
-    // multithread this >?
-    // run this on the GuhPoo with CUDA (or metal :> )
-    // turn this loop bs into a lambda
-
-    // stop going through the palette if we're within .05
     float threshold = 0.01;
 
     for (int y = 0; y < image.height(); ++y)
@@ -96,6 +92,84 @@ ImageProcessor::applyColorPalette(
             }
             rgb = result;
         }
+    }
+    
+}
+
+static void
+maxSpeedApplyColorPalette(
+    QImage &image, 
+    QList<QColor> *palette, 
+    PaletterUtils::PaletteApplyMode mode
+)
+{
+    int N = 1<<20;
+    float *x, *y;
+
+    // Allocate Unified Memory – accessible from CPU or GPU
+    // what does that mean, you ask ??
+    // well, if you're an idiot like me you spend 20 minutes printing a float that's not
+    // getting incremented and the reason behind it is because you created an array
+    // on the host device, sent it to cuda, cuda then made a copy on the gpu and 
+    // that memory was never copied back to the cpu...
+    // so either you copy that memory back to host or you use this super fancy
+    // cudaMallocManaged which does that for you
+    // basically i was uploading stuff to the gpu but never downloading it 
+    // because i'm braindead :)
+
+    // most of this code comes from add.cu which is a tutorial I did some time ago
+    // that you can find on nvidia's website, iirc
+    
+    cudaMallocManaged(&x, N * sizeof(float));
+    cudaMallocManaged(&y, N * sizeof(float));
+
+    for (int i = 0; i < N; ++i) 
+    {
+        x[i] = 1.0f;
+        y[i] = 2.0f;
+    }
+    
+    Zoom::test(N, x, y);
+    
+    for (int i = 0; i < 10; ++i) 
+    {
+        qDebug() << y[i];
+    }
+    
+    // Free memory
+    cudaFree(x);
+    cudaFree(y);
+}
+
+
+void
+ImageProcessor::applyColorPalette(
+    QImage &image, 
+    QList<QColor> *palette, 
+    PaletterUtils::PaletteApplyMode mode,
+    PaletterUtils::PaletteProcessorDevice dev
+)
+{
+    // TODO:
+    // add handling by mode
+    // multithread this >?
+    // run this on the GuhPoo with CUDA (or metal :> )
+    // turn this loop bs into a lambda
+
+    // stop going through the palette if we're within .05
+    switch (dev)
+    {
+        case PaletterUtils::PaletteProcessorDevice::CPU:
+        {
+            hostApplyColorPalette(image, palette, mode);
+            break;
+        }
+        case PaletterUtils::PaletteProcessorDevice::GPU:
+        {
+            maxSpeedApplyColorPalette(image, palette, mode);
+            break;
+        }
+        
     }
 }
 

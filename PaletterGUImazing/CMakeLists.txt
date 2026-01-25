@@ -9,18 +9,23 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-if (CUDA_FOUND)
-    message(STATUS "CUDA toolkit found.")
+find_package(CUDAToolkit)
+
+if (CUDAToolkit_FOUND)
+    
+    message(STATUS "CUDA toolkit found at: ${CUDAToolkit_LIBRARY_DIR}")
+    
     enable_language(CUDA)
+    
     set(CMAKE_CUDA_STANDARD 17)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 elseif(APPLE)
     message(STATUS "You're so metal :sunglasses:")
 else()
-    message(STATUS "Eat shit and die")
+    message(STATUS "No CUDA ? ...")
 endif()
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
@@ -42,6 +47,8 @@ set(PROJECT_SOURCES
     sickdropdown.h
     sickslider.cpp
     sickslider.h
+    zoom.cuh # add the cuda stuff, ... I have a feeling this should be behind cuda
+    zoom.cu # found condition otherwise it will not build on ED's machine ?
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -67,11 +74,14 @@ else()
     endif()
 endif()
 
-if(CUDA_FOUND)
-    set_target_properties(PaletterGUImazing PROPERTIES CUDA_SEPARABLE_COMPILATION ON)
-endif()
 
 target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+if (CUDAToolkit_FOUND)
+    
+    target_link_libraries(PaletterGUImazing PRIVATE CUDA::cudart )
+    set_target_properties(PaletterGUImazing PROPERTIES CUDA_ARCHITECTURES native)
+endif()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

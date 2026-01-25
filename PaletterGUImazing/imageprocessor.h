@@ -27,7 +27,8 @@ public:
     void applyColorPalette(
         QImage &image, 
         QList<QColor> *palette,
-        PaletterUtils::PaletteApplyMode mode
+        PaletterUtils::PaletteApplyMode mode,
+        PaletterUtils::PaletteProcessorDevice dev    
     );
 
     void process(

@@ -19,6 +19,13 @@ enum class PaletteGenerationMode
     K_Means
 };
 
+enum class PaletteProcessorDevice
+{
+    CPU = 0,
+    GPU,    
+
+};
+
 
 }// end namespace
 
