@@ -18,4 +18,8 @@ in build/Deslktop
   - Export the image with the palette applied
 - put quantizer on a worker thread :)
 
+So I think the idea behind SickViewer is that I don't like the palettesource argument to ImageViewer 
+so SickViewer would be the base class and then we have two children classes for the two different viewers
+I just don't want a ton of bramching logicx in image viewer but maybe three classes is overkill ? mmhhh
+
 ...
