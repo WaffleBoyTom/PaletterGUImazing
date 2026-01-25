@@ -22,4 +22,11 @@ So I think the idea behind SickViewer is that I don't like the palettesource arg
 so SickViewer would be the base class and then we have two children classes for the two different viewers
 I just don't want a ton of bramching logicx in image viewer but maybe three classes is overkill ? mmhhh
 
+
+IF THIS DOES NOT COMPILE TOM YOU IDIOT
+OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE
+QTCREATOR WILL JUST COMPILE THAT SHIT FOR YOU
+WE HATE GUIS BUT DAMN THIS SHIT DID THE HOLD ME NOW
+CUZ I WAS 6 FEET FROM THE EDGE AND I WAS THINKING
+MAYBE SIX FEET AINT SO FAR DOWN
 ...
