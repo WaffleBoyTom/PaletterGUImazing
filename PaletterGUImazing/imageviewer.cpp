@@ -11,7 +11,7 @@
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-#define TEST_GPU
+// #define TEST_GPU
 
 ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 {
@@ -157,7 +157,15 @@ ImageViewer::processImage()
 
     QImage image = getImage();
     // myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
-    myColorPalette = Quantizer(myPaletteCount).generatePalette(image);
+    // myColorPalette = Quantizer(myPaletteCount).generatePalette(image);
+    
+    // FIXME: This is a horrible hack to keep the palette at a size of 50
+    // and only copy what was asked for..
+    QVector<QColor> new_palette = Quantizer(myPaletteCount).generatePalette(image);
+    for (int i = 0; i < myPaletteCount; ++i)
+    {
+        myColorPalette[i] = new_palette[i];
+    }
     qDebug() << "filled color palette";
 
     // override orig with processed to make sure

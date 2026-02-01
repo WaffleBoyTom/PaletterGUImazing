@@ -97,7 +97,7 @@ hostApplyColorPalette(
 }
 
 static void
-maxSpeedApplyColorPalette(
+testMaxSpeedApplyColorPalette(
     QImage &image, 
     QList<QColor> *palette, 
     PaletterUtils::PaletteApplyMode mode
@@ -139,6 +139,56 @@ maxSpeedApplyColorPalette(
     // Free memory
     cudaFree(x);
     cudaFree(y);
+}
+
+static void
+maxSpeedApplyColorPalette(
+    QImage &image, 
+    const QList<QColor> *palette, 
+    const PaletterUtils::PaletteApplyMode mode
+)
+{
+    int width = image.width();
+    int height = image.height();
+    int pixel_count = width * height;
+    
+    QVector<float3> v_palette;
+    v_palette.reserve(palette->size());
+    
+    for (int i = 0; i < palette->size(); ++i)
+    {
+        
+        float paletter, paletteg, paletteb;
+        
+        palette->at(i).getRgbF(&paletter, &paletteg, &paletteb);
+        
+        v_palette.push_back(make_float3(paletter, paletteg, paletteb));
+    }
+    
+    float3 *cu_palette;
+    cudaMalloc(&cu_palette, v_palette.size() * sizeof(float3));
+    
+    cudaMemcpy(cu_palette, v_palette.data(), v_palette.size() * sizeof(float3), 
+               cudaMemcpyHostToDevice);
+
+    uchar4 *cu_image;
+    cudaMalloc(&cu_image, pixel_count * sizeof(uchar4));
+    cudaMemcpy(cu_image, image.bits(), pixel_count * sizeof(uchar4), 
+               cudaMemcpyHostToDevice);
+
+
+    qDebug() << "Starting Cuda !";
+    Zoom::applyPaletteByLength(cu_image, width, height, cu_palette, 
+                               v_palette.size());  
+
+    cudaMemcpy(image.bits(), cu_image, 
+               pixel_count * sizeof(uchar4), 
+               cudaMemcpyDeviceToHost);
+    
+    qDebug() << "Cuda is done, son !";
+
+    cudaFree(cu_palette);
+    cudaFree(cu_image);  
 }
 
 
