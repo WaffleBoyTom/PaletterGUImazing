@@ -32,6 +32,7 @@ public slots:
     void setPaletteCount(int count);
     void drawPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
+    void logMeHard(const QString msg);
 
 private:
     QLabel *paletterLabel;
@@ -40,6 +41,7 @@ private:
     ImageViewer *myImgViewer;
     PaletteViewer *myPaletteViewer;
     ImageViewer *myConvertImgViewer;
+    QLabel *myLogger;
 };
 
 #endif  // PALETTERWINDOW_H

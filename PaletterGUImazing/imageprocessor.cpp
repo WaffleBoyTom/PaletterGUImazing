@@ -171,13 +171,14 @@ maxSpeedApplyColorPalette(
     cudaMemcpy(cu_palette, v_palette.data(), v_palette.size() * sizeof(float3), 
                cudaMemcpyHostToDevice);
 
+    // FIXME: I think this is wrong because we load images as
+    // RGB not RGBA ..
     uchar4 *cu_image;
     cudaMalloc(&cu_image, pixel_count * sizeof(uchar4));
     cudaMemcpy(cu_image, image.bits(), pixel_count * sizeof(uchar4), 
                cudaMemcpyHostToDevice);
 
 
-    qDebug() << "Starting Cuda !";
     Zoom::applyPaletteByLength(cu_image, width, height, cu_palette, 
                                v_palette.size());  
 
@@ -185,8 +186,6 @@ maxSpeedApplyColorPalette(
                pixel_count * sizeof(uchar4), 
                cudaMemcpyDeviceToHost);
     
-    qDebug() << "Cuda is done, son !";
-
     cudaFree(cu_palette);
     cudaFree(cu_image);  
 }

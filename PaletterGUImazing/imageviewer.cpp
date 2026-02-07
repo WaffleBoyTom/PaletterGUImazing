@@ -4,7 +4,6 @@
 #include <QtWidgets>
 
 #include "imageprocessor.h"
-#include "paletterutils.h"
 #include "quantizer.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
@@ -45,6 +44,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // FIXME : we want a base class for these two viewers
     // with overrides so we don't do this nasty if stuff ?
     // FIXME : stuff this in a horizontal layout    
+    auto dropdowns = new QHBoxLayout(this);
+    
     myModeDropdown = new SickDropDown(this, tr("Mode"));
     if (paletteSource)
     {
@@ -75,6 +76,15 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
         myModeDropdown->setMenuItem(tr("Hue"));
         myModeDropdown->setMenuItem(tr("Saturation"));
     }
+
+    myDeviceDropdown = new SickDropDown(this, tr("Device"));
+    myDeviceDropdown->setMenuItem(tr("CPU"));
+
+#ifdef Q_OS_MACOS
+    myDeviceDropdown->setMenuItem(tr("Metal"));
+#else
+    myDeviceDropdown->setMenuItem(tr("CUDA"));
+#endif
     // init ImageProcessor
     myImageProcessor = ImageProcessor();
 
@@ -88,7 +98,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myLayout->addWidget(myLineEdit);
     myLayout->addWidget(myNautilusButton);
     myLayout->addWidget(myProcessorButton);
-    myLayout->addWidget(myModeDropdown);
+    dropdowns->addWidget(myModeDropdown);
+    dropdowns->addWidget(myDeviceDropdown);
+    myLayout->addLayout(dropdowns);
     myLayout->addWidget(myImageHolder);
 }
 
@@ -111,11 +123,12 @@ ImageViewer::openNautilus()
         return;
 
     // print selected file to console
-    qDebug() << fileName;
+    emit tellBossToLog("Loaded Image :\n");
+    emit tellBossToLog(fileName + '\n');
 
     if (!loadImage(&fileName))
     {
-        qDebug() << "Failed to load image";
+        emit tellBossToLog("Failed to load image");
         QMessageBox::information(
             this,
             QGuiApplication::applicationDisplayName(), /* title */
@@ -166,7 +179,7 @@ ImageViewer::processImage()
     {
         myColorPalette[i] = new_palette[i];
     }
-    qDebug() << "filled color palette";
+    emit tellBossToLog("filled color palette\n");
 
     // override orig with processed to make sure
     // result stays the same when we resize
@@ -185,18 +198,24 @@ ImageViewer::askForPalette()
 void
 ImageViewer::applyPalette(QList<QColor> *palette)
 {
+    using namespace PaletterUtils;
     QImage image = getImage();
-    auto mode = PaletterUtils::PaletteApplyMode(
-        myModeDropdown->item()  
-    );
+    auto mode = PaletteApplyMode(myModeDropdown->item());
 
-#ifdef TEST_GPU
-    myImageProcessor.applyColorPalette(image, palette, mode, 
-                                       PaletterUtils::PaletteProcessorDevice::GPU);
-#else
-    myImageProcessor.applyColorPalette(image, palette, mode, 
-                                       PaletterUtils::PaletteProcessorDevice::CPU);
-#endif
+    auto device = PaletteProcessorDevice(myDeviceDropdown->item());
+
+    // FIXME : logging here does not work ?
+
+    emit tellBossToLog("Applying color palette :\n");
+    
+    QString dev_str(tr("Using: "));
+    dev_str.append(getDeviceStr(device));
+    emit tellBossToLog(dev_str);
+        
+    myImageProcessor.applyColorPalette(image, palette, mode, device);
+
+    emit tellBossToLog("Done applying color palette: \n");
+    
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
 }

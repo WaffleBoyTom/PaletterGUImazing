@@ -36,6 +36,7 @@ public:
 signals:
 
     void tellBossAboutPaletteFill(QList<QColor> *palette);
+    void tellBossToLog(QString logmsg);
     void askBossForPalette();
 
 private slots:
@@ -61,7 +62,9 @@ private slots:
     QPixmap resizeImage(QPixmap *image);
 
 private:
+    
     QVBoxLayout *myLayout;
+    
     QLineEdit *myLineEdit;
 
     QLabel *myImageHolder;
@@ -80,6 +83,9 @@ private:
 
     // dropdown for processing method
     SickDropDown *myModeDropdown;
+
+    // dropdown for specifying device
+    SickDropDown *myDeviceDropdown;
 
     // pointer to paletter window
     QWidget *myCreator;

@@ -26,6 +26,20 @@ enum class PaletteProcessorDevice
 
 };
 
+inline const char *
+getDeviceStr(PaletteProcessorDevice device)
+{
+    switch (device)
+    {
+        case PaletteProcessorDevice::CPU: return "CPU";
+        case PaletteProcessorDevice::GPU: return "GPU";
+        
+    }
+    Q_ASSERT("How did we get here !!");
+    
+    return "CPU";
+}
+
 
 }// end namespace
 

@@ -73,6 +73,15 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
+    myLogger = new QLabel(tr("Captain's Log: \n"), this);
+    connect(
+        myImgViewer,
+        &ImageViewer::tellBossToLog,
+        this,
+        &PaletterGUI::logMeHard
+    );
+    mainLayout->addWidget(myLogger);
+    
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
 }
@@ -108,4 +117,10 @@ PaletterGUI::applyPaletteToSecondViewer()
         myImgViewer->getPalette()
     );
 
+}
+
+void 
+PaletterGUI::logMeHard(const QString msg)
+{
+    myLogger->setText(myLogger->text() + msg);
 }
