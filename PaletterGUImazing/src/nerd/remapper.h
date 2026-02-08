@@ -23,7 +23,7 @@ public:
     void remapHost(QImage &image) const;
 
 private:
-    [[gnu::unused]] Colorspace myColorspace;
+    Colorspace myColorspace;
     const QList<QColor> &myPalette;
 };
 

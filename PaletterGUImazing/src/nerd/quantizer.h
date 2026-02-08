@@ -62,7 +62,7 @@ public:
 
 private:
     int myPaletteSize;
-    [[gnu::unused]] Method myMethod;
+    Method myMethod;
 };
 
 #endif

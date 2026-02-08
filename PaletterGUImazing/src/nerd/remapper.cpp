@@ -6,20 +6,23 @@
 #include <QRgb>
 #include <QtMath>
 
-// TODO: To avoid ifdef-ing all over the place we need to create a compute
-// library that abstracts platform-specific backends. So then the image
-// processor would only use the compute library, which would internally select
-// CUDA, Metal, etc. Epic ASCII chart:
-//
-//                                 CUDA
-//                                /
-// Image processor <- GPU compute - Metal
-//             \                  \
-//              \                   etc.
-//               CPU compute
-//
-// It would be a bunch of work but it would be a neat sub-project. But for now
-// ifdef spam is fine
+/*
+ TODO: To avoid ifdef-ing all over the place we need to create a compute
+ library that abstracts platform-specific backends. So then the image
+ processor would only use the compute library, which would internally select
+ CUDA, Metal, etc. Epic ASCII chart:
+
+                                 CUDA
+                                /
+ Image processor <- GPU compute - Metal
+             \                  \
+              \                   etc.
+               CPU compute
+
+ It would be a bunch of work but it would be a neat sub-project. But for now
+ ifdef spam is fine
+*/
+
 #ifdef USE_CUDA
 #include "zoom.cuh"
 #endif
