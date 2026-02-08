@@ -62,7 +62,7 @@ public:
 
 private:
     int myPaletteSize;
-    Method myMethod;
+    [[maybe_unused]] Method myMethod;
 };
 
 #endif
