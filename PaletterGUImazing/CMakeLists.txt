@@ -17,8 +17,7 @@ set(CMAKE_CXX_FLAGS
     -pedantic \
     -Wall \
     -Werror \
-    -Wpedantic \
-    -Wno-ignored-attributes"
+    -Wpedantic"
 )
 
 # Project
