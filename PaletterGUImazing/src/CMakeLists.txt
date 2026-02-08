@@ -8,14 +8,11 @@ set(PROJECT_SOURCES
     paletteviewer.h
     paletterow.cpp
     paletterow.h
-    sickdropdown.cpp
-    sickdropdown.h
-    sickslider.cpp
-    sickslider.h
 )
 
 add_subdirectory("nerd")
 add_subdirectory("baller")
+add_subdirectory("sick")
 
 # Create the executable target
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -41,7 +38,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(PaletterGUImazing PUBLIC baller)
+target_link_libraries(PaletterGUImazing PUBLIC baller sick)
 
 target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 

@@ -1,4 +1,4 @@
-#include "sickviewer.h"
+#include "sick_viewer.h"
 
 #include <QMessageBox>
 #include <QtWidgets>

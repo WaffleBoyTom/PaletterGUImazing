@@ -1,4 +1,4 @@
-#include "sickdropdown.h"
+#include "sick_dropdown.h"
 
 #include <QString>
 #include <QtWidgets>
@@ -16,8 +16,8 @@ SickDropDown::SickDropDown(QWidget *parent, QString label)
     // keep in touch with your parent
     myCreator = parent;
     myLayout = new QHBoxLayout(this);
-	myLabel = new QLabel(label, this);
-	myMenu = new QComboBox(this);
+    myLabel = new QLabel(label, this);
+    myMenu = new QComboBox(this);
     myLayout->addWidget(myLabel);
     myLayout->addWidget(myMenu);
 }
@@ -25,11 +25,11 @@ SickDropDown::SickDropDown(QWidget *parent, QString label)
 void
 SickDropDown::setMenuItem(QString item)
 {
-	myMenu->addItem(item);
+    myMenu->addItem(item);
 }
 
 int
 SickDropDown::item()
 {
-	return myMenu->currentIndex();
+    return myMenu->currentIndex();
 }

@@ -6,7 +6,7 @@
 #include <QWidget>
 
 #include "image_processor.h"
-#include "sickdropdown.h"
+#include "sick_dropdown.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;

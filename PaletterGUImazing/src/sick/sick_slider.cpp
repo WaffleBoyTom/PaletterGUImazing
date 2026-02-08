@@ -1,4 +1,4 @@
-#include "sickslider.h"
+#include "sick_slider.h"
 
 #include <QString>
 #include <QtWidgets>

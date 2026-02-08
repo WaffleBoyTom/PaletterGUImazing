@@ -6,7 +6,7 @@
 #include <QWidget>
 
 #include "paletterow.h"
-#include "sickslider.h"
+#include "sick_slider.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;

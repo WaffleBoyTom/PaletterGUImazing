@@ -8,7 +8,7 @@ class QWidget;
 QT_END_NAMESPACE
 
 void
-qDebugGeometry(const QWidget *w, const std::string &name = "")
+sickDebugGeometry(const QWidget *w, const std::string &name = "")
 {
     if (!name.empty())
         qDebug() << name;
@@ -27,7 +27,7 @@ qDebugGeometry(const QWidget *w, const std::string &name = "")
 }
 
 void
-qDebugSizing(const QWidget *w, const std::string &name = "")
+sickDebugSizing(const QWidget *w, const std::string &name = "")
 {
     if (!name.empty())
         qDebug() << name;
@@ -52,7 +52,7 @@ qDebugSizing(const QWidget *w, const std::string &name = "")
 }
 
 void
-qDebugLayout(const QWidget *w, const std::string &name = "")
+sickDebugLayout(const QWidget *w, const std::string &name = "")
 {
     if (!name.empty())
         qDebug() << name;

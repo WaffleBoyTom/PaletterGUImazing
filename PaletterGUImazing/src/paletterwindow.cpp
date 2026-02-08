@@ -64,24 +64,20 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         myConvertImgViewer,
         &ImageViewer::askBossForPalette,
         this,
-        &PaletterGUI::applyPaletteToSecondViewer  
+        &PaletterGUI::applyPaletteToSecondViewer
     );
 
-
     drawPalette(myImgViewer->getPalette());
-    
+
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
     myLogger = new QLabel(tr("Captain's Log: \n"), this);
     connect(
-        myImgViewer,
-        &ImageViewer::tellBossToLog,
-        this,
-        &PaletterGUI::logMeHard
+        myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
     mainLayout->addWidget(myLogger);
-    
+
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
 }
@@ -93,7 +89,7 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
     myImgViewer->handleResizing();
-    // we have myConvertImgViewer, 
+    // we have myConvertImgViewer,
     // it probably shoud be resized here
 }
 
@@ -112,14 +108,10 @@ PaletterGUI::drawPalette(QList<QColor> *palette)
 void
 PaletterGUI::applyPaletteToSecondViewer()
 {
-
-    myConvertImgViewer->applyPalette(
-        myImgViewer->getPalette()
-    );
-
+    myConvertImgViewer->applyPalette(myImgViewer->getPalette());
 }
 
-void 
+void
 PaletterGUI::logMeHard(const QString msg)
 {
     myLogger->setText(myLogger->text() + msg);
