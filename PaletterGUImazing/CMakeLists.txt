@@ -79,7 +79,4 @@ set(CMAKE_AUTORCC ON)
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-set(INCLUDE_DIRS "src")
-include_directories(${INCLUDE_DIRS})
-
 add_subdirectory(src)

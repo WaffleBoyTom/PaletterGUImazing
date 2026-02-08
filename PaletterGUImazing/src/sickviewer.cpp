@@ -1,8 +1,9 @@
 #include "sickviewer.h"
+
 #include <QMessageBox>
 #include <QtWidgets>
 
-#include "imageprocessor.h"
+#include "image_processor.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
@@ -12,7 +13,7 @@ SickViewer::SickViewer(QWidget *parent)
 {
     // keep in touch with your parent
     myCreator = parent;
-	initialize();
+    initialize();
     myProcessorButton = new QPushButton(tr("Process Image"), this);
     connect(
         myProcessorButton,
@@ -83,7 +84,6 @@ SickViewer::getImage()
     return myLoadedImage.toImage();
 }
 
-
 void
 SickViewer::askForPalette()
 {
@@ -117,7 +117,6 @@ SickViewer::handleResizing()
     myImageHolder->setPixmap(scaled);
 }
 
-
 QList<QColor> *
 SickViewer::getPalette()
 {
@@ -138,7 +137,6 @@ SickViewer::layout()
 void
 SickViewer::initialize()
 {
-
     // main layout
     myLayout = new QVBoxLayout(this);
 
@@ -170,5 +168,3 @@ SickViewer::initialize()
     QList<QColor> default_palette(50, QColor(0, 0, 0));
     myColorPalette = default_palette;
 }
-
-

@@ -175,7 +175,8 @@ sortByChannel(QSpan<QColor> colors, const Channel chan)
 
 }
 
-Quantizer::Quantizer(const int palette_size) : myPaletteSize(palette_size)
+Quantizer::Quantizer(int palette_size, Method method)
+    : myPaletteSize(palette_size), myMethod(method)
 {
 }
 

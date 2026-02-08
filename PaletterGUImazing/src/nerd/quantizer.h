@@ -8,7 +8,13 @@
 class Quantizer
 {
 public:
-    Quantizer(const int palette_size);
+    enum class Method
+    {
+        MedianCut = 0,
+        K_Means
+    };
+
+    Quantizer(int palette_size, Method method);
     ~Quantizer() = default;
 
     // Generates a palette for the given image using median cut.
@@ -56,6 +62,7 @@ public:
 
 private:
     int myPaletteSize;
+    [[gnu::unused]] Method myMethod;
 };
 
 #endif

@@ -1,50 +1,21 @@
+set(PROJECT_SOURCES
+    main.cpp
+    paletterwindow.cpp
+    paletterwindow.h
+    imageviewer.cpp
+    imageviewer.h
+    paletteviewer.cpp
+    paletteviewer.h
+    paletterow.cpp
+    paletterow.h
+    sickdropdown.cpp
+    sickdropdown.h
+    sickslider.cpp
+    sickslider.h
+)
 
-# Sources
-if (USE_CUDA)
-    set(PROJECT_SOURCES
-        main.cpp
-        paletterwindow.cpp
-        paletterwindow.h
-        imageviewer.cpp
-        imageviewer.h
-        imageprocessor.cpp
-        imageprocessor.h
-        quantizer.h
-        quantizer.cpp
-        paletteviewer.cpp
-        paletteviewer.h
-        paletterow.cpp
-        paletterow.h
-        paletterutils.h
-        sickdropdown.cpp
-        sickdropdown.h
-        sickslider.cpp
-        sickslider.h
-        zoom.cuh
-        zoom.cu
-    )
-else()
-    set(PROJECT_SOURCES
-        main.cpp
-        paletterwindow.cpp
-        paletterwindow.h
-        imageviewer.cpp
-        imageviewer.h
-        imageprocessor.cpp
-        imageprocessor.h
-        quantizer.h
-        quantizer.cpp
-        paletteviewer.cpp
-        paletteviewer.h
-        paletterow.cpp
-        paletterow.h
-        paletterutils.h
-        sickdropdown.cpp
-        sickdropdown.h
-        sickslider.cpp
-        sickslider.h
-    )
-endif()
+add_subdirectory("nerd")
+add_subdirectory("baller")
 
 # Create the executable target
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -70,6 +41,8 @@ else()
     endif()
 endif()
 
+target_link_libraries(PaletterGUImazing PUBLIC baller)
+
 target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 if(USE_CUDA)
@@ -83,6 +56,8 @@ if(APPLE)
     target_link_libraries(PaletterGUImazing PRIVATE OpenGL::GL)
     target_compile_options(PaletterGUImazing PRIVATE -Wno-deprecated-declarations)
 endif()
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "imageprocessor.h"
+#include "image_processor.h"
 #include "sickdropdown.h"
 
 QT_BEGIN_NAMESPACE
@@ -54,7 +54,7 @@ private slots:
     void processImage();
 
     void askForPalette();
-    
+
     // applies palette to image
     // void applyPalette();
 
@@ -62,9 +62,8 @@ private slots:
     QPixmap resizeImage(QPixmap *image);
 
 private:
-    
     QVBoxLayout *myLayout;
-    
+
     QLineEdit *myLineEdit;
 
     QLabel *myImageHolder;

@@ -3,8 +3,7 @@
 #include <QMessageBox>
 #include <QtWidgets>
 
-#include "imageprocessor.h"
-#include "quantizer.h"
+#include "image_processor.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
@@ -43,9 +42,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // between the two image viewers
     // FIXME : we want a base class for these two viewers
     // with overrides so we don't do this nasty if stuff ?
-    // FIXME : stuff this in a horizontal layout    
+    // FIXME : stuff this in a horizontal layout
     auto dropdowns = new QHBoxLayout(this);
-    
+
     myModeDropdown = new SickDropDown(this, tr("Mode"));
     if (paletteSource)
     {
@@ -59,7 +58,6 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
         );
         myModeDropdown->setMenuItem(tr("Median Cut"));
         myModeDropdown->setMenuItem(tr("K-Means"));
-    
     }
     else
     {
@@ -171,10 +169,12 @@ ImageViewer::processImage()
     QImage image = getImage();
     // myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
     // myColorPalette = Quantizer(myPaletteCount).generatePalette(image);
-    
+
     // FIXME: This is a horrible hack to keep the palette at a size of 50
     // and only copy what was asked for..
-    QVector<QColor> new_palette = Quantizer(myPaletteCount).generatePalette(image);
+    QVector<QColor> new_palette = myImageProcessor.createColorPalette(
+        image, myPaletteCount, Quantizer::Method::MedianCut
+    );
     for (int i = 0; i < myPaletteCount; ++i)
     {
         myColorPalette[i] = new_palette[i];
@@ -198,24 +198,23 @@ ImageViewer::askForPalette()
 void
 ImageViewer::applyPalette(QList<QColor> *palette)
 {
-    using namespace PaletterUtils;
     QImage image = getImage();
-    auto mode = PaletteApplyMode(myModeDropdown->item());
+    auto colorspace = Remapper::Colorspace(myModeDropdown->item());
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
 
     // FIXME : logging here does not work ?
 
     emit tellBossToLog("Applying color palette :\n");
-    
+
     QString dev_str(tr("Using: "));
     dev_str.append(getDeviceStr(device));
     emit tellBossToLog(dev_str);
-        
-    myImageProcessor.applyColorPalette(image, palette, mode, device);
+
+    myImageProcessor.applyColorPalette(image, palette, device, colorspace);
 
     emit tellBossToLog("Done applying color palette: \n");
-    
+
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
 }

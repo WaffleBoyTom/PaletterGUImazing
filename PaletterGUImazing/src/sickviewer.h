@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "imageprocessor.h"
+#include "image_processor.h"
 #include "sickdropdown.h"
 
 QT_BEGIN_NAMESPACE
