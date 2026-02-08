@@ -259,7 +259,6 @@ Quantizer::generatePalette(const QImage &image) const
     QVector<QColor> palette;
     for (int i = 0; i < buckets.size() - 1; ++i)
     {
-        const Bucket &bucket = buckets[i];
         const std::size_t start = buckets[i].start;
         const std::size_t len = buckets[i + 1].start - start;
         QSpan<const QColor> bucket_colors = colors.subspan(start, len);

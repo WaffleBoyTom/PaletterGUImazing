@@ -1,7 +1,6 @@
 #ifndef SICKVIEWER_H
 #define SICKVIEWER_H
 
-
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
@@ -74,9 +73,6 @@ private:
 
     // deals with processing the pixmap
     ImageProcessor myImageProcessor;
-
 };
-
-#endif
 
 #endif

@@ -1,5 +1,4 @@
 #include "imageprocessor.h"
-#include "zoom.cuh"
 
 #include <QDebug>
 #include <QImage>
@@ -7,6 +6,24 @@
 #include <QRgb>
 #include <QtMath>
 #include <functional>
+
+// TODO: To avoid ifdef-ing all over the place we need to create a compute
+// library that abstracts platform-specific backends. So then the image
+// processor would only use the compute library, which would internally select
+// CUDA, Metal, etc. Epic ASCII chart:
+//
+//                                 CUDA
+//                                /
+// Image processor <- GPU compute - Metal
+//             \                  \
+//              \                   etc.
+//               CPU compute
+//
+// It would be a bunch of work but it would be a neat sub-project. But for now
+// ifdef spam is fine
+#ifdef USE_CUDA
+#include "zoom.cuh"
+#endif
 
 ImageProcessor::ImageProcessor()
 {
@@ -47,9 +64,9 @@ ImageProcessor::fillColorPalette(
 
 static void
 hostApplyColorPalette(
-    QImage &image, 
-    QList<QColor> *palette,
-    PaletterUtils::PaletteApplyMode mode
+    QImage &image,
+    const QList<QColor> *palette,
+    const PaletterUtils::PaletteApplyMode mode
 )
 {
     float threshold = 0.01;
@@ -67,7 +84,6 @@ hostApplyColorPalette(
 
             float delta = 1000.0;
 
-            QColor balls = QColor(rgb);
             for (int i = 0; i < palette->size(); ++i)
 
             {
@@ -93,108 +109,124 @@ hostApplyColorPalette(
             rgb = result;
         }
     }
-    
 }
 
+#ifdef USE_CUDA
 static void
 testMaxSpeedApplyColorPalette(
-    QImage &image, 
-    QList<QColor> *palette, 
-    PaletterUtils::PaletteApplyMode mode
+    QImage &image, QList<QColor> *palette, PaletterUtils::PaletteApplyMode mode
 )
 {
-    int N = 1<<20;
+    int N = 1 << 20;
     float *x, *y;
 
     // Allocate Unified Memory – accessible from CPU or GPU
     // what does that mean, you ask ??
-    // well, if you're an idiot like me you spend 20 minutes printing a float that's not
-    // getting incremented and the reason behind it is because you created an array
-    // on the host device, sent it to cuda, cuda then made a copy on the gpu and 
-    // that memory was never copied back to the cpu...
-    // so either you copy that memory back to host or you use this super fancy
+    // well, if you're an idiot like me you spend 20 minutes printing a float
+    // that's not getting incremented and the reason behind it is because you
+    // created an array on the host device, sent it to cuda, cuda then made a
+    // copy on the gpu and that memory was never copied back to the cpu... so
+    // either you copy that memory back to host or you use this super fancy
     // cudaMallocManaged which does that for you
-    // basically i was uploading stuff to the gpu but never downloading it 
+    // basically i was uploading stuff to the gpu but never downloading it
     // because i'm braindead :)
 
-    // most of this code comes from add.cu which is a tutorial I did some time ago
-    // that you can find on nvidia's website, iirc
-    
+    // most of this code comes from add.cu which is a tutorial I did some time
+    // ago that you can find on nvidia's website, iirc
+
     cudaMallocManaged(&x, N * sizeof(float));
     cudaMallocManaged(&y, N * sizeof(float));
 
-    for (int i = 0; i < N; ++i) 
+    for (int i = 0; i < N; ++i)
     {
         x[i] = 1.0f;
         y[i] = 2.0f;
     }
-    
+
     Zoom::test(N, x, y);
-    
-    for (int i = 0; i < 10; ++i) 
+
+    for (int i = 0; i < 10; ++i)
     {
         qDebug() << y[i];
     }
-    
+
     // Free memory
     cudaFree(x);
     cudaFree(y);
 }
+#endif
 
 static void
 maxSpeedApplyColorPalette(
-    QImage &image, 
-    const QList<QColor> *palette, 
+    QImage &image,
+    const QList<QColor> *palette,
     const PaletterUtils::PaletteApplyMode mode
 )
 {
+#ifdef USE_CUDA
     int width = image.width();
     int height = image.height();
     int pixel_count = width * height;
-    
+
     QVector<float3> v_palette;
     v_palette.reserve(palette->size());
-    
+
     for (int i = 0; i < palette->size(); ++i)
     {
-        
         float paletter, paletteg, paletteb;
-        
+
         palette->at(i).getRgbF(&paletter, &paletteg, &paletteb);
-        
+
         v_palette.push_back(make_float3(paletter, paletteg, paletteb));
     }
-    
+
     float3 *cu_palette;
     cudaMalloc(&cu_palette, v_palette.size() * sizeof(float3));
-    
-    cudaMemcpy(cu_palette, v_palette.data(), v_palette.size() * sizeof(float3), 
-               cudaMemcpyHostToDevice);
+
+    cudaMemcpy(
+        cu_palette,
+        v_palette.data(),
+        v_palette.size() * sizeof(float3),
+        cudaMemcpyHostToDevice
+    );
 
     // FIXME: I think this is wrong because we load images as
     // RGB not RGBA ..
     uchar4 *cu_image;
     cudaMalloc(&cu_image, pixel_count * sizeof(uchar4));
-    cudaMemcpy(cu_image, image.bits(), pixel_count * sizeof(uchar4), 
-               cudaMemcpyHostToDevice);
+    cudaMemcpy(
+        cu_image,
+        image.bits(),
+        pixel_count * sizeof(uchar4),
+        cudaMemcpyHostToDevice
+    );
 
+    Zoom::applyPaletteByLength(
+        cu_image, width, height, cu_palette, v_palette.size()
+    );
 
-    Zoom::applyPaletteByLength(cu_image, width, height, cu_palette, 
-                               v_palette.size());  
+    cudaMemcpy(
+        image.bits(),
+        cu_image,
+        pixel_count * sizeof(uchar4),
+        cudaMemcpyDeviceToHost
+    );
 
-    cudaMemcpy(image.bits(), cu_image, 
-               pixel_count * sizeof(uchar4), 
-               cudaMemcpyDeviceToHost);
-    
     cudaFree(cu_palette);
-    cudaFree(cu_image);  
-}
+    cudaFree(cu_image);
 
+    // TODO: #elif USE_METAL
+
+#else
+    // Just forward to CPU processor.
+    hostApplyColorPalette(image, palette, mode);
+#endif
+}
 
 void
 ImageProcessor::applyColorPalette(
-    QImage &image, 
-    QList<QColor> *palette, 
+    QImage &image,
+    QList<QColor> *palette,
     PaletterUtils::PaletteApplyMode mode,
     PaletterUtils::PaletteProcessorDevice dev
 )
@@ -208,17 +240,16 @@ ImageProcessor::applyColorPalette(
     // stop going through the palette if we're within .05
     switch (dev)
     {
-        case PaletterUtils::PaletteProcessorDevice::CPU:
-        {
-            hostApplyColorPalette(image, palette, mode);
-            break;
-        }
-        case PaletterUtils::PaletteProcessorDevice::GPU:
-        {
-            maxSpeedApplyColorPalette(image, palette, mode);
-            break;
-        }
-        
+    case PaletterUtils::PaletteProcessorDevice::CPU:
+    {
+        hostApplyColorPalette(image, palette, mode);
+        break;
+    }
+    case PaletterUtils::PaletteProcessorDevice::GPU:
+    {
+        maxSpeedApplyColorPalette(image, palette, mode);
+        break;
+    }
     }
 }
 
