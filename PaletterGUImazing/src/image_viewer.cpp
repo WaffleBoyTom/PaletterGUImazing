@@ -199,7 +199,7 @@ void
 ImageViewer::applyPalette(QList<QColor> *palette)
 {
     QImage image = getImage();
-    auto colorspace = Remapper::Colorspace(myModeDropdown->item());
+    auto method = Remapper::CompareMethod(myModeDropdown->item());
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
 
@@ -211,7 +211,7 @@ ImageViewer::applyPalette(QList<QColor> *palette)
     dev_str.append(getDeviceStr(device));
     emit tellBossToLog(dev_str);
 
-    myImageProcessor.applyColorPalette(image, palette, device, colorspace);
+    myImageProcessor.applyColorPalette(image, palette, device, method);
 
     emit tellBossToLog("Done applying color palette: \n");
 

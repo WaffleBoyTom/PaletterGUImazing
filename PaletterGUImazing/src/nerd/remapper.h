@@ -9,7 +9,7 @@
 class Remapper
 {
 public:
-    enum class Colorspace
+    enum class CompareMethod
     {
         Distance = 0,
         Luminance,
@@ -17,13 +17,13 @@ public:
         Saturation
     };
 
-    Remapper(Colorspace colorspace, const QList<QColor> &palette);
+    Remapper(CompareMethod method, const QList<QColor> &palette);
 
     void remap(QImage &image) const;
     void remapHost(QImage &image) const;
 
 private:
-    Colorspace myColorspace;
+    CompareMethod myCompareMethod;
     const QList<QColor> &myPalette;
 };
 

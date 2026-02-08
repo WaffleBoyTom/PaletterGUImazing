@@ -57,7 +57,7 @@ ImageProcessor::applyColorPalette(
     QImage &image,
     QList<QColor> *palette,
     PaletteProcessorDevice dev,
-    Remapper::Colorspace colorspace
+    Remapper::CompareMethod method
 )
 {
     // TODO:
@@ -69,7 +69,7 @@ ImageProcessor::applyColorPalette(
     if (palette == nullptr)
         return;
 
-    Remapper remapper(colorspace, *palette);
+    Remapper remapper(method, *palette);
 
     // stop going through the palette if we're within .05
     switch (dev)

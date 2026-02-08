@@ -27,15 +27,15 @@
 #include "zoom.cuh"
 #endif
 
-Remapper::Remapper(Colorspace colorspace, const QList<QColor> &palette)
-    : myColorspace(colorspace), myPalette(palette)
+Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
+    : myCompareMethod(method), myPalette(palette)
 {
 }
 
 #ifdef USE_CUDA
 static void
 testMaxSpeedApplyColorPalette(
-    QImage &image, QList<QColor> *palette, PaletterUtils::PaletteApplyMode mode
+    QImage &image, QList<QColor> *palette, Remapper::CompareMethod method
 )
 {
     int N = 1 << 20;

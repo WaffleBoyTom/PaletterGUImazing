@@ -14,14 +14,7 @@
 class ImageProcessor
 {
 public:
-    enum class ApplyMode
-    {
-        Distance = 0,
-        Luminance,
-        Hue,
-        Saturation
-    };
-
+    
     ImageProcessor();
 
     // removes green component from an image
@@ -40,7 +33,7 @@ public:
         QImage &image,
         QList<QColor> *palette,
         PaletteProcessorDevice dev,
-        Remapper::Colorspace colorspace
+        Remapper::CompareMethod method
     );
 
     void process(QImage &image, std::function<void(QRgb &)> processor);
