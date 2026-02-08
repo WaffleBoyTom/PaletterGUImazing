@@ -1,6 +1,6 @@
 #include <QApplication>
 
-#include "paletterwindow.h"
+#include "paletter_window.h"
 
 int
 main(int argc, char *argv[])

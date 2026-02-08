@@ -1,13 +1,13 @@
 set(PROJECT_SOURCES
     main.cpp
-    paletterwindow.cpp
-    paletterwindow.h
-    imageviewer.cpp
-    imageviewer.h
-    paletteviewer.cpp
-    paletteviewer.h
-    paletterow.cpp
-    paletterow.h
+    paletter_window.cpp
+    paletter_window.h
+    image_viewer.cpp
+    image_viewer.h
+    palette_viewer.cpp
+    palette_viewer.h
+    palette_row.cpp
+    palette_row.h
 )
 
 add_subdirectory("nerd")

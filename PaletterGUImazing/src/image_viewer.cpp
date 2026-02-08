@@ -1,4 +1,4 @@
-#include "imageviewer.h"
+#include "image_viewer.h"
 
 #include <QMessageBox>
 #include <QtWidgets>

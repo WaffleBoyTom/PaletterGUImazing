@@ -1,4 +1,4 @@
-#include "paletteviewer.h"
+#include "palette_viewer.h"
 
 #include <QtWidgets>
 

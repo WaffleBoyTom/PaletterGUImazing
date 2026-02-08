@@ -1,9 +1,9 @@
-#include "paletterwindow.h"
+#include "paletter_window.h"
 
 #include <QtWidgets>
 
-#include "imageviewer.h"
-#include "paletteviewer.h"
+#include "image_viewer.h"
+#include "palette_viewer.h"
 
 static const int theMinSizeScaleFactor = 4;
 

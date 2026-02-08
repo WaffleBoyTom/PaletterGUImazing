@@ -3,8 +3,8 @@
 
 #include <QWidget>
 
-#include "imageviewer.h"
-#include "paletteviewer.h"
+#include "image_viewer.h"
+#include "palette_viewer.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;

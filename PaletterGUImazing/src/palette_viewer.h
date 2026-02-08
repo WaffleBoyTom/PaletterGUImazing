@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "paletterow.h"
+#include "palette_row.h"
 #include "sick_slider.h"
 
 QT_BEGIN_NAMESPACE

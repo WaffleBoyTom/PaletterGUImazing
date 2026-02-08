@@ -1,4 +1,4 @@
-#include "paletterow.h"
+#include "palette_row.h"
 
 #include <QCursor>
 #include <QToolTip>
