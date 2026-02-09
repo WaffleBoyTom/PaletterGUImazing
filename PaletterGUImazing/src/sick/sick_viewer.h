@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "image_processor.h"
 #include "sick_dropdown.h"
 
 QT_BEGIN_NAMESPACE
@@ -70,9 +69,6 @@ private:
 
     // pointer to paletter window
     QWidget *myCreator;
-
-    // deals with processing the pixmap
-    ImageProcessor myImageProcessor;
 };
 
 #endif

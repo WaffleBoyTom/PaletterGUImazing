@@ -3,8 +3,6 @@
 #include <QMessageBox>
 #include <QtWidgets>
 
-#include "image_processor.h"
-
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
@@ -159,8 +157,6 @@ SickViewer::initialize()
     myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
     myModeDropdown = new SickDropDown(this, tr("Mode"));
-    // init ImageProcessor
-    myImageProcessor = ImageProcessor();
 
     setPaletteCount(6);
 

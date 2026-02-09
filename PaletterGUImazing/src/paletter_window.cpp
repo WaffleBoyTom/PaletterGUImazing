@@ -1,7 +1,10 @@
 #include "paletter_window.h"
 
+#include <QPushButton>
+#include <QThread>
 #include <QtWidgets>
 
+#include "baller_task.h"
 #include "image_viewer.h"
 #include "palette_viewer.h"
 
@@ -74,22 +77,47 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogger = new QLabel(tr("Captain's Log: \n"), this);
     connect(
-        myImgViewer, 
-        &ImageViewer::tellBossToLog, 
-        this, 
-        &PaletterGUI::logMeHard
+        myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
     connect(
-        myConvertImgViewer, 
-        &ImageViewer::tellBossToLog, 
-        this, 
+        myConvertImgViewer,
+        &ImageViewer::tellBossToLog,
+        this,
         &PaletterGUI::logMeHard
     );
-    
+
     mainLayout->addWidget(myLogger);
+
+    QPushButton *test_task_button = new QPushButton(tr("Run test task"), this);
+    connect(
+        test_task_button, &QPushButton::clicked, this, &PaletterGUI::runTestTask
+    );
+    mainLayout->addWidget(test_task_button);
 
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
+}
+
+void
+PaletterGUI::runTestTask()
+{
+    QThread *thread = new QThread();
+    TestTask *task = new TestTask();
+    connect(task, &TestTask::started, this, &PaletterGUI::onTestTaskStart);
+    connect(task, &TestTask::finished, this, &PaletterGUI::onTestTaskFinish);
+    task->runOnThread(thread);
+}
+
+void
+PaletterGUI::onTestTaskStart()
+{
+    logMeHard("Started test task");
+}
+
+void
+PaletterGUI::onTestTaskFinish()
+{
+    logMeHard("Finished test task");
 }
 
 // resive event override

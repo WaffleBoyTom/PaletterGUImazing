@@ -1,6 +1,6 @@
 set(SOURCE
-    image_processor.h
-    image_processor.cpp
+    baller_task.h
+    baller_task.cpp
     processor_device.h
 )
 add_library(baller STATIC ${SOURCE})
