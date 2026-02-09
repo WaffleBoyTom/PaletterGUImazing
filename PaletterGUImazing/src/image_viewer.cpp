@@ -9,8 +9,6 @@
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-// #define TEST_GPU
-
 ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 {
     // keep in touch with your parent
@@ -40,10 +38,10 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // processor button
     // temp solution to allow for a different button
     // between the two image viewers
-    // FIXME : we want a base class for these two viewers
+    // FIXME: we want a base class for these two viewers
     // with overrides so we don't do this nasty if stuff ?
-    // FIXME : stuff this in a horizontal layout
-    auto dropdowns = new QHBoxLayout(this);
+    // FIXME: stuff this in a horizontal layout
+    auto dropdowns = new QHBoxLayout();
 
     myModeDropdown = new SickDropDown(this, tr("Mode"));
     if (paletteSource)
@@ -88,9 +86,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
     setPaletteCount(6);
 
-    // I don't think I should have to make a copy here >?
-    QList<QColor> default_palette(50, QColor(0, 0, 0));
-    myColorPalette = default_palette;
+    myColorPalette = QList<QColor>(50, QColor(0, 0, 0));
 
     // populate layout
     myLayout->addWidget(myLineEdit);
