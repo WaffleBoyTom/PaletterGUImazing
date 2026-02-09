@@ -7,6 +7,7 @@
 #include "baller_task.h"
 #include "image_viewer.h"
 #include "palette_viewer.h"
+#include "sick_log_viewer.h"
 
 static const int theMinSizeScaleFactor = 4;
 
@@ -75,7 +76,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
-    myLogger = new QLabel(tr("Captain's Log: \n"), this);
+    myLogViewer = new SickLogViewer(this);
     connect(
         myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
@@ -86,7 +87,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::logMeHard
     );
 
-    mainLayout->addWidget(myLogger);
+    mainLayout->addWidget(myLogViewer);
 
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
@@ -124,5 +125,5 @@ PaletterGUI::applyPaletteToSecondViewer()
 void
 PaletterGUI::logMeHard(const QString msg)
 {
-    myLogger->setText(myLogger->text() + msg);
+    myLogViewer->appendLine(msg);
 }

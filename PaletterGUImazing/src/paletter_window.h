@@ -5,6 +5,7 @@
 
 #include "image_viewer.h"
 #include "palette_viewer.h"
+#include "sick_log_viewer.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -36,12 +37,10 @@ public slots:
 
 private:
     QLabel *paletterLabel;
-    // QPushButton *newTestButton;
-    // QLineEdit *newLineEdit;
     ImageViewer *myImgViewer;
     PaletteViewer *myPaletteViewer;
     ImageViewer *myConvertImgViewer;
-    QLabel *myLogger;
+    SickLogViewer *myLogViewer;
 };
 
 #endif  // PALETTERWINDOW_H

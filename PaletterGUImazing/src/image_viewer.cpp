@@ -114,7 +114,7 @@ ImageViewer::openNautilus()
     // not that I want to support that awful os but
     // you know...
 
-    const QString fileName = QFileDialog::getOpenFileName(
+    const QString file_name = QFileDialog::getOpenFileName(
         this,
         tr("Palettize this geezer"),    /* title of fileDialog */
         QDir::homePath(),               /* where to start the search */
@@ -122,21 +122,22 @@ ImageViewer::openNautilus()
     );
 
     // User closed the dialog, so don't error out
-    if (fileName.isEmpty())
+    if (file_name.isEmpty())
         return;
 
     // print selected file to console
-    emit tellBossToLog("Loaded Image :\n");
-    emit tellBossToLog(fileName + '\n');
+    emit tellBossToLog(QString("Loaded image file: %1").arg(file_name));
 
-    if (!loadImage(&fileName))
+    if (!loadImage(&file_name))
     {
-        emit tellBossToLog("Failed to load image");
+        emit tellBossToLog(
+            QString("Failed to load image file: %1").arg(file_name)
+        );
         QMessageBox::information(
             this,
             QGuiApplication::applicationDisplayName(), /* title */
             tr("Failed to load image: %1")
-                .arg(QDir::toNativeSeparators(fileName)) /* message text */
+                .arg(QDir::toNativeSeparators(file_name)) /* message text */
         );
     }
 }
@@ -199,7 +200,7 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     {
         myColorPalette[i] = palette[i];
     }
-    emit tellBossToLog("filled color palette\n");
+    emit tellBossToLog("Filled color palette");
 
     // override orig with processed to make sure
     // result stays the same when we resize
@@ -217,16 +218,13 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 {
     myProcessorButton->setEnabled(false);
 
+    // FIXME: logging here does not work ?
+    emit tellBossToLog("Applying color palette");
+
     QImage image = getImage();
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
-
-    // FIXME : logging here does not work ?
-    emit tellBossToLog("Applying color palette :\n");
-
-    QString dev_str(tr("Using: "));
-    dev_str.append(getDeviceStr(device));
-    emit tellBossToLog(dev_str);
+    emit tellBossToLog(QString("Using: %1").arg(getDeviceStr(device)));
 
     auto method = Remapper::CompareMethod(myModeDropdown->item());
 
@@ -243,7 +241,7 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 void
 ImageViewer::onApplyPaletteFinished(QImage image)
 {
-    emit tellBossToLog("Done applying color palette: \n");
+    emit tellBossToLog("Done applying color palette");
 
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
