@@ -1,7 +1,10 @@
 #include "paletter_window.h"
 
+#include <QPushButton>
+#include <QThread>
 #include <QtWidgets>
 
+#include "baller_task.h"
 #include "image_viewer.h"
 #include "palette_viewer.h"
 
@@ -74,18 +77,15 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogger = new QLabel(tr("Captain's Log: \n"), this);
     connect(
-        myImgViewer, 
-        &ImageViewer::tellBossToLog, 
-        this, 
-        &PaletterGUI::logMeHard
+        myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
     connect(
-        myConvertImgViewer, 
-        &ImageViewer::tellBossToLog, 
-        this, 
+        myConvertImgViewer,
+        &ImageViewer::tellBossToLog,
+        this,
         &PaletterGUI::logMeHard
     );
-    
+
     mainLayout->addWidget(myLogger);
 
     setWindowTitle(tr("PaletterGUImazing"));

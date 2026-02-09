@@ -5,7 +5,6 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "image_processor.h"
 #include "sick_dropdown.h"
 
 QT_BEGIN_NAMESPACE
@@ -31,6 +30,8 @@ public:
     void handleResizing();
     void setPaletteCount(const int count);
     QList<QColor> *getPalette();
+
+    // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
 
 signals:
@@ -50,13 +51,16 @@ private slots:
     // get QImage from image holder
     QImage getImage();
 
-    // load into image processor and get output
-    void processImage();
+    // Generate a new palette from the image.
+    void generatePalette();
+
+    // Called after palette is generated.
+    void onGeneratePaletteFinished(QList<QColor> palette);
+
+    // Called after palette apply completes.
+    void onApplyPaletteFinished(QImage image);
 
     void askForPalette();
-
-    // applies palette to image
-    // void applyPalette();
 
     // resizes image based on myCreator size;
     QPixmap resizeImage(QPixmap *image);
@@ -88,9 +92,6 @@ private:
 
     // pointer to paletter window
     QWidget *myCreator;
-
-    // deals with processing the pixmap
-    ImageProcessor myImageProcessor;
 
     QList<QColor> myColorPalette;
     int myPaletteCount;

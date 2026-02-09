@@ -1,9 +1,12 @@
 #include "image_viewer.h"
 
+#include <QtWidgets/qpushbutton.h>
+
 #include <QMessageBox>
 #include <QtWidgets>
 
-#include "image_processor.h"
+#include "baller_task.h"
+#include "remapper.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
@@ -44,6 +47,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     auto dropdowns = new QHBoxLayout();
 
     myModeDropdown = new SickDropDown(this, tr("Mode"));
+
+    // TODO: inheritanceizationify this instead of using a flag lol
     if (paletteSource)
     {
         myProcessorButton = new QPushButton(tr("Process Image"), this);
@@ -52,8 +57,11 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
             myProcessorButton,
             &QPushButton::clicked,
             this,
-            &ImageViewer::processImage
+            &ImageViewer::generatePalette
         );
+
+        myProcessorButton->setEnabled(false);
+
         myModeDropdown->setMenuItem(tr("Median Cut"));
         myModeDropdown->setMenuItem(tr("K-Means"));
     }
@@ -67,6 +75,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
             this,
             &ImageViewer::askForPalette
         );
+
+        myProcessorButton->setEnabled(false);
+
         myModeDropdown->setMenuItem(tr("Distance"));
         myModeDropdown->setMenuItem(tr("Luminance"));
         myModeDropdown->setMenuItem(tr("Hue"));
@@ -76,13 +87,11 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
     myDeviceDropdown->setMenuItem(tr("CPU"));
 
-#ifdef Q_OS_MACOS
+#if defined(USE_METAL)
     myDeviceDropdown->setMenuItem(tr("Metal"));
-#else
+#elif defined(USE_CUDA)
     myDeviceDropdown->setMenuItem(tr("CUDA"));
 #endif
-    // init ImageProcessor
-    myImageProcessor = ImageProcessor();
 
     setPaletteCount(6);
 
@@ -140,6 +149,8 @@ ImageViewer::loadImage(const QString *filename)
     if (!myLoadedImage.load(*filename))
         return false;
 
+    myProcessorButton->setEnabled(true);
+
     const QPixmap scaled = resizeImage(&myLoadedImage);
 
     // loaded image successfully
@@ -157,62 +168,93 @@ ImageViewer::getImage()
 }
 
 void
-ImageViewer::processImage()
+ImageViewer::generatePalette()
 {
     if (myLoadedImage.isNull())
         return;
 
-    QImage image = getImage();
-    // myImageProcessor.fillColorPalette(image, myColorPalette, myPaletteCount);
-    // myColorPalette = Quantizer(myPaletteCount).generatePalette(image);
+    myProcessorButton->setEnabled(false);
 
+    QImage image = getImage();
+    QuantizeTask *task =
+        new QuantizeTask(image, myPaletteCount, Quantizer::Method::MedianCut);
+
+    connect(
+        task,
+        &QuantizeTask::finished,
+        this,
+        &ImageViewer::onGeneratePaletteFinished
+    );
+
+    QThread *thread = new QThread();
+    task->runOnThread(thread);
+}
+
+void
+ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
+{
     // FIXME: This is a horrible hack to keep the palette at a size of 50
     // and only copy what was asked for..
-    QVector<QColor> new_palette = myImageProcessor.createColorPalette(
-        image, myPaletteCount, Quantizer::Method::MedianCut
-    );
     for (int i = 0; i < myPaletteCount; ++i)
     {
-        myColorPalette[i] = new_palette[i];
+        myColorPalette[i] = palette[i];
     }
     emit tellBossToLog("filled color palette\n");
 
     // override orig with processed to make sure
     // result stays the same when we resize
+    QImage image = getImage();
     myLoadedImage = QPixmap::fromImage(image);
 
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
     emit tellBossAboutPaletteFill(&myColorPalette);
-}
 
-void
-ImageViewer::askForPalette()
-{
-    emit askBossForPalette();
+    myProcessorButton->setEnabled(true);
 }
 
 void
 ImageViewer::applyPalette(QList<QColor> *palette)
 {
+    myProcessorButton->setEnabled(false);
+
     QImage image = getImage();
-    auto method = Remapper::CompareMethod(myModeDropdown->item());
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
 
     // FIXME : logging here does not work ?
-
     emit tellBossToLog("Applying color palette :\n");
 
     QString dev_str(tr("Using: "));
     dev_str.append(getDeviceStr(device));
     emit tellBossToLog(dev_str);
 
-    myImageProcessor.applyColorPalette(image, palette, device, method);
+    auto method = Remapper::CompareMethod(myModeDropdown->item());
 
+    RemapTask *task = new RemapTask(image, device, method, *palette);
+
+    connect(
+        task, &RemapTask::finished, this, &ImageViewer::onApplyPaletteFinished
+    );
+
+    QThread *thread = new QThread();
+    task->runOnThread(thread);
+}
+
+void
+ImageViewer::onApplyPaletteFinished(QImage image)
+{
     emit tellBossToLog("Done applying color palette: \n");
 
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
+
+    myProcessorButton->setEnabled(true);
+}
+
+void
+ImageViewer::askForPalette()
+{
+    emit askBossForPalette();
 }
 
 QPixmap
