@@ -4,11 +4,8 @@
 #include <QToolTip>
 #include <QtWidgets>
 
-PaletteRow::PaletteRow(QWidget *parent) : myBoxCount(6)
+PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
-    // keep in touch with your parent
-    myCreator = parent;
-
     // receive mouseMouseEvent without needing to press a button
     this->setMouseTracking(true);
 }

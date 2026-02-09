@@ -5,11 +5,8 @@
 #include "sick_debug.h"
 #include "sick_slider.h"
 
-PaletteViewer::PaletteViewer(QWidget *parent)
+PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
-
     // main layout
     myLayout = new QVBoxLayout(this);
 

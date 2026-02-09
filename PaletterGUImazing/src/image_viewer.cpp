@@ -13,10 +13,8 @@
 static const int theImageScaleFactor = 2;
 
 ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
+    : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
-
     // main layout
     myLayout = new QVBoxLayout(this);
 
