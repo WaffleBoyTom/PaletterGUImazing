@@ -32,23 +32,6 @@ signals:
     void _postCompletion();
 };
 
-class TestTask : public BallerTask
-{
-    Q_OBJECT
-signals:
-    void started();
-    void finished();
-
-protected:
-    void
-    runInternal() override
-    {
-        emit started();
-        QThread::sleep(10);
-        emit finished();
-    }
-};
-
 class QuantizeTask : public BallerTask
 {
     Q_OBJECT

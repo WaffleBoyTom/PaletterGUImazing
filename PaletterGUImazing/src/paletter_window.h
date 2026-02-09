@@ -35,10 +35,6 @@ public slots:
     void logMeHard(const QString msg);
 
 private:
-    void runTestTask();
-    void onTestTaskStart();
-    void onTestTaskFinish();
-
     QLabel *paletterLabel;
     // QPushButton *newTestButton;
     // QLineEdit *newLineEdit;
