@@ -31,7 +31,6 @@ protected:
 
 private:
     QVBoxLayout *myLayout;
-    QWidget *myCreator;
 
     QList<QColor> *myPalettePtr;
     int myBoxCount;

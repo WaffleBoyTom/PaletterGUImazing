@@ -33,7 +33,6 @@ protected:
     void wheelEvent(QWheelEvent *event);
 
 private:
-    QWidget *myCreator;
     QHBoxLayout *myLayout;
     QSlider *mySlider;
     QLineEdit *mySliderValueDisplay;

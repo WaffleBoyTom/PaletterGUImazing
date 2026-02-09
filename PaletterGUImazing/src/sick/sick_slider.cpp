@@ -71,7 +71,8 @@ SickSlider::onSliderValueChanged()
     mySliderValueDisplay->setText(QString::number(mySlider->value()));
 
     // forces paintEvent to get called on PaletteViewer
-    myCreator->repaint();
+    parentWidget()->repaint();
+
     emit paletteCountChangedSignal();
 }
 
@@ -82,7 +83,7 @@ SickSlider::onLineEditValueChanged()
     mySlider->setValue(mySliderValueDisplay->text().toInt());
 
     // forces paintEvent to get called on PaletteViewer
-    myCreator->repaint();
+    parentWidget()->repaint();
 
     emit paletteCountChangedSignal();
 }

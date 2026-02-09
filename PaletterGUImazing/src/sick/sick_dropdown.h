@@ -23,7 +23,6 @@ public:
     int item();
 
 private:
-    QWidget *myCreator;
     QHBoxLayout *myLayout;
     QComboBox *myMenu;
     QLabel *myLabel;

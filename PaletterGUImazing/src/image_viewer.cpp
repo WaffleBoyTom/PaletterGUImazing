@@ -263,9 +263,9 @@ ImageViewer::resizeImage(QPixmap *imagedisplay)
     // dividing by 2 for now, idk
 
     return imagedisplay->scaled(
-        myCreator->height() / theImageScaleFactor, /* width */
-        myCreator->width() / theImageScaleFactor,  /* height */
-        Qt::KeepAspectRatio                        /* ar */
+        parentWidget()->height() / theImageScaleFactor, /* width */
+        parentWidget()->width() / theImageScaleFactor,  /* height */
+        Qt::KeepAspectRatio                             /* ar */
     );
 }
 

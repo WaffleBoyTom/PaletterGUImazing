@@ -62,7 +62,7 @@ private slots:
 
     void askForPalette();
 
-    // resizes image based on myCreator size;
+    // Resizes image based on parent size.
     QPixmap resizeImage(QPixmap *image);
 
 private:
@@ -89,9 +89,6 @@ private:
 
     // dropdown for specifying device
     SickDropDown *myDeviceDropdown;
-
-    // pointer to paletter window
-    QWidget *myCreator;
 
     QList<QColor> myColorPalette;
     int myPaletteCount;

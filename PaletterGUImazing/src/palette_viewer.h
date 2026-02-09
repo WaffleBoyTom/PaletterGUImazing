@@ -33,7 +33,6 @@ protected:
     void exportPalette();
 
 private:
-    QWidget *myCreator;
     QVBoxLayout *myLayout;
     PaletteRow *myPaletteRow;
     SickSlider *mySlider;
