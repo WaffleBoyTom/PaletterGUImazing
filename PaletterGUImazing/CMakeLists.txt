@@ -16,6 +16,7 @@ set(CMAKE_CXX_FLAGS
     -fms-extensions \
     -pedantic \
     -Wall \
+    -Wno-attributes \
     -Werror \
     -Wpedantic \
     -Wno-attributes"

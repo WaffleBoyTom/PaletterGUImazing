@@ -5,7 +5,13 @@
 inline __device__ float3
 uchar4ToFloat3(uchar4 pixel)
 {
-    return make_float3(pixel.x / 255.0, pixel.y / 255.0, pixel.z / 255.0);
+    return make_float3(pixel.x / 255.0f, pixel.y / 255.0f, pixel.z / 255.0f);
+}
+
+inline __device__ float3
+uchar3ToFloat3(uchar3 pixel)
+{
+    return make_float3(pixel.x / 255.0f, pixel.y / 255.0f, pixel.z / 255.0f);
 }
 
 inline __device__ uchar4
@@ -19,6 +25,16 @@ float3ToUChar4(float3 color)
     );
 }
 
+inline __device__ uchar3
+float3ToUChar3(float3 color)
+{
+    return make_uchar3(
+        (unsigned char)(color.x * 255.0f),
+        (unsigned char)(color.y * 255.0f),
+        (unsigned char)(color.z * 255.0f)
+    );
+}
+
 inline __device__ float
 euclidDist(float3 a, float3 b)
 {
@@ -27,6 +43,16 @@ euclidDist(float3 a, float3 b)
     float bdiff = b.z - a.z;
 
     return sqrtf(rdiff * rdiff + gdiff * gdiff + bdiff * bdiff);
+}
+
+inline __device__ float
+euclidDist2(float3 a, float3 b)
+{
+    float rdiff = b.x - a.x;
+    float gdiff = b.y - a.y;
+    float bdiff = b.z - a.z;
+
+    return rdiff * rdiff + gdiff * gdiff + bdiff * bdiff;
 }
 
 __global__ void
@@ -38,7 +64,7 @@ test_kernel(int n, float *x, float *y)
 
 __global__ void
 applyPaletteByLengthKernel(
-    uchar4 *pixels,
+    uchar3 *pixels,
     const int pixel_count,
     const float3 *palette,
     const int palette_size
@@ -50,14 +76,14 @@ applyPaletteByLengthKernel(
     for (int i = index; i < pixel_count; i += stride)
     {
         float delta = 1000.0;
-        uchar4 bits = pixels[i];
-        float3 pixel = uchar4ToFloat3(bits);
+        uchar3 bits = pixels[i];
+        float3 pixel = uchar3ToFloat3(bits);
         float3 best = pixel;
 
         for (int j = 0; j < palette_size; ++j)
         {
             float3 palette_col = palette[j];
-            float dist = euclidDist(pixel, palette_col);
+            float dist = euclidDist2(pixel, palette_col);
             if (dist < delta)
             {
                 best = palette_col;
@@ -66,7 +92,7 @@ applyPaletteByLengthKernel(
             if (dist < 0.01)
                 break;
         }
-        pixels[i] = float3ToUChar4(best);
+        pixels[i] = float3ToUChar3(best);
     }
 }
 
@@ -83,7 +109,7 @@ test(const int n, float *x, float *y)
 
 void
 applyPaletteByLength(
-    uchar4 *img,
+    uchar3 *img,
     const int width,
     const int height,
     const float3 *palette,

@@ -109,12 +109,12 @@ Remapper::remap(QImage &image) const
 
     // FIXME: I think this is wrong because we load images as
     // RGB not RGBA ..
-    uchar4 *cu_image;
-    cudaMalloc(&cu_image, pixel_count * sizeof(uchar4));
+    uchar3 *cu_image;
+    cudaMalloc(&cu_image, pixel_count * sizeof(uchar3));
     cudaMemcpy(
         cu_image,
         image.bits(),
-        pixel_count * sizeof(uchar4),
+        pixel_count * sizeof(uchar3),
         cudaMemcpyHostToDevice
     );
 
@@ -125,7 +125,7 @@ Remapper::remap(QImage &image) const
     cudaMemcpy(
         image.bits(),
         cu_image,
-        pixel_count * sizeof(uchar4),
+        pixel_count * sizeof(uchar3),
         cudaMemcpyDeviceToHost
     );
 
