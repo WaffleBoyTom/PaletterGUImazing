@@ -193,7 +193,6 @@ ImageViewer::generatePalette()
 void
 ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    qDebug() << palette;
     // FIXME: This is a horrible hack to keep the palette at a size of 50
     // and only copy what was asked for..
     for (int i = 0; i < myPaletteCount; ++i)
