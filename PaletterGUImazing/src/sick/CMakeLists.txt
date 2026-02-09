@@ -2,6 +2,8 @@ set(SOURCE
     sick_debug.h
     sick_dropdown.h
     sick_dropdown.cpp
+    sick_inspector.h
+    sick_inspector.cpp
     sick_log_viewer.h
     sick_log_viewer.cpp
     sick_slider.h
