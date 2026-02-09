@@ -60,12 +60,6 @@ ImageProcessor::applyColorPalette(
     Remapper::CompareMethod method
 )
 {
-    // TODO:
-    // add handling by mode
-    // multithread this >?
-    // run this on the GuhPoo with CUDA (or metal :> )
-    // turn this loop bs into a lambda
-
     if (palette == nullptr)
         return;
 
