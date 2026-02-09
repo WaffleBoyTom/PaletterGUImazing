@@ -1,5 +1,5 @@
-#ifndef PALETTERWINDOW_H
-#define PALETTERWINDOW_H
+#ifndef PALETTER_WINDOW_H
+#define PALETTER_WINDOW_H
 
 #include <QWidget>
 
@@ -43,4 +43,4 @@ private:
     SickLogViewer *myLogViewer;
 };
 
-#endif  // PALETTERWINDOW_H
+#endif  // PALETTER_WINDOW_H

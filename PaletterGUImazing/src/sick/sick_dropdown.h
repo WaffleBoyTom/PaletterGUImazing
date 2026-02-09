@@ -1,5 +1,5 @@
-#ifndef SICKDROPDOWN_H
-#define SICKDROPDOWN_H
+#ifndef SICK_DROPDOWN_H
+#define SICK_DROPDOWN_H
 
 #include <QtWidgets>
 
@@ -19,9 +19,7 @@ class SickDropDown : public QWidget
 
 public:
     explicit SickDropDown(QWidget *parent, QString label);
-    // FIXME this seems like a shit name because I would expect
-    // this method to take in an index....
-    void setMenuItem(QString item);
+    void addMenuItem(QString item);
     int item();
 
 private:
@@ -31,4 +29,4 @@ private:
     QLabel *myLabel;
 };
 
-#endif
+#endif  // SICK_DROPDOWN_H

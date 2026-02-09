@@ -1,5 +1,5 @@
-#ifndef PALETTEVIEWER_H
-#define PALETTEVIEWER_H
+#ifndef PALETTE_VIEWER_H
+#define PALETTE_VIEWER_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -40,4 +40,4 @@ private:
     QPushButton *myExportButton;
 };
 
-#endif
+#endif  // PALETTE_VIEWER_H

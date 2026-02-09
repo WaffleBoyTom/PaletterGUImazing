@@ -1,5 +1,5 @@
-#ifndef BALLER_WORKER_H
-#define BALLER_WORKER_H
+#ifndef BALLER_TASK_H
+#define BALLER_TASK_H
 
 #include <QObject>
 #include <QThread>
@@ -74,4 +74,4 @@ private:
     QList<QColor> myPalette;
 };
 
-#endif  // BALLER_WORKER_H
+#endif  // BALLER_TASK_H

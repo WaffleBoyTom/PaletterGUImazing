@@ -1,5 +1,5 @@
-#ifndef PALETTEROW_H
-#define PALETTEROW_H
+#ifndef PALETTE_ROW_H
+#define PALETTE_ROW_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -37,4 +37,4 @@ private:
     int myBoxCount;
 };
 
-#endif
+#endif  // PALETTE_ROW_H

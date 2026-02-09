@@ -62,8 +62,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
         myProcessorButton->setEnabled(false);
 
-        myModeDropdown->setMenuItem(tr("Median Cut"));
-        myModeDropdown->setMenuItem(tr("K-Means"));
+        myModeDropdown->addMenuItem(tr("Median Cut"));
+        myModeDropdown->addMenuItem(tr("K-Means"));
     }
     else
     {
@@ -78,14 +78,14 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
         myProcessorButton->setEnabled(false);
 
-        myModeDropdown->setMenuItem(tr("Distance"));
-        myModeDropdown->setMenuItem(tr("Luminance"));
-        myModeDropdown->setMenuItem(tr("Hue"));
-        myModeDropdown->setMenuItem(tr("Saturation"));
+        myModeDropdown->addMenuItem(tr("Distance"));
+        myModeDropdown->addMenuItem(tr("Luminance"));
+        myModeDropdown->addMenuItem(tr("Hue"));
+        myModeDropdown->addMenuItem(tr("Saturation"));
     }
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
-    myDeviceDropdown->setMenuItem(tr("CPU"));
+    myDeviceDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
     myDeviceDropdown->setMenuItem(tr("Metal"));

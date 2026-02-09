@@ -6,6 +6,7 @@
 class SickLogViewer : public QPlainTextEdit
 {
     Q_OBJECT
+
 public:
     SickLogViewer(QWidget *parent);
 

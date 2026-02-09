@@ -1,5 +1,5 @@
-#ifndef IMAGEVIEWER_H
-#define IMAGEVIEWER_H
+#ifndef IMAGE_VIEWER_H
+#define IMAGE_VIEWER_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -97,4 +97,4 @@ private:
     int myPaletteCount;
 };
 
-#endif
+#endif  // IMAGE_VIEWER_H

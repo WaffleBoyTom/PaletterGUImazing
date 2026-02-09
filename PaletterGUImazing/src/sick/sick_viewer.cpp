@@ -19,8 +19,8 @@ SickViewer::SickViewer(QWidget *parent)
         this,
         &ImageViewer::processImage
     );
-    myModeDropdown->setMenuItem(tr("Median Cut"));
-    myModeDropdown->setMenuItem(tr("K-Means"));
+    myModeDropdown->addMenuItem(tr("Median Cut"));
+    myModeDropdown->addMenuItem(tr("K-Means"));
     // populate layout
     layout();
 }
