@@ -1,14 +1,15 @@
 #include "palette_row.h"
 
+#include <QtCore/qnamespace.h>
+
 #include <QCursor>
 #include <QToolTip>
 #include <QtWidgets>
 
-PaletteRow::PaletteRow(QWidget *parent) : myBoxCount(6)
-{
-    // keep in touch with your parent
-    myCreator = parent;
+#include "sick_inspector.h"
 
+PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
+{
     // receive mouseMouseEvent without needing to press a button
     this->setMouseTracking(true);
 }
@@ -22,23 +23,23 @@ PaletteRow::sizeHint() const
 }
 
 void
-PaletteRow::onPaletteCountChanged(const int count)
+PaletteRow::onPaletteDisplaySizeChanged(int size)
 {
-    myBoxCount = count;
+    myBoxCount = size;
     this->repaint();
 }
 
 void
-PaletteRow::drawPalette(QList<QColor> *paletteptr)
+PaletteRow::onPaletteChanged(QList<QColor> *palette)
 {
-    myPalettePtr = paletteptr;
+    myPalette = palette;
     this->repaint();
 }
 
 void
 PaletteRow::paintEvent(QPaintEvent *event)
 {
-    if (!myPalettePtr)
+    if (!myPalette)
         return;
 
     QPainter painter(this);
@@ -52,26 +53,71 @@ PaletteRow::paintEvent(QPaintEvent *event)
 
     for (int i = 0; i < myBoxCount; ++i)
     {
-        const int index = qBound(0, i, 50);
+        const QColor color =
+            (i < myPalette->size()) ? myPalette->at(i) : Qt::black;
         painter.fillRect(
             start + (width * i),  // x
             height / 2,           // y
             width - padding,      // width
             height,               // height
-            myPalettePtr->at(index)
+            color
         );
+    }
+}
+
+void
+PaletteRow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::MouseButton::LeftButton)
+    {
+        std::optional<QColor> color = findColor(event->position().toPoint());
+        if (!color)
+            return;
+
+        QString name_hex = color->name(QColor::HexRgb);
+
+        QClipboard *clipboard = QGuiApplication::clipboard();
+        clipboard->setText(name_hex);
+
+        emit tellBossToLog(QString("Copied: %1").arg(name_hex));
     }
 }
 
 void
 PaletteRow::mouseMoveEvent(QMouseEvent *event)
 {
+    std::optional<QColor> color = findColor(event->position().toPoint());
+
+    if (color)
+    {
+        SickInspector::displayColor(*color, event->globalPosition().toPoint());
+    }
+    else
+    {
+        SickInspector::displayColor(
+            Qt::black, event->globalPosition().toPoint()
+        );
+    }
+}
+
+void
+PaletteRow::leaveEvent(QEvent *event)
+{
+    SickInspector::hideColor();
+}
+
+std::optional<QColor>
+PaletteRow::findColor(QPoint position) const
+{
+    if (!myPalette)
+        return std::nullopt;
+
     const int width = this->width() / myBoxCount;
     const int height = this->height();
     const int padding = 10;
 
-    const int x = static_cast<int>(event->position().x());
-    const int y = static_cast<int>(event->position().y());
+    const int x = static_cast<int>(position.x());
+    const int y = static_cast<int>(position.y());
 
     const int index = x / width;
 
@@ -83,14 +129,7 @@ PaletteRow::mouseMoveEvent(QMouseEvent *event)
     const int y_high = y_low + height;
     const bool y_check = y_low <= y && y <= y_high;
 
-    if (index >= 0 && x_check && y_check)
-    {
-        const QColor &color = myPalettePtr->at(index);
-        const QString hex = color.name(QColor::HexRgb);
-        QToolTip::showText(event->globalPosition().toPoint(), hex, this);
-    }
-    else
-    {
-        QToolTip::hideText();
-    }
+    if (0 <= index && index < myPalette->size() && x_check && y_check)
+        return myPalette->at(index);
+    return std::nullopt;
 }

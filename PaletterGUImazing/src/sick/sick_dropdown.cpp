@@ -11,10 +11,8 @@ houdini has spoiled me for too long i guess >?
 
 */
 
-SickDropDown::SickDropDown(QWidget *parent, QString label)
+SickDropDown::SickDropDown(QWidget *parent, QString label) : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
     myLayout = new QHBoxLayout(this);
     myLabel = new QLabel(label, this);
     myMenu = new QComboBox(this);
@@ -23,7 +21,7 @@ SickDropDown::SickDropDown(QWidget *parent, QString label)
 }
 
 void
-SickDropDown::setMenuItem(QString item)
+SickDropDown::addMenuItem(QString item)
 {
     myMenu->addItem(item);
 }

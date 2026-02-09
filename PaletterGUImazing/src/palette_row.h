@@ -1,5 +1,5 @@
-#ifndef PALETTEROW_H
-#define PALETTEROW_H
+#ifndef PALETTE_ROW_H
+#define PALETTE_ROW_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -21,20 +21,26 @@ public:
 
     QSize sizeHint() const override;
 
+signals:
+    void tellBossToLog(QString logmsg);
+
 public slots:
-    void onPaletteCountChanged(const int count);
-    void drawPalette(QList<QColor> *palette);
+    void onPaletteDisplaySizeChanged(int size);
+    void onPaletteChanged(QList<QColor> *palette);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
+    void leaveEvent(QEvent *event) override;
 
 private:
-    QVBoxLayout *myLayout;
-    QWidget *myCreator;
+    std::optional<QColor> findColor(QPoint position) const;
 
-    QList<QColor> *myPalettePtr;
+    QVBoxLayout *myLayout;
+
+    QList<QColor> *myPalette;
     int myBoxCount;
 };
 
-#endif
+#endif  // PALETTE_ROW_H

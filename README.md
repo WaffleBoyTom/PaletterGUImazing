@@ -6,17 +6,29 @@ cmake --build .
 in build/Deslktop
 
 # TODO
-- CUDA:
-  - Use to run K-Means for palette generation
-  - Use to apply palette to second image
-- Add Modes to apply:
-  - Added dropdown but does nothing right now.
-  - Applying should work on CPU even when we have CUDA and right now, no worko whatsoever...
-- color sorting options
-- Export:
-  - Json ?
-  - Export the image with the palette applied
-- put quantizer on a worker thread :)
+[ ] Worker threads
+    [x] BallerTask
+    [x] QuantizeTask
+    [x] RemapTask
+    [ ] ImageProcessor as task manager
+[ ] Logging
+    [x] SickLogger
+    [ ] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
+[ ] UI
+    [ ] Fix ImageViewer hierarchy
+    [ ] Fix layout issues
+[ ] GPU
+    [x] Use to apply palette to second image
+    [ ] Use to run K-Means for palette generation
+    [ ] Metal support
+    [ ] Compute backend abstraction layer
+[ ] Add Modes to apply:
+    [ ] Added dropdown but does nothing right now.
+    [ ] Applying should work on CPU even when we have CUDA and right now, no worko whatsoever...
+[ ] color sorting options
+[ ] Export:
+    [ ] JSON palette string
+    [ ] The image with the palette applied
 
 So I think the idea behind SickViewer is that I don't like the palettesource argument to ImageViewer 
 so SickViewer would be the base class and then we have two children classes for the two different viewers

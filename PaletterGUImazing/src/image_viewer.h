@@ -1,5 +1,5 @@
-#ifndef IMAGEVIEWER_H
-#define IMAGEVIEWER_H
+#ifndef IMAGE_VIEWER_H
+#define IMAGE_VIEWER_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -28,11 +28,13 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent, bool paletteSource);
     void handleResizing();
-    void setPaletteCount(const int count);
-    QList<QColor> *getPalette();
+    void setPaletteDisplaySize(int size);
+    QList<QColor> *palette();
 
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
+
+    constexpr static int INIT_PALETTE_SIZE = 6;
 
 signals:
 
@@ -62,7 +64,7 @@ private slots:
 
     void askForPalette();
 
-    // resizes image based on myCreator size;
+    // Resizes image based on parent size.
     QPixmap resizeImage(QPixmap *image);
 
 private:
@@ -90,11 +92,8 @@ private:
     // dropdown for specifying device
     SickDropDown *myDeviceDropdown;
 
-    // pointer to paletter window
-    QWidget *myCreator;
-
-    QList<QColor> myColorPalette;
-    int myPaletteCount;
+    QList<QColor> myPalette;
+    int myPaletteDisplaySize;
 };
 
-#endif
+#endif  // IMAGE_VIEWER_H

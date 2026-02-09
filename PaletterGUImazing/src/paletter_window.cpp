@@ -4,9 +4,9 @@
 #include <QThread>
 #include <QtWidgets>
 
-#include "baller_task.h"
 #include "image_viewer.h"
 #include "palette_viewer.h"
+#include "sick_log_viewer.h"
 
 static const int theMinSizeScaleFactor = 4;
 
@@ -51,16 +51,16 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     // on the image processor
     connect(
         myPaletteViewer,
-        &PaletteViewer::tellBossAboutPaletteCount,
+        &PaletteViewer::tellBossAboutPaletteDisplaySize,
         this,
-        &PaletterGUI::setPaletteCount
+        &PaletterGUI::setPaletteDisplaySize
     );
 
     connect(
         myImgViewer,
         &ImageViewer::tellBossAboutPaletteFill,
         this,
-        &PaletterGUI::drawPalette
+        &PaletterGUI::setPalette
     );
 
     connect(
@@ -70,12 +70,18 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::applyPaletteToSecondViewer
     );
 
-    drawPalette(myImgViewer->getPalette());
+    setPalette(myImgViewer->palette());
 
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
-    myLogger = new QLabel(tr("Captain's Log: \n"), this);
+    myLogViewer = new SickLogViewer(this);
+    connect(
+        myPaletteViewer,
+        &PaletteViewer::tellBossToLog,
+        this,
+        &PaletterGUI::logMeHard
+    );
     connect(
         myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
@@ -86,7 +92,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::logMeHard
     );
 
-    mainLayout->addWidget(myLogger);
+    mainLayout->addWidget(myLogViewer);
 
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
@@ -104,25 +110,25 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 }
 
 void
-PaletterGUI::setPaletteCount(int count)
+PaletterGUI::setPaletteDisplaySize(int size)
 {
-    myImgViewer->setPaletteCount(count);
+    myImgViewer->setPaletteDisplaySize(size);
 }
 
 void
-PaletterGUI::drawPalette(QList<QColor> *palette)
+PaletterGUI::setPalette(QList<QColor> *palette)
 {
-    myPaletteViewer->drawPalette(palette);
+    myPaletteViewer->onPaletteChanged(palette);
 }
 
 void
 PaletterGUI::applyPaletteToSecondViewer()
 {
-    myConvertImgViewer->applyPalette(myImgViewer->getPalette());
+    myConvertImgViewer->applyPalette(myImgViewer->palette());
 }
 
 void
 PaletterGUI::logMeHard(const QString msg)
 {
-    myLogger->setText(myLogger->text() + msg);
+    myLogViewer->appendLine(msg);
 }

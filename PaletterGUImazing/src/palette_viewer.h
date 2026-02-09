@@ -1,5 +1,5 @@
-#ifndef PALETTEVIEWER_H
-#define PALETTEVIEWER_H
+#ifndef PALETTE_VIEWER_H
+#define PALETTE_VIEWER_H
 
 #include <QImage>
 #include <QMainWindow>
@@ -23,21 +23,21 @@ public:
     explicit PaletteViewer(QWidget *parent);
 
 public slots:
-    void onPaletteCountChanged();
-    void drawPalette(QList<QColor> *palette);
+    void onPaletteSizeChanged();
+    void onPaletteChanged(QList<QColor> *palette);
 
 signals:
-    void tellBossAboutPaletteCount(int count);
+    void tellBossAboutPaletteDisplaySize(int count);
+    void tellBossToLog(QString logmsg);
 
 protected:
     void exportPalette();
 
 private:
-    QWidget *myCreator;
     QVBoxLayout *myLayout;
     PaletteRow *myPaletteRow;
     SickSlider *mySlider;
     QPushButton *myExportButton;
 };
 
-#endif
+#endif  // PALETTE_VIEWER_H

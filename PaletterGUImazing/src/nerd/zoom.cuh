@@ -3,6 +3,7 @@
 
 namespace Zoom
 {
+
 void test(const int n, float *x, float *y);
 
 void applyPaletteByLength(
@@ -12,4 +13,5 @@ void applyPaletteByLength(
     const float3 *palette,
     const int palette_size
 );
+
 }  // end namespace

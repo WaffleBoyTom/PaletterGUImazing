@@ -1,5 +1,5 @@
-#ifndef SICKSLIDER_H
-#define SICKSLIDER_H
+#ifndef SICK_SLIDER_H
+#define SICK_SLIDER_H
 
 #include <QtWidgets>
 
@@ -20,15 +20,12 @@ public:
     int getValue();
 
 public slots:
-
     void onSliderValueChanged();
 
 private slots:
-
     void onLineEditValueChanged();
 
 signals:
-
     void paletteCountChangedSignal();
 
 protected:
@@ -36,10 +33,9 @@ protected:
     void wheelEvent(QWheelEvent *event);
 
 private:
-    QWidget *myCreator;
     QHBoxLayout *myLayout;
     QSlider *mySlider;
     QLineEdit *mySliderValueDisplay;
 };
 
-#endif
+#endif  // SICK_SLIDER_H

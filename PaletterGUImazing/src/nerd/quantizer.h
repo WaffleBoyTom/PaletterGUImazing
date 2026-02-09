@@ -65,4 +65,4 @@ private:
     [[maybe_unused]] Method myMethod;
 };
 
-#endif
+#endif  // QUANTIZER_H

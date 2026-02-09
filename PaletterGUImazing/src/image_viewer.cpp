@@ -13,10 +13,8 @@
 static const int theImageScaleFactor = 2;
 
 ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
+    : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
-
     // main layout
     myLayout = new QVBoxLayout(this);
 
@@ -62,8 +60,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
         myProcessorButton->setEnabled(false);
 
-        myModeDropdown->setMenuItem(tr("Median Cut"));
-        myModeDropdown->setMenuItem(tr("K-Means"));
+        myModeDropdown->addMenuItem(tr("Median Cut"));
+        myModeDropdown->addMenuItem(tr("K-Means"));
     }
     else
     {
@@ -78,14 +76,14 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
         myProcessorButton->setEnabled(false);
 
-        myModeDropdown->setMenuItem(tr("Distance"));
-        myModeDropdown->setMenuItem(tr("Luminance"));
-        myModeDropdown->setMenuItem(tr("Hue"));
-        myModeDropdown->setMenuItem(tr("Saturation"));
+        myModeDropdown->addMenuItem(tr("Distance"));
+        myModeDropdown->addMenuItem(tr("Luminance"));
+        myModeDropdown->addMenuItem(tr("Hue"));
+        myModeDropdown->addMenuItem(tr("Saturation"));
     }
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
-    myDeviceDropdown->setMenuItem(tr("CPU"));
+    myDeviceDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
     myDeviceDropdown->setMenuItem(tr("Metal"));
@@ -93,9 +91,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myDeviceDropdown->setMenuItem(tr("CUDA"));
 #endif
 
-    setPaletteCount(6);
-
-    myColorPalette = QList<QColor>(50, QColor(0, 0, 0));
+    setPaletteDisplaySize(INIT_PALETTE_SIZE);
+    myPalette = QList<QColor>();
 
     // populate layout
     myLayout->addWidget(myLineEdit);
@@ -114,7 +111,7 @@ ImageViewer::openNautilus()
     // not that I want to support that awful os but
     // you know...
 
-    const QString fileName = QFileDialog::getOpenFileName(
+    const QString file_name = QFileDialog::getOpenFileName(
         this,
         tr("Palettize this geezer"),    /* title of fileDialog */
         QDir::homePath(),               /* where to start the search */
@@ -122,21 +119,22 @@ ImageViewer::openNautilus()
     );
 
     // User closed the dialog, so don't error out
-    if (fileName.isEmpty())
+    if (file_name.isEmpty())
         return;
 
     // print selected file to console
-    emit tellBossToLog("Loaded Image :\n");
-    emit tellBossToLog(fileName + '\n');
+    emit tellBossToLog(QString("Loaded image file: %1").arg(file_name));
 
-    if (!loadImage(&fileName))
+    if (!loadImage(&file_name))
     {
-        emit tellBossToLog("Failed to load image");
+        emit tellBossToLog(
+            QString("Failed to load image file: %1").arg(file_name)
+        );
         QMessageBox::information(
             this,
             QGuiApplication::applicationDisplayName(), /* title */
             tr("Failed to load image: %1")
-                .arg(QDir::toNativeSeparators(fileName)) /* message text */
+                .arg(QDir::toNativeSeparators(file_name)) /* message text */
         );
     }
 }
@@ -175,9 +173,12 @@ ImageViewer::generatePalette()
 
     myProcessorButton->setEnabled(false);
 
+    // TODO: the task should be hidden behind an ImageProcessor interface.
+    // the ImageViewer should not create threads or tasks directly.
     QImage image = getImage();
-    QuantizeTask *task =
-        new QuantizeTask(image, myPaletteCount, Quantizer::Method::MedianCut);
+    QuantizeTask *task = new QuantizeTask(
+        image, myPaletteDisplaySize, Quantizer::Method::MedianCut
+    );
 
     connect(
         task,
@@ -193,13 +194,8 @@ ImageViewer::generatePalette()
 void
 ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    // FIXME: This is a horrible hack to keep the palette at a size of 50
-    // and only copy what was asked for..
-    for (int i = 0; i < myPaletteCount; ++i)
-    {
-        myColorPalette[i] = palette[i];
-    }
-    emit tellBossToLog("filled color palette\n");
+    myPalette = std::move(palette);
+    emit tellBossToLog("Filled color palette");
 
     // override orig with processed to make sure
     // result stays the same when we resize
@@ -207,7 +203,7 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     myLoadedImage = QPixmap::fromImage(image);
 
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
-    emit tellBossAboutPaletteFill(&myColorPalette);
+    emit tellBossAboutPaletteFill(&myPalette);
 
     myProcessorButton->setEnabled(true);
 }
@@ -217,19 +213,17 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 {
     myProcessorButton->setEnabled(false);
 
+    emit tellBossToLog("Applying color palette");
+
     QImage image = getImage();
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
-
-    // FIXME : logging here does not work ?
-    emit tellBossToLog("Applying color palette :\n");
-
-    QString dev_str(tr("Using: "));
-    dev_str.append(getDeviceStr(device));
-    emit tellBossToLog(dev_str);
+    emit tellBossToLog(QString("Using: %1").arg(getDeviceStr(device)));
 
     auto method = Remapper::CompareMethod(myModeDropdown->item());
 
+    // TODO: the task should be hidden behind an ImageProcessor interface.
+    // the ImageViewer should not create threads or tasks directly.
     RemapTask *task = new RemapTask(image, device, method, *palette);
 
     connect(
@@ -243,7 +237,7 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 void
 ImageViewer::onApplyPaletteFinished(QImage image)
 {
-    emit tellBossToLog("Done applying color palette: \n");
+    emit tellBossToLog("Done applying color palette");
 
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
@@ -267,9 +261,9 @@ ImageViewer::resizeImage(QPixmap *imagedisplay)
     // dividing by 2 for now, idk
 
     return imagedisplay->scaled(
-        myCreator->height() / theImageScaleFactor, /* width */
-        myCreator->width() / theImageScaleFactor,  /* height */
-        Qt::KeepAspectRatio                        /* ar */
+        parentWidget()->height() / theImageScaleFactor, /* width */
+        parentWidget()->width() / theImageScaleFactor,  /* height */
+        Qt::KeepAspectRatio                             /* ar */
     );
 }
 
@@ -285,13 +279,13 @@ ImageViewer::handleResizing()
 }
 
 void
-ImageViewer::setPaletteCount(const int count)
+ImageViewer::setPaletteDisplaySize(int size)
 {
-    myPaletteCount = count;
+    myPaletteDisplaySize = size;
 }
 
 QList<QColor> *
-ImageViewer::getPalette()
+ImageViewer::palette()
 {
-    return &myColorPalette;
+    return &myPalette;
 }

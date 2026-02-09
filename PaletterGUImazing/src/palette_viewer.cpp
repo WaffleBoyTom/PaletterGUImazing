@@ -2,28 +2,32 @@
 
 #include <QtWidgets>
 
+#include "palette_row.h"
 #include "sick_debug.h"
 #include "sick_slider.h"
 
-PaletteViewer::PaletteViewer(QWidget *parent)
+PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
-
     // main layout
     myLayout = new QVBoxLayout(this);
 
     myPaletteRow = new PaletteRow(this);
-    mySlider = new SickSlider(this);
-    myExportButton = new QPushButton(tr("Export Palette"), this);
+    connect(
+        myPaletteRow,
+        &PaletteRow::tellBossToLog,
+        this,
+        &PaletteViewer::tellBossToLog
+    );
 
+    mySlider = new SickSlider(this);
     connect(
         mySlider,
         &SickSlider::paletteCountChangedSignal,
         this,
-        &PaletteViewer::onPaletteCountChanged
+        &PaletteViewer::onPaletteSizeChanged
     );
 
+    myExportButton = new QPushButton(tr("Export Palette"), this);
     connect(
         myExportButton,
         &QPushButton::clicked,
@@ -37,18 +41,18 @@ PaletteViewer::PaletteViewer(QWidget *parent)
 }
 
 void
-PaletteViewer::onPaletteCountChanged()
+PaletteViewer::onPaletteSizeChanged()
 {
-    const int count = mySlider->getValue();
-    myPaletteRow->onPaletteCountChanged(count);
+    const int size = mySlider->getValue();
+    myPaletteRow->onPaletteDisplaySizeChanged(size);
 
-    emit tellBossAboutPaletteCount(count);
+    emit tellBossAboutPaletteDisplaySize(size);
 }
 
 void
-PaletteViewer::drawPalette(QList<QColor> *paletteptr)
+PaletteViewer::onPaletteChanged(QList<QColor> *palette)
 {
-    myPaletteRow->drawPalette(paletteptr);
+    myPaletteRow->onPaletteChanged(palette);
 }
 
 void

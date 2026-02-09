@@ -27,4 +27,4 @@ private:
     const QList<QColor> &myPalette;
 };
 
-#endif
+#endif  // REMAPPER_H

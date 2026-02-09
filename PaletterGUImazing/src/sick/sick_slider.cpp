@@ -4,16 +4,15 @@
 #include <QtWidgets>
 
 /*
+
 Custom slider because base qt slider is more cheeks
 than maurice...
 houdini has spoiled me for too long i guess >?
 
 */
 
-SickSlider::SickSlider(QWidget *parent)
+SickSlider::SickSlider(QWidget *parent) : QWidget(parent)
 {
-    // keep in touch with your parent
-    myCreator = parent;
     myLayout = new QHBoxLayout(this);
     myLayout->setContentsMargins(0, 0, 0, 0);
 
@@ -22,10 +21,14 @@ SickSlider::SickSlider(QWidget *parent)
 
     mySliderValueDisplay = new QLineEdit("6", this);
 
+    mySlider->setMaximumHeight(30);
     mySlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     mySliderValueDisplay->setSizePolicy(
         QSizePolicy::Preferred, QSizePolicy::Fixed
     );
+
+    setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+    setContentsMargins(QMargins(0, 10, 0, 10));
 
     // adds callbackto slider
     connect(
@@ -53,7 +56,7 @@ SickSlider::setSliderProperties()
     // bunch of magic numbers here
 
     mySlider->setOrientation(Qt::Horizontal);
-    mySlider->setTickInterval(2);
+    mySlider->setTickInterval(1);
     mySlider->setTickPosition(QSlider::TicksBothSides);
     mySlider->setMinimum(2);
     mySlider->setMaximum(50);
@@ -68,7 +71,8 @@ SickSlider::onSliderValueChanged()
     mySliderValueDisplay->setText(QString::number(mySlider->value()));
 
     // forces paintEvent to get called on PaletteViewer
-    myCreator->repaint();
+    parentWidget()->repaint();
+
     emit paletteCountChangedSignal();
 }
 
@@ -79,7 +83,7 @@ SickSlider::onLineEditValueChanged()
     mySlider->setValue(mySliderValueDisplay->text().toInt());
 
     // forces paintEvent to get called on PaletteViewer
-    myCreator->repaint();
+    parentWidget()->repaint();
 
     emit paletteCountChangedSignal();
 }

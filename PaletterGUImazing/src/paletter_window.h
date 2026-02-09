@@ -1,10 +1,11 @@
-#ifndef PALETTERWINDOW_H
-#define PALETTERWINDOW_H
+#ifndef PALETTER_WINDOW_H
+#define PALETTER_WINDOW_H
 
 #include <QWidget>
 
 #include "image_viewer.h"
 #include "palette_viewer.h"
+#include "sick_log_viewer.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -29,19 +30,17 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public slots:
-    void setPaletteCount(int count);
-    void drawPalette(QList<QColor> *palette);
+    void setPaletteDisplaySize(int size);
+    void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
     void logMeHard(const QString msg);
 
 private:
     QLabel *paletterLabel;
-    // QPushButton *newTestButton;
-    // QLineEdit *newLineEdit;
     ImageViewer *myImgViewer;
     PaletteViewer *myPaletteViewer;
     ImageViewer *myConvertImgViewer;
-    QLabel *myLogger;
+    SickLogViewer *myLogViewer;
 };
 
-#endif  // PALETTERWINDOW_H
+#endif  // PALETTER_WINDOW_H
