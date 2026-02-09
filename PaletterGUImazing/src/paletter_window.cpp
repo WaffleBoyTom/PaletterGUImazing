@@ -4,7 +4,6 @@
 #include <QThread>
 #include <QtWidgets>
 
-#include "baller_task.h"
 #include "image_viewer.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
@@ -52,16 +51,16 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     // on the image processor
     connect(
         myPaletteViewer,
-        &PaletteViewer::tellBossAboutPaletteCount,
+        &PaletteViewer::tellBossAboutPaletteDisplaySize,
         this,
-        &PaletterGUI::setPaletteCount
+        &PaletterGUI::setPaletteDisplaySize
     );
 
     connect(
         myImgViewer,
         &ImageViewer::tellBossAboutPaletteFill,
         this,
-        &PaletterGUI::drawPalette
+        &PaletterGUI::setPalette
     );
 
     connect(
@@ -71,7 +70,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::applyPaletteToSecondViewer
     );
 
-    drawPalette(myImgViewer->getPalette());
+    setPalette(myImgViewer->palette());
 
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
@@ -105,21 +104,21 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 }
 
 void
-PaletterGUI::setPaletteCount(int count)
+PaletterGUI::setPaletteDisplaySize(int size)
 {
-    myImgViewer->setPaletteCount(count);
+    myImgViewer->setPaletteDisplaySize(size);
 }
 
 void
-PaletterGUI::drawPalette(QList<QColor> *palette)
+PaletterGUI::setPalette(QList<QColor> *palette)
 {
-    myPaletteViewer->drawPalette(palette);
+    myPaletteViewer->onPaletteChanged(palette);
 }
 
 void
 PaletterGUI::applyPaletteToSecondViewer()
 {
-    myConvertImgViewer->applyPalette(myImgViewer->getPalette());
+    myConvertImgViewer->applyPalette(myImgViewer->palette());
 }
 
 void

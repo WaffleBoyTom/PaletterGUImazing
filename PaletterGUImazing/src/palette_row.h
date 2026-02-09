@@ -22,8 +22,8 @@ public:
     QSize sizeHint() const override;
 
 public slots:
-    void onPaletteCountChanged(const int count);
-    void drawPalette(QList<QColor> *palette);
+    void onPaletteDisplaySizeChanged(int size);
+    void onPaletteChanged(QList<QColor> *palette);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -32,7 +32,7 @@ protected:
 private:
     QVBoxLayout *myLayout;
 
-    QList<QColor> *myPalettePtr;
+    QList<QColor> *myPalette;
     int myBoxCount;
 };
 

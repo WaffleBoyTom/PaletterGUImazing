@@ -28,13 +28,13 @@ class ImageViewer : public QWidget
 public:
     explicit ImageViewer(QWidget *parent, bool paletteSource);
     void handleResizing();
-    void setPaletteCount(const int count);
-    QList<QColor> *getPalette();
+    void setPaletteDisplaySize(int size);
+    QList<QColor> *palette();
 
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
 
-    constexpr static std::size_t MAX_PALETTE_SIZE = 50;
+    constexpr static int INIT_PALETTE_SIZE = 6;
 
 signals:
 
@@ -92,8 +92,8 @@ private:
     // dropdown for specifying device
     SickDropDown *myDeviceDropdown;
 
-    QList<QColor> myColorPalette;
-    int myPaletteCount;
+    QList<QColor> myPalette;
+    int myPaletteDisplaySize;
 };
 
 #endif  // IMAGE_VIEWER_H

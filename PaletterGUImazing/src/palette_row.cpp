@@ -19,23 +19,23 @@ PaletteRow::sizeHint() const
 }
 
 void
-PaletteRow::onPaletteCountChanged(const int count)
+PaletteRow::onPaletteDisplaySizeChanged(int size)
 {
-    myBoxCount = count;
+    myBoxCount = size;
     this->repaint();
 }
 
 void
-PaletteRow::drawPalette(QList<QColor> *paletteptr)
+PaletteRow::onPaletteChanged(QList<QColor> *palette)
 {
-    myPalettePtr = paletteptr;
+    myPalette = palette;
     this->repaint();
 }
 
 void
 PaletteRow::paintEvent(QPaintEvent *event)
 {
-    if (!myPalettePtr)
+    if (!myPalette)
         return;
 
     QPainter painter(this);
@@ -49,13 +49,14 @@ PaletteRow::paintEvent(QPaintEvent *event)
 
     for (int i = 0; i < myBoxCount; ++i)
     {
-        const int index = qBound(0, i, 50);
+        const QColor color =
+            (i < myPalette->size()) ? myPalette->at(i) : QColor("black");
         painter.fillRect(
             start + (width * i),  // x
             height / 2,           // y
             width - padding,      // width
             height,               // height
-            myPalettePtr->at(index)
+            color
         );
     }
 }
@@ -63,6 +64,9 @@ PaletteRow::paintEvent(QPaintEvent *event)
 void
 PaletteRow::mouseMoveEvent(QMouseEvent *event)
 {
+    if (!myPalette)
+        return;
+
     const int width = this->width() / myBoxCount;
     const int height = this->height();
     const int padding = 10;
@@ -82,7 +86,8 @@ PaletteRow::mouseMoveEvent(QMouseEvent *event)
 
     if (index >= 0 && x_check && y_check)
     {
-        const QColor &color = myPalettePtr->at(index);
+        QColor color = (index < myPalette->size()) ? myPalette->at(index)
+                                                   : QColor("black");
         const QString hex = color.name(QColor::HexRgb);
         QToolTip::showText(event->globalPosition().toPoint(), hex, this);
     }

@@ -30,8 +30,8 @@ protected:
     void resizeEvent(QResizeEvent *event) override;
 
 public slots:
-    void setPaletteCount(int count);
-    void drawPalette(QList<QColor> *palette);
+    void setPaletteDisplaySize(int size);
+    void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
     void logMeHard(const QString msg);
 

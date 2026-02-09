@@ -23,11 +23,11 @@ public:
     explicit PaletteViewer(QWidget *parent);
 
 public slots:
-    void onPaletteCountChanged();
-    void drawPalette(QList<QColor> *palette);
+    void onPaletteSizeChanged();
+    void onPaletteChanged(QList<QColor> *palette);
 
 signals:
-    void tellBossAboutPaletteCount(int count);
+    void tellBossAboutPaletteDisplaySize(int count);
 
 protected:
     void exportPalette();

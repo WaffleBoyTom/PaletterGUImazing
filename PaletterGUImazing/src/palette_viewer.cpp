@@ -18,7 +18,7 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
         mySlider,
         &SickSlider::paletteCountChangedSignal,
         this,
-        &PaletteViewer::onPaletteCountChanged
+        &PaletteViewer::onPaletteSizeChanged
     );
 
     connect(
@@ -34,18 +34,18 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
 }
 
 void
-PaletteViewer::onPaletteCountChanged()
+PaletteViewer::onPaletteSizeChanged()
 {
-    const int count = mySlider->getValue();
-    myPaletteRow->onPaletteCountChanged(count);
+    const int size = mySlider->getValue();
+    myPaletteRow->onPaletteDisplaySizeChanged(size);
 
-    emit tellBossAboutPaletteCount(count);
+    emit tellBossAboutPaletteDisplaySize(size);
 }
 
 void
-PaletteViewer::drawPalette(QList<QColor> *paletteptr)
+PaletteViewer::onPaletteChanged(QList<QColor> *palette)
 {
-    myPaletteRow->drawPalette(paletteptr);
+    myPaletteRow->onPaletteChanged(palette);
 }
 
 void

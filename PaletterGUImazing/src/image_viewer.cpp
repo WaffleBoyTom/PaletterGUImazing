@@ -91,9 +91,8 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myDeviceDropdown->setMenuItem(tr("CUDA"));
 #endif
 
-    setPaletteCount(6);
-
-    myColorPalette = QList<QColor>(50, QColor(0, 0, 0));
+    setPaletteDisplaySize(INIT_PALETTE_SIZE);
+    myPalette = QList<QColor>();
 
     // populate layout
     myLayout->addWidget(myLineEdit);
@@ -177,8 +176,9 @@ ImageViewer::generatePalette()
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.
     QImage image = getImage();
-    QuantizeTask *task =
-        new QuantizeTask(image, myPaletteCount, Quantizer::Method::MedianCut);
+    QuantizeTask *task = new QuantizeTask(
+        image, myPaletteDisplaySize, Quantizer::Method::MedianCut
+    );
 
     connect(
         task,
@@ -194,7 +194,7 @@ ImageViewer::generatePalette()
 void
 ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    myColorPalette = palette.sliced(0, MAX_PALETTE_SIZE);
+    myPalette = std::move(palette);
     emit tellBossToLog("Filled color palette");
 
     // override orig with processed to make sure
@@ -203,7 +203,7 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     myLoadedImage = QPixmap::fromImage(image);
 
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));
-    emit tellBossAboutPaletteFill(&myColorPalette);
+    emit tellBossAboutPaletteFill(&myPalette);
 
     myProcessorButton->setEnabled(true);
 }
@@ -279,13 +279,13 @@ ImageViewer::handleResizing()
 }
 
 void
-ImageViewer::setPaletteCount(const int count)
+ImageViewer::setPaletteDisplaySize(int size)
 {
-    myPaletteCount = count;
+    myPaletteDisplaySize = size;
 }
 
 QList<QColor> *
-ImageViewer::getPalette()
+ImageViewer::palette()
 {
-    return &myColorPalette;
+    return &myPalette;
 }
