@@ -78,6 +78,8 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
 
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(name_hex);
+
+        emit tellBossToLog(QString("Copied: %1").arg(name_hex));
     }
 }
 

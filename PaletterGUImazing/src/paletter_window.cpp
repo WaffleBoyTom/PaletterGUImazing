@@ -77,6 +77,12 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogViewer = new SickLogViewer(this);
     connect(
+        myPaletteViewer,
+        &PaletteViewer::tellBossToLog,
+        this,
+        &PaletterGUI::logMeHard
+    );
+    connect(
         myImgViewer, &ImageViewer::tellBossToLog, this, &PaletterGUI::logMeHard
     );
     connect(

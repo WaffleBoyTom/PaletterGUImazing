@@ -28,6 +28,7 @@ public slots:
 
 signals:
     void tellBossAboutPaletteDisplaySize(int count);
+    void tellBossToLog(QString logmsg);
 
 protected:
     void exportPalette();

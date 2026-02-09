@@ -2,6 +2,7 @@
 
 #include <QtWidgets>
 
+#include "palette_row.h"
 #include "sick_debug.h"
 #include "sick_slider.h"
 
@@ -11,9 +12,14 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
     myLayout = new QVBoxLayout(this);
 
     myPaletteRow = new PaletteRow(this);
-    mySlider = new SickSlider(this);
-    myExportButton = new QPushButton(tr("Export Palette"), this);
+    connect(
+        myPaletteRow,
+        &PaletteRow::tellBossToLog,
+        this,
+        &PaletteViewer::tellBossToLog
+    );
 
+    mySlider = new SickSlider(this);
     connect(
         mySlider,
         &SickSlider::paletteCountChangedSignal,
@@ -21,6 +27,7 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
         &PaletteViewer::onPaletteSizeChanged
     );
 
+    myExportButton = new QPushButton(tr("Export Palette"), this);
     connect(
         myExportButton,
         &QPushButton::clicked,
