@@ -34,6 +34,8 @@ public:
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
 
+    constexpr static std::size_t MAX_PALETTE_SIZE = 50;
+
 signals:
 
     void tellBossAboutPaletteFill(QList<QColor> *palette);

@@ -174,6 +174,8 @@ ImageViewer::generatePalette()
 
     myProcessorButton->setEnabled(false);
 
+    // TODO: the task should be hidden behind an ImageProcessor interface.
+    // the ImageViewer should not create threads or tasks directly.
     QImage image = getImage();
     QuantizeTask *task =
         new QuantizeTask(image, myPaletteCount, Quantizer::Method::MedianCut);
@@ -192,12 +194,7 @@ ImageViewer::generatePalette()
 void
 ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    // FIXME: This is a horrible hack to keep the palette at a size of 50
-    // and only copy what was asked for..
-    for (int i = 0; i < myPaletteCount; ++i)
-    {
-        myColorPalette[i] = palette[i];
-    }
+    myColorPalette = palette.sliced(0, MAX_PALETTE_SIZE);
     emit tellBossToLog("Filled color palette");
 
     // override orig with processed to make sure
@@ -216,7 +213,6 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 {
     myProcessorButton->setEnabled(false);
 
-    // FIXME: logging here does not work ?
     emit tellBossToLog("Applying color palette");
 
     QImage image = getImage();
@@ -226,6 +222,8 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 
     auto method = Remapper::CompareMethod(myModeDropdown->item());
 
+    // TODO: the task should be hidden behind an ImageProcessor interface.
+    // the ImageViewer should not create threads or tasks directly.
     RemapTask *task = new RemapTask(image, device, method, *palette);
 
     connect(
