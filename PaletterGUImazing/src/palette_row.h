@@ -21,9 +21,6 @@ public:
 
     QSize sizeHint() const override;
 
-signals:
-    void tellBossToLog(QString logmsg);
-
 public slots:
     void onPaletteDisplaySizeChanged(int size);
     void onPaletteChanged(QList<QColor> *palette);

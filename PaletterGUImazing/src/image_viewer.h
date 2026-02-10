@@ -37,9 +37,7 @@ public:
     constexpr static int INIT_PALETTE_SIZE = 6;
 
 signals:
-
     void tellBossAboutPaletteFill(QList<QColor> *palette);
-    void tellBossToLog(QString logmsg);
     void askBossForPalette();
 
 private slots:

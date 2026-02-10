@@ -4,6 +4,8 @@ set(PROJECT_SOURCES
     paletter_window.h
     image_viewer.cpp
     image_viewer.h
+    logger.h
+    logger.cpp
     palette_viewer.cpp
     palette_viewer.h
     palette_row.cpp

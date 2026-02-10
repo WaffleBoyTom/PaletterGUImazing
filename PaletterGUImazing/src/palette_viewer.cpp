@@ -12,12 +12,6 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
     myLayout = new QVBoxLayout(this);
 
     myPaletteRow = new PaletteRow(this);
-    connect(
-        myPaletteRow,
-        &PaletteRow::tellBossToLog,
-        this,
-        &PaletteViewer::tellBossToLog
-    );
 
     mySlider = new SickSlider(this);
     connect(
