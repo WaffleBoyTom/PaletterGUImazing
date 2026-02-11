@@ -61,9 +61,9 @@ SickInspector *SickInspector::theInspector = nullptr;
 SickInspector *
 SickInspector::getInstance()
 {
-    if (SickInspector::theInspector == nullptr)
-        SickInspector::theInspector = new SickInspector();
-    return SickInspector::theInspector;
+    if (theInspector == nullptr)
+        theInspector = new SickInspector();
+    return theInspector;
 }
 
 SickInspector::SickInspector() : QWidget(nullptr)

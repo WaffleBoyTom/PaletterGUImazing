@@ -6,6 +6,7 @@
 #include <QToolTip>
 #include <QtWidgets>
 
+#include "logger.h"
 #include "sick_inspector.h"
 
 PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
@@ -79,7 +80,7 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(name_hex);
 
-        emit tellBossToLog(QString("Copied: %1").arg(name_hex));
+        Logger::log(QString("Copied: %1").arg(name_hex));
     }
 }
 
