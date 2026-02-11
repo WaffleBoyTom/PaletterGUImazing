@@ -46,7 +46,7 @@ private slots:
     void openNautilus();
 
     // loads image from file explorer into window
-    bool loadImage(const QString *filename);
+    bool loadImage(const QString &filename);
 
     // get QImage from image holder
     QImage getImage();

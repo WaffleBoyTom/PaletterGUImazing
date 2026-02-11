@@ -1,7 +1,5 @@
 #include "image_viewer.h"
 
-#include <QtWidgets/qpushbutton.h>
-
 #include <QMessageBox>
 #include <QtWidgets>
 
@@ -108,42 +106,55 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 void
 ImageViewer::openNautilus()
 {
-    // TODO: I wonder if /home resolves correctly on windows >?
-    // not that I want to support that awful os but
-    // you know...
+    QFileDialog dialog(this);
+    dialog.setWindowTitle(tr("Palettize this geezer"));
+    dialog.setDirectory(QDir::homePath());
+    dialog.setFileMode(QFileDialog::ExistingFile);
 
-    const QString file_name = QFileDialog::getOpenFileName(
-        this,
-        tr("Palettize this geezer"),    /* title of fileDialog */
-        QDir::homePath(),               /* where to start the search */
-        tr("Image Files (*.png *.jpg)") /* file filter */
-    );
+    QList<QByteArray> image_formats = QImageReader::supportedImageFormats();
+    QStringList format_filters;
+    for (const QByteArray &image_format : image_formats)
+        format_filters << QString("*.%1").arg(image_format);
 
-    // User closed the dialog, so don't error out
-    if (file_name.isEmpty())
-        return;
+    // Remove GIF filter.
+    format_filters.removeAll("*.gif");
 
-    // print selected file to console
-    Logger::log(QString("Loaded image file: %1").arg(file_name));
+    QString all_name_filter =
+        QString("All Images (%1)").arg(format_filters.join(" "));
 
-    if (!loadImage(&file_name))
+    dialog.setNameFilter(all_name_filter);
+
+    if (dialog.exec() == QDialog::Accepted)
     {
-        Logger::log(QString("Failed to load image file: %1").arg(file_name));
-        QMessageBox::information(
-            this,
-            QGuiApplication::applicationDisplayName(), /* title */
-            tr("Failed to load image: %1")
-                .arg(QDir::toNativeSeparators(file_name)) /* message text */
-        );
+        QString file_path = dialog.selectedFiles().first();
+        if (loadImage(file_path))
+        {
+            const QString native_path = QDir::toNativeSeparators(file_path);
+            QString message = QString("Loaded image file: %1").arg(native_path);
+            Logger::log(message);
+        }
+        else
+        {
+            QString message = "Failed to load image file";
+            Logger::log(message);
+            QMessageBox::information(
+                this, QGuiApplication::applicationDisplayName(), message
+            );
+        }
+    }
+    else
+    {
+        // User closed the dialog, so don't error out.
+        return;
     }
 }
 
 bool
-ImageViewer::loadImage(const QString *filename)
+ImageViewer::loadImage(const QString &filename)
 {
-    myLineEdit->setText(*filename);
+    myLineEdit->setText(filename);
 
-    if (!myLoadedImage.load(*filename))
+    if (!myLoadedImage.load(filename))
         return false;
 
     myProcessorButton->setEnabled(true);
