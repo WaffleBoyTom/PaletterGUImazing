@@ -35,6 +35,8 @@ Shabu Dabu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom
     - [ ] JSON palette string
     - [ ] The image with the palette applied
 
+- [ ] Misc
+    - [ ] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE
