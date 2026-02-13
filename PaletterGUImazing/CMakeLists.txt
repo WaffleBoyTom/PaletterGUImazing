@@ -17,9 +17,9 @@ set(CMAKE_CXX_FLAGS
     -pedantic \
     -Wall \
     -Wno-attributes \
+    -Wno-unused-variable \
     -Werror \
-    -Wpedantic \
-    -Wno-attributes"
+    -Wpedantic"
 )
 
 # Project
