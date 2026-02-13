@@ -117,7 +117,6 @@ ImageViewer::openNautilus()
     for (const QByteArray &image_format : image_formats)
         format_filters << QString("*.%1").arg(image_format);
 
-    // Remove GIF filter.
     format_filters.removeAll("*.gif");
 
     QString all_name_filter =
@@ -139,7 +138,9 @@ ImageViewer::openNautilus()
             QString message = "Failed to load image file";
             SickLogger::log(message, SickLogSeverity::ERROR);
             QMessageBox::information(
-                this, QGuiApplication::applicationDisplayName(), message
+                this, 
+                QGuiApplication::applicationDisplayName(), 
+                message
             );
         }
     }

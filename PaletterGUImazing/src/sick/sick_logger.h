@@ -6,6 +6,8 @@
 enum class SickLogSeverity 
 {
     MSG,
+    CUDA,
+    METAL,
     WARNING,
     ERROR
 };

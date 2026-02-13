@@ -24,15 +24,27 @@ void
 SickLogViewer::appendLine(QString message, SickLogSeverity sev)
 {
     QTextCursor cursor(textCursor());
-    cursor.movePosition(QTextCursor::End); // Move cursor to the end
+    cursor.movePosition(QTextCursor::End);
 
-    // Apply the character format (color)
     QTextCharFormat format;
     switch (sev)
     {
         case SickLogSeverity::MSG:
         {
+            // Qt::cyan looks pretty cool
+            // maybe we could give the user an option
+            // to set the messages to cyan ...
             format.setForeground(QBrush(Qt::white));
+            break;
+        }
+        case SickLogSeverity::CUDA:
+        {
+            format.setForeground(QBrush(Qt::green));
+            break;
+        }
+        case SickLogSeverity::METAL:
+        {
+            format.setForeground(QBrush(Qt::lightGray));
             break;
         }
         case SickLogSeverity::WARNING:
@@ -49,9 +61,8 @@ SickLogViewer::appendLine(QString message, SickLogSeverity sev)
         format.setForeground(QBrush(Qt::white));
         break;
     }
+    
     cursor.setCharFormat(format);
-
-    // Insert the text and a newline character to form a line
     cursor.insertText(message);
     cursor.insertText("\n");
 }

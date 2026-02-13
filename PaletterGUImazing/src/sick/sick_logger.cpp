@@ -19,7 +19,9 @@ SickLogger *SickLogger::theLogger = nullptr;
 
 SickLogger::SickLogger()
 {
+#ifdef LOG_DEBUG
     connect(this, &SickLogger::tellBossToLog, this, &SickLogger::logToQDebug);
+#endif
 }
 
 void
