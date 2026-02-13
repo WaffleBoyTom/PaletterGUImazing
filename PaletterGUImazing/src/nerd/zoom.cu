@@ -64,7 +64,7 @@ test_kernel(int n, float *x, float *y)
 
 __global__ void
 applyPaletteByLengthKernel(
-    uchar3 *pixels,
+    uchar4 *pixels,
     const int pixel_count,
     const float3 *palette,
     const int palette_size
@@ -76,8 +76,8 @@ applyPaletteByLengthKernel(
     for (int i = index; i < pixel_count; i += stride)
     {
         float delta = 1000.0;
-        uchar3 bits = pixels[i];
-        float3 pixel = uchar3ToFloat3(bits);
+        uchar4 bits = pixels[i];
+        float3 pixel = uchar4ToFloat3(bits);
         float3 best = pixel;
 
         for (int j = 0; j < palette_size; ++j)
@@ -92,7 +92,7 @@ applyPaletteByLengthKernel(
             if (dist < 0.01)
                 break;
         }
-        pixels[i] = float3ToUChar3(best);
+        pixels[i] = float3ToUChar4(best);
     }
 }
 
@@ -100,16 +100,8 @@ namespace Zoom
 {
 
 void
-test(const int n, float *x, float *y)
-{
-    test_kernel<<<1, 1>>>(n, x, y);
-
-    cudaDeviceSynchronize();
-}
-
-void
 applyPaletteByLength(
-    uchar3 *img,
+    uchar4 *img,
     const int width,
     const int height,
     const float3 *palette,

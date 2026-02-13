@@ -85,9 +85,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myDeviceDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
-    myDeviceDropdown->setMenuItem(tr("Metal"));
+    myDeviceDropdown->addMenuItem(tr("Metal"));
 #elif defined(USE_CUDA)
-    myDeviceDropdown->setMenuItem(tr("CUDA"));
+    myDeviceDropdown->addMenuItem(tr("CUDA"));
 #endif
 
     setPaletteDisplaySize(INIT_PALETTE_SIZE);
@@ -237,7 +237,10 @@ ImageViewer::applyPalette(QList<QColor> *palette)
     RemapTask *task = new RemapTask(image, device, method, *palette);
 
     connect(
-        task, &RemapTask::finished, this, &ImageViewer::onApplyPaletteFinished
+        task, 
+        &RemapTask::finished, 
+        this, 
+        &ImageViewer::onApplyPaletteFinished
     );
 
     QThread *thread = new QThread();

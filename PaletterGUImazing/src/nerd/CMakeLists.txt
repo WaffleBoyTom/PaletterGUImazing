@@ -1,4 +1,6 @@
 if (USE_CUDA)
+    message( "compiling zoom")
+    add_definitions(-DUSE_CUDA)
     set(SOURCE
         quantizer.h
         quantizer.cpp
