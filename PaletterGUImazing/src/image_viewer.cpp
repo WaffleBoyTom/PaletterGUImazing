@@ -4,7 +4,7 @@
 #include <QtWidgets>
 
 #include "baller_task.h"
-#include "logger.h"
+#include "sick_logger.h"
 #include "remapper.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
@@ -131,12 +131,12 @@ ImageViewer::openNautilus()
         {
             const QString native_path = QDir::toNativeSeparators(file_path);
             QString message = QString("Loaded image file: %1").arg(native_path);
-            Logger::log(message);
+            SickLogger::log(message);
         }
         else
         {
             QString message = "Failed to load image file";
-            Logger::log(message);
+            SickLogger::log(message);
             QMessageBox::information(
                 this, QGuiApplication::applicationDisplayName(), message
             );
@@ -205,7 +205,7 @@ void
 ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 {
     myPalette = std::move(palette);
-    Logger::log("Filled color palette");
+    SickLogger::log("Filled color palette");
 
     // override orig with processed to make sure
     // result stays the same when we resize
@@ -223,12 +223,12 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 {
     myProcessorButton->setEnabled(false);
 
-    Logger::log("Applying color palette");
+    SickLogger::log("Applying color palette");
 
     QImage image = getImage();
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
-    Logger::log(QString("Using: %1").arg(getDeviceStr(device)));
+    SickLogger::log(QString("Using: %1").arg(getDeviceStr(device)));
 
     auto method = Remapper::CompareMethod(myModeDropdown->item());
 
@@ -247,7 +247,7 @@ ImageViewer::applyPalette(QList<QColor> *palette)
 void
 ImageViewer::onApplyPaletteFinished(QImage image)
 {
-    Logger::log("Done applying color palette");
+    SickLogger::log("Done applying color palette");
 
     myLoadedImage = QPixmap::fromImage(image);
     myImageHolder->setPixmap(resizeImage(&myLoadedImage));

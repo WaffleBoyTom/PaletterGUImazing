@@ -5,7 +5,7 @@
 #include <QtWidgets>
 
 #include "image_viewer.h"
-#include "logger.h"
+#include "sick_logger.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
 
@@ -78,8 +78,8 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogViewer = new SickLogViewer(this);
     connect(
-        Logger::getInstance(),
-        &Logger::tellBossToLog,
+        SickLogger::getInstance(),
+        &SickLogger::tellBossToLog,
         this,
         &PaletterGUI::logMeHard
     );

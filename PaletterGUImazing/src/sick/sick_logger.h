@@ -1,14 +1,14 @@
-#ifndef LOGGER_H
-#define LOGGER_H
+#ifndef SICK_LOGGER_H
+#define SICK_LOGGER_H
 
 #include <QtWidgets>
 
-class Logger : public QObject
+class SickLogger : public QObject
 {
     Q_OBJECT
 
 public:
-    static Logger *getInstance();
+    static SickLogger *getInstance();
     static void log(QString message);
 
 signals:
@@ -18,9 +18,9 @@ private slots:
     void logToQDebug(QString message) const;
 
 private:
-    Logger();
+    SickLogger();
 
-    static Logger *theLogger;
+    static SickLogger *theLogger;
 };
 
-#endif  // LOGGER_H
+#endif  // SICK_LOGGER_H

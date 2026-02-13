@@ -6,6 +6,8 @@ set(SOURCE
     sick_inspector.cpp
     sick_log_viewer.h
     sick_log_viewer.cpp
+    sick_logger.h
+    sick_logger.cpp
     sick_slider.h
     sick_slider.cpp
 )
