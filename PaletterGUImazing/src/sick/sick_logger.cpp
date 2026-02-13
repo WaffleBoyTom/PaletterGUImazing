@@ -9,10 +9,10 @@ SickLogger::getInstance()
 }
 
 void
-SickLogger::log(QString message)
+SickLogger::log(QString message, SickLogSeverity sev)
 {
     SickLogger *logger = SickLogger::getInstance();
-    emit logger->tellBossToLog(std::move(message));
+    emit logger->tellBossToLog(std::move(message), sev);
 }
 
 SickLogger *SickLogger::theLogger = nullptr;

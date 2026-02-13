@@ -33,7 +33,7 @@ public slots:
     void setPaletteDisplaySize(int size);
     void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
-    void logMeHard(const QString msg);
+    void logMeHard(const QString msg, const SickLogSeverity sev);
 
 private:
     QLabel *paletterLabel;

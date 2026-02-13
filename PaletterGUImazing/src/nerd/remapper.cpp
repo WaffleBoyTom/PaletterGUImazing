@@ -1,4 +1,5 @@
 #include "remapper.h"
+#include "sick_logger.h"
 
 // THIS CAN'T BE INCLUDED BECAUSE NVCC DOESNT LIKE IT !!!!!!
 // #include <QDebug>
@@ -26,6 +27,7 @@
 
 #ifdef USE_CUDA
 #include "zoom.cuh"
+#include <cuda_runtime.h>
 #endif
 
 Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
@@ -37,6 +39,29 @@ void
 Remapper::remap(QImage &image) const
 {
 #ifdef USE_CUDA
+
+    int deviceCount = 0;
+    cudaError_t err = cudaGetDeviceCount(&deviceCount);
+
+    if (err == cudaSuccess && deviceCount > 0)
+    {
+        SickLogger::log("Using CUDA !");
+        for (int dev = 0; dev < deviceCount; ++dev) 
+        {
+            cudaDeviceProp deviceProp;
+            cudaGetDeviceProperties(&deviceProp, dev);
+            QString dev_name(deviceProp.name);
+            SickLogger::log(QString("Device %1").arg(dev_name));
+        }
+    
+    }
+    else
+    {
+        SickLogger::log("Failed to find a CUDA device !!",
+                        SickLogSeverity::ERROR);
+        return;
+    }
+
     int width = image.width();
     int height = image.height();
     int pixel_count = width * height;

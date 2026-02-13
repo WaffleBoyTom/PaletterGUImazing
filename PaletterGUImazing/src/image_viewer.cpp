@@ -82,6 +82,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     }
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
+    // CPU should be the second option..
     myDeviceDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
@@ -89,7 +90,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 #elif defined(USE_CUDA)
     myDeviceDropdown->addMenuItem(tr("CUDA"));
 #endif
-
+    
     setPaletteDisplaySize(INIT_PALETTE_SIZE);
     myPalette = QList<QColor>();
 
@@ -136,7 +137,7 @@ ImageViewer::openNautilus()
         else
         {
             QString message = "Failed to load image file";
-            SickLogger::log(message);
+            SickLogger::log(message, SickLogSeverity::ERROR);
             QMessageBox::information(
                 this, QGuiApplication::applicationDisplayName(), message
             );

@@ -120,7 +120,7 @@ PaletterGUI::applyPaletteToSecondViewer()
 }
 
 void
-PaletterGUI::logMeHard(const QString msg)
+PaletterGUI::logMeHard(const QString msg, const SickLogSeverity sev)
 {
-    myLogViewer->appendLine(msg);
+    myLogViewer->appendLine(msg, sev);
 }
