@@ -134,3 +134,20 @@ PaletteRow::findColor(QPoint position) const
         return myPalette->at(index);
     return std::nullopt;
 }
+
+bool
+PaletteRow::serialize(QJsonObject &json)
+{
+
+    // assert big time, this should never happen !
+    if (!myPalette || myPalette->size() < 2)
+        return false;
+
+    for (int i = 0; i < myPalette->size(); ++i)
+    {
+        QString name_hex = myPalette->at(i).name(QColor::HexRgb);
+        json.insert(QString("Color %1").arg(i + 1), name_hex);
+    }
+    return true;
+
+}

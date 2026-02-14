@@ -20,6 +20,9 @@ public:
     explicit PaletteRow(QWidget *parent);
 
     QSize sizeHint() const override;
+    // fills json with palette
+    // returns false if the palette is empty
+    bool serialize(QJsonObject &json);
 
 public slots:
     void onPaletteDisplaySizeChanged(int size);

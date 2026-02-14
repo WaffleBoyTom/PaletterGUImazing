@@ -5,6 +5,7 @@
 #include "palette_row.h"
 #include "sick_debug.h"
 #include "sick_slider.h"
+#include "sick_logger.h"
 
 PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
 {
@@ -52,5 +53,21 @@ PaletteViewer::onPaletteChanged(QList<QColor> *palette)
 void
 PaletteViewer::exportPalette()
 {
-    qDebug() << "balllls";
+    SickLogger::log("Exporting Palette !");
+    QJsonObject json;
+    bool can_serialize = myPaletteRow->serialize(json);
+    if (!can_serialize)
+    {
+        // shit went south big time
+        SickLogger::log(
+            QString("Either you never generated a palette or shit went south big time..."),
+            SickLogSeverity::ERROR
+        );
+        return;
+    }
+
+    QJsonDocument doc(json);
+    QByteArray jsonData = doc.toJson(QJsonDocument::Indented);
+    SickLogger::log(QString(jsonData));
+    
 }
