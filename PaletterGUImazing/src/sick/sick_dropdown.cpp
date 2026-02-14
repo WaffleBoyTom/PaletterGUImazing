@@ -26,8 +26,14 @@ SickDropDown::addMenuItem(QString item)
     myMenu->addItem(item);
 }
 
+void
+SickDropDown::setMenuItem(int idx)
+{
+    myMenu->setCurrentIndex(idx);
+}
+
 int
-SickDropDown::item()
+SickDropDown::item() const
 {
     return myMenu->currentIndex();
 }

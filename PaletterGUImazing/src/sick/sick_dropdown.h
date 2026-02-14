@@ -20,7 +20,8 @@ class SickDropDown : public QWidget
 public:
     explicit SickDropDown(QWidget *parent, QString label);
     void addMenuItem(QString item);
-    int item();
+    void setMenuItem(int idx);
+    int item() const;
 
 private:
     QHBoxLayout *myLayout;

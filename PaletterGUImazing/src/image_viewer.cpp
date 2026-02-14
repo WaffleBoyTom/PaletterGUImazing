@@ -82,13 +82,15 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     }
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
-    // CPU should be the second option..
     myDeviceDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
     myDeviceDropdown->addMenuItem(tr("Metal"));
 #elif defined(USE_CUDA)
     myDeviceDropdown->addMenuItem(tr("CUDA"));
+    // if we compile with CUDA, then it should be the
+    // the default as it is the better option !
+    myDeviceDropdown->setMenuItem(1);
 #endif
     
     setPaletteDisplaySize(INIT_PALETTE_SIZE);

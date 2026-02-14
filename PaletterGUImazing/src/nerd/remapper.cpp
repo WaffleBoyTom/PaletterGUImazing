@@ -40,18 +40,24 @@ Remapper::remap(QImage &image) const
 {
 #ifdef USE_CUDA
 
+    // FIXME: 
+    // should this be in ImageViewer::applyPalette instead ?
+    // this being here means nerd lib has to include sick lib
+    // which maybe is fine but seems a bit sketch ...
+    
     int deviceCount = 0;
     cudaError_t err = cudaGetDeviceCount(&deviceCount);
 
     if (err == cudaSuccess && deviceCount > 0)
     {
-        SickLogger::log("Using CUDA !");
+        SickLogger::log("Using CUDA !", SickLogSeverity::CUDA);
         for (int dev = 0; dev < deviceCount; ++dev) 
         {
             cudaDeviceProp deviceProp;
             cudaGetDeviceProperties(&deviceProp, dev);
             QString dev_name(deviceProp.name);
-            SickLogger::log(QString("Device %1").arg(dev_name));
+            SickLogger::log(QString("Device %1").arg(dev_name),
+                            SickLogSeverity::CUDA);
         }
     
     }
