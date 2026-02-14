@@ -3,13 +3,15 @@
 
 #include <QtWidgets>
 
+// determines the color of the
+// text being logged
 enum class SickLogSeverity 
 {
-    MSG,
-    CUDA,
-    METAL,
-    WARNING,
-    ERROR
+    MSG,          //  white
+    CUDA,         //  green
+    METAL,        //  light gray
+    WARNING,      //  yellow
+    ERROR         //  red
 };
 
 class SickLogger : public QObject
@@ -18,6 +20,7 @@ class SickLogger : public QObject
 
 public:
     static SickLogger *getInstance();
+
     static void log(QString message, 
                     SickLogSeverity sev = SickLogSeverity::MSG);
 
