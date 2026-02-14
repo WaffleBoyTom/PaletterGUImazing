@@ -15,14 +15,15 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     : QWidget(parent)
 {
     // main layout
-    myLayout = new QVBoxLayout(this);
+    myLayout = new QVBoxLayout();
+    myLayout->setAlignment(Qt::AlignTop);
 
     // my boy Ethan so good lookin'
-    myLineEdit = new QLineEdit(tr("Ethan so sexy"), this);
+    myLineEdit = new QLineEdit(tr("Ethan so sexy"));
 
     // nautilus button
-    myNautilusButton = new QPushButton(tr("Open Image"), this);
-
+    myNautilusButton = new QPushButton(tr("Open Image"));
+    
     connect(
         myNautilusButton,
         &QPushButton::clicked,
@@ -31,7 +32,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     );
 
     // image holder
-    myImageHolder = new QLabel(tr(""), this);
+    myImageHolder = new QLabel(tr(""));
 
     myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
@@ -40,7 +41,6 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // between the two image viewers
     // FIXME: we want a base class for these two viewers
     // with overrides so we don't do this nasty if stuff ?
-    // FIXME: stuff this in a horizontal layout
     auto dropdowns = new QHBoxLayout();
 
     myModeDropdown = new SickDropDown(this, tr("Mode"));
@@ -48,7 +48,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // TODO: inheritanceizationify this instead of using a flag lol
     if (paletteSource)
     {
-        myProcessorButton = new QPushButton(tr("Process Image"), this);
+        myProcessorButton = new QPushButton(tr("Process Image"));
 
         connect(
             myProcessorButton,
@@ -64,7 +64,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     }
     else
     {
-        myProcessorButton = new QPushButton(tr("Apply Palette to Image"), this);
+        myProcessorButton = new QPushButton(tr("Apply Palette to Image"));
 
         connect(
             myProcessorButton,
@@ -104,12 +104,14 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     dropdowns->addWidget(myDeviceDropdown);
     myLayout->addLayout(dropdowns);
     myLayout->addWidget(myImageHolder);
+    
+    setLayout(myLayout);
 }
 
 void
 ImageViewer::openNautilus()
 {
-    QFileDialog dialog(this);
+    QFileDialog dialog;
     dialog.setWindowTitle(tr("Palettize this geezer"));
     dialog.setDirectory(QDir::homePath());
     dialog.setFileMode(QFileDialog::ExistingFile);

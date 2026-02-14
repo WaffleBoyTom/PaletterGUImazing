@@ -4,6 +4,7 @@
 
 #include "palette_row.h"
 #include "sick_debug.h"
+#include "sick_fileio.h"
 #include "sick_slider.h"
 #include "sick_logger.h"
 
@@ -70,20 +71,7 @@ PaletteViewer::exportPalette()
     QString file_path = dialog.selectedFiles().first();
     
     const QString native_path = QDir::toNativeSeparators(file_path);
-    
-    //TODO: make sure we always export to json
-    // cuz user might type something like ballllls.jpg
-    // this is not enough because user could type
-    // fuck it up royally but hey, whatever 
-    if (!native_path.endsWith(".json"))
-    {
-        SickLogger::log(
-            QString("File name should end in .json.\nBy default we append the .json extension for you !"),
-            SickLogSeverity::ERROR
-        );
-        return;
-    }
-    
+        
     QJsonObject json;
     bool can_serialize = myPaletteRow->serialize(json);
     if (!can_serialize)
@@ -96,28 +84,13 @@ PaletteViewer::exportPalette()
         return;
     }
 
-    
-    QJsonDocument doc(json);
-    
-    QByteArray json_data = doc.toJson(QJsonDocument::Indented);
-
-    QFile out_file(native_path);
-
-    // TODO: I don't trust these flags, idk what they do
-    // look into these sus flags
-    if (!out_file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate)) 
-    {
-        SickLogger::log(
-            QString("Something went wrong with that file !!!!"), 
-            SickLogSeverity::ERROR
-        );
-        return;
-    }
-
-    out_file.write(doc.toJson()); 
-    out_file.close();
-
-    SickLogger::log(QString(json_data));
-    SickLogger::log(QString(native_path));
+    SickJsonIO io(&json, &native_path);
+    QString log;
+    bool success = io.write(log);
+    SickLogger::log(
+        log,
+        success ? SickLogSeverity::MSG 
+                : SickLogSeverity::ERROR
+    );
     
 }
