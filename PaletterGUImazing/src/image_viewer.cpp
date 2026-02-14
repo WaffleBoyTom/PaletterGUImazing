@@ -256,8 +256,10 @@ ImageViewer::onApplyPaletteFinished(QImage image)
 {
     SickLogger::log("Done applying color palette");
 
-    myLoadedImage = QPixmap::fromImage(image);
-    myImageHolder->setPixmap(resizeImage(&myLoadedImage));
+    // don't override original !
+    // myLoadedImage = QPixmap::fromImage(image);
+    QPixmap pixmap = QPixmap::fromImage(image);
+    myImageHolder->setPixmap(resizeImage(&pixmap));
 
     myProcessorButton->setEnabled(true);
 }
