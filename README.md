@@ -10,7 +10,7 @@ cmake --build .
 ```
 
 # oh yeah
-Shabu Dabu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom
+Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 
 # we need to do this
 - [ ] Worker threads
@@ -21,6 +21,7 @@ Shabu Dabu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom
 - [x] Logging
     - [x] SickLogger
     - [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
+    - [ ] It should be possible the hide the log viewer and/or to set a verbosity level 
 - [ ] UI
     - [ ] Fix ImageViewer hierarchy
     - [ ] Fix layout issues
@@ -32,7 +33,7 @@ Shabu Dabu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom
 - [ ] Application method
 - [ ] Color sorting methods
 - [ ] Export
-    - [ ] JSON palette string
+    - [x] JSON palette string
     - [ ] The image with the palette applied
 
 - [ ] Misc
