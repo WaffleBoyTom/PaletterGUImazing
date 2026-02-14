@@ -148,6 +148,11 @@ PaletteRow::serialize(QJsonObject &json)
         QString name_hex = myPalette->at(i).name(QColor::HexRgb);
         json.insert(QString("Color %1").arg(i + 1), name_hex);
     }
+    // sign the json like true gentlemen
+    json.insert(
+        QString("Palette Generator"),
+        QString("PaletterGUImazing 1.0 TM")  
+    );
     return true;
 
 }

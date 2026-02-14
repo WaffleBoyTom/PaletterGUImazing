@@ -183,8 +183,12 @@ void
 ImageViewer::generatePalette()
 {
     if (myLoadedImage.isNull())
+    {
+        // button should be greyed out if no image has been loaded
+        // so this should never happen
+        Q_ASSERT("How the fuck did we get here !");
         return;
-
+    }
     myProcessorButton->setEnabled(false);
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
