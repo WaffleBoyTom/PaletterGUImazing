@@ -103,10 +103,42 @@ Remapper::remap(QImage &image) const
         cudaMemcpyHostToDevice
     );
 
-    Zoom::applyPaletteByLength(
-        cu_image, width, height, cu_palette, v_palette.size()
-    );
+    switch (myCompareMethod)
+    {
+        case Remapper::CompareMethod::Distance:
+        {
+            Zoom::applyPaletteByLength(
+                cu_image, width, height, 
+                cu_palette, v_palette.size()
+            );
+            break;
+        }
+        case Remapper::CompareMethod::Luminance:
+        {
+            Zoom::applyPaletteByLuminance(
+                cu_image, width, height, 
+                cu_palette, v_palette.size()
+            );
+            break;
+        }
+        case Remapper::CompareMethod::Hue:
+        {
+            Zoom::applyPaletteByHue(
+                cu_image, width, height, 
+                cu_palette, v_palette.size()
+            );
+            break;
+        }
+        case Remapper::CompareMethod::Saturation:
+        {
+            Zoom::applyPaletteBySaturation(
+                cu_image, width, height, 
+                cu_palette, v_palette.size()
+            );
+            break;
+        }
 
+    }
     cudaMemcpy(
         image.bits(),
         cu_image,

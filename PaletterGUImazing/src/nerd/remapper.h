@@ -23,7 +23,7 @@ public:
     void remapHost(QImage &image) const;
 
 private:
-    [[maybe_unused]] CompareMethod myCompareMethod;
+    CompareMethod myCompareMethod;
     const QList<QColor> &myPalette;
 };
 
