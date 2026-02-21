@@ -20,6 +20,9 @@ SickSlider::SickSlider(QWidget *parent) : QWidget(parent)
     setSliderProperties();
 
     mySliderValueDisplay = new QLineEdit("6", this);
+    mySliderValueDisplay->setStyleSheet(
+        "background-color: black; color: cornsilk; selection-color: lightseagreen"    
+    );
 
     mySlider->setMaximumHeight(30);
     mySlider->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
@@ -62,6 +65,9 @@ SickSlider::setSliderProperties()
     mySlider->setMaximum(50);
     mySlider->setValue(6);
     mySlider->setSingleStep(1);
+    mySlider->setStyleSheet(
+        "selection-background-color: gold; selection-color: black"    
+    );
 }
 
 void

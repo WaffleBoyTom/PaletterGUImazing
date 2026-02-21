@@ -30,6 +30,7 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
         this,
         &PaletteViewer::exportPalette
     );
+    
 
     myLayout->addWidget(myPaletteRow);
     myLayout->addWidget(mySlider);

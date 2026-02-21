@@ -20,10 +20,12 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
     // my boy Ethan so good lookin'
     myLineEdit = new QLineEdit(tr("Ethan so sexy"));
+    myLineEdit->setStyleSheet(
+        "color: cornsilk; background-color: #232323"    
+    );
 
     // nautilus button
     myNautilusButton = new QPushButton(tr("Open Image"));
-    
     connect(
         myNautilusButton,
         &QPushButton::clicked,

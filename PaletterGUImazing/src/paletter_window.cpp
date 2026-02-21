@@ -22,6 +22,11 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         screenGeometry.height() / theMinSizeScaleFactor
     );
 
+    // myMenuBar = new QMenuBar(this);
+    // QMenu *menu = new QMenu("File");
+    // menu->addMenu("Hell Yeah !");
+    // myMenuBar->addMenu(menu);
+    
     // Outermost layout of the app.
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 

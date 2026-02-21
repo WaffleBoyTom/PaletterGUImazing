@@ -15,7 +15,13 @@ SickDropDown::SickDropDown(QWidget *parent, QString label) : QWidget(parent)
 {
     myLayout = new QHBoxLayout();
     myLabel = new QLabel(label);
+    myLabel->setStyleSheet(
+        "color: cornsilk"  
+    );
     myMenu = new QComboBox();
+    myMenu->setStyleSheet(
+        "color: cornsilk; background-color: #191919; selection-color: lightseagreen"    
+    );
     myLayout->addWidget(myLabel);
     myLayout->addWidget(myMenu);
     setLayout(myLayout);

@@ -13,12 +13,16 @@ class QGridLayout;
 class QGroupBox;
 class QHBoxLayout;
 class QLabel;
+// class QMainWindow;
+class QMenuBar;
 class QPushButton;
 class QSpinBox;
 class QVBoxLayout;
 class QLineEdit;
 QT_END_NAMESPACE
 
+
+// FIXME: This should be a QMainWindow ?? :sadpanda:
 class PaletterGUI : public QWidget
 {
     Q_OBJECT
@@ -41,6 +45,7 @@ private:
     PaletteViewer *myPaletteViewer;
     ImageViewer *myConvertImgViewer;
     SickLogViewer *myLogViewer;
+    [[maybe_unused]]QMenuBar *myMenuBar;
 };
 
 #endif  // PALETTER_WINDOW_H
