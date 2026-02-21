@@ -6,6 +6,7 @@
 #include <QWidget>
 
 #include "sick_dropdown.h"
+#include "sick_imageholder.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -40,6 +41,9 @@ signals:
     void tellBossAboutPaletteFill(QList<QColor> *palette);
     void askBossForPalette();
 
+protected:
+    void paintEvent(QPaintEvent *event) override;
+
 private slots:
 
     // opens file explorer
@@ -51,6 +55,9 @@ private slots:
     // get QImage from image holder
     QImage getImage();
 
+    // resizes image based on drag
+    void resizeOnDrag(int width, int height);
+    
     // Generate a new palette from the image.
     void generatePalette();
 
@@ -63,14 +70,14 @@ private slots:
     void askForPalette();
 
     // Resizes image based on parent size.
-    QPixmap resizeImage(QPixmap *image);
+    QPixmap resizeImage(QPixmap *image, int width, int height);
 
 private:
     QVBoxLayout *myLayout;
 
     QLineEdit *myLineEdit;
 
-    QLabel *myImageHolder;
+    SickImageHolder *myImageHolder;
 
     // keep reference to original image otherwise
     // we iteratively scale the pixmap

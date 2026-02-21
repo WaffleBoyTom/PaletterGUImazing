@@ -34,9 +34,14 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     );
 
     // image holder
-    myImageHolder = new QLabel(tr(""));
-
+    myImageHolder = new SickImageHolder(nullptr, tr(""));
     myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    connect(
+        myImageHolder,
+        &SickImageHolder::tellBossToResize,
+        this,
+        &ImageViewer::resizeOnDrag
+    );
 
     // processor button
     // temp solution to allow for a different button
@@ -167,10 +172,7 @@ ImageViewer::loadImage(const QString &filename)
 
     myProcessorButton->setEnabled(true);
 
-    const QPixmap scaled = resizeImage(&myLoadedImage);
-
-    // loaded image successfully
-    myImageHolder->setPixmap(scaled);
+    handleResizing();
 
     return true;
 }
@@ -224,7 +226,8 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     QImage image = getImage();
     myLoadedImage = QPixmap::fromImage(image);
 
-    myImageHolder->setPixmap(resizeImage(&myLoadedImage));
+    // myImageHolder->setPixmap(resizeImage(&myLoadedImage));
+    handleResizing();
     emit tellBossAboutPaletteFill(&myPalette);
 
     myProcessorButton->setEnabled(true);
@@ -267,7 +270,13 @@ ImageViewer::onApplyPaletteFinished(QImage image)
     // don't override original !
     // myLoadedImage = QPixmap::fromImage(image);
     QPixmap pixmap = QPixmap::fromImage(image);
-    myImageHolder->setPixmap(resizeImage(&pixmap));
+    myImageHolder->setPixmap(
+        resizeImage(
+            &pixmap,            
+            parentWidget()->height() / theImageScaleFactor, /* width */
+            parentWidget()->width() / theImageScaleFactor  /* height */
+        )
+    );
 
     myProcessorButton->setEnabled(true);
 }
@@ -279,7 +288,8 @@ ImageViewer::askForPalette()
 }
 
 QPixmap
-ImageViewer::resizeImage(QPixmap *imagedisplay)
+ImageViewer::resizeImage(QPixmap *imagedisplay, 
+                         int width, int height)
 {
     // by default images are pretty big
     // unlike other things...
@@ -288,9 +298,8 @@ ImageViewer::resizeImage(QPixmap *imagedisplay)
     // dividing by 2 for now, idk
 
     return imagedisplay->scaled(
-        parentWidget()->height() / theImageScaleFactor, /* width */
-        parentWidget()->width() / theImageScaleFactor,  /* height */
-        Qt::KeepAspectRatio                             /* ar */
+        width, height,
+        Qt::KeepAspectRatio /* ar */
     );
 }
 
@@ -300,9 +309,45 @@ ImageViewer::handleResizing()
     if (myLoadedImage.isNull())
         return;
 
-    const QPixmap scaled = resizeImage(&myLoadedImage);
+    const QPixmap scaled = resizeImage(
+        &myLoadedImage,
+        parentWidget()->height() / theImageScaleFactor, /* width */
+        parentWidget()->width() / theImageScaleFactor  /* height */
+    );
 
     myImageHolder->setPixmap(scaled);
+}
+
+void
+ImageViewer::resizeOnDrag(int width, int height)
+{
+    if (myLoadedImage.isNull())
+        return;
+
+    const QPixmap scaled = resizeImage(
+        &myLoadedImage,
+        width,
+        height    
+    );
+    
+    myImageHolder->setPixmap(scaled);
+
+}
+
+void
+ImageViewer::paintEvent(QPaintEvent *event)
+{
+    // FIXME : It'd be lit if we could
+    // drag a rectangle around the image
+    // when it's being dragged !
+    // QPainter painter(this);
+    // const QPoint topleft = myImageHolder->rect().center();
+    // painter.drawRect(
+    //     topleft.x(),
+    //     topleft.y(),        
+    //     myImageHolder->width(),
+    //     myImageHolder->height()
+    // );
 }
 
 void
