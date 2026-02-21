@@ -21,7 +21,7 @@ SickSlider::SickSlider(QWidget *parent) : QWidget(parent)
 
     mySliderValueDisplay = new QLineEdit("6", this);
     mySliderValueDisplay->setStyleSheet(
-        "background-color: black; color: cornsilk; selection-color: lightseagreen"    
+        "background-color: #232323; color: cornsilk; selection-color: lightseagreen"    
     );
 
     mySlider->setMaximumHeight(30);
