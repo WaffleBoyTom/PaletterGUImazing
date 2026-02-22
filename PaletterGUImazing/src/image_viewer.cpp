@@ -227,7 +227,13 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     myLoadedImage = QPixmap::fromImage(image);
 
     // myImageHolder->setPixmap(resizeImage(&myLoadedImage));
-    handleResizing();
+    myImageHolder->setPixmap(
+        resizeImage(
+            &myLoadedImage,            
+            myImageHolder->pixmap().width(),
+            myImageHolder->pixmap().height()
+        )
+    );
     emit tellBossAboutPaletteFill(&myPalette);
 
     myProcessorButton->setEnabled(true);
