@@ -17,8 +17,14 @@ public slots:
     void appendLine(QString message, 
                     SickLogSeverity sev = SickLogSeverity::MSG);
 
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+
 private:
-    QString mContents;
+    QString myContents;
+    QPoint myStartDragPos;
 };
 
 #endif  // SICK_LOG_VIEWER_H

@@ -12,11 +12,17 @@ class QVBoxLayout;
 class QPushButton;
 QT_END_NAMESPACE
 
+
 class PaletteRow : public QWidget
 {
     Q_OBJECT
 
 public:
+    enum class PaletteDrawStyle
+    {
+        RECT,
+        APPLE // they make everything super round don't they
+    };
     explicit PaletteRow(QWidget *parent);
 
     QSize sizeHint() const override;
@@ -41,6 +47,7 @@ private:
 
     QList<QColor> *myPalette;
     int myBoxCount;
+    PaletteDrawStyle myDrawStyle;
 };
 
 #endif  // PALETTE_ROW_H

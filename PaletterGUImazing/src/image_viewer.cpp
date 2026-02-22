@@ -273,8 +273,8 @@ ImageViewer::onApplyPaletteFinished(QImage image)
     myImageHolder->setPixmap(
         resizeImage(
             &pixmap,            
-            parentWidget()->height() / theImageScaleFactor, /* width */
-            parentWidget()->width() / theImageScaleFactor  /* height */
+            myImageHolder->pixmap().width(),
+            myImageHolder->pixmap().height()
         )
     );
 
@@ -324,6 +324,9 @@ ImageViewer::resizeOnDrag(int width, int height)
     if (myLoadedImage.isNull())
         return;
 
+    
+    // FIXME: this means we override an image which has been
+    // palette : ( 
     const QPixmap scaled = resizeImage(
         &myLoadedImage,
         width,

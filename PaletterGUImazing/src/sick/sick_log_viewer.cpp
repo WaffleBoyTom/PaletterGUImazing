@@ -9,7 +9,7 @@ SickLogViewer::SickLogViewer(QWidget *parent) : QPlainTextEdit(parent)
     setPlaceholderText("Log is empty.");
     setFixedHeight(150);
 
-    setStyleSheet("QPlainTextEdit { background-color: black; color: white; }");
+    setStyleSheet("QPlainTextEdit { background-color: black }");
     setMaximumBlockCount(1000);
 }
 
@@ -65,4 +65,28 @@ SickLogViewer::appendLine(QString message, SickLogSeverity sev)
     cursor.setCharFormat(format);
     cursor.insertText(message);
     cursor.insertText("\n");
+}
+void 
+SickLogViewer::mousePressEvent(QMouseEvent *event) 
+{
+    if (event->button() == Qt::LeftButton) 
+        myStartDragPos = event->pos();
+}
+
+void 
+SickLogViewer::mouseMoveEvent(QMouseEvent *event) 
+{
+    if (!(event->buttons() & Qt::LeftButton)) 
+        return;
+
+    
+    const QPoint pos = myStartDragPos - event->pos();
+    setFixedHeight(height() + pos.y());
+    
+    event->accept();
+}
+
+void 
+SickLogViewer::mouseReleaseEvent(QMouseEvent *event) 
+{
 }

@@ -13,13 +13,15 @@ PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
     // receive mouseMouseEvent without needing to press a button
     this->setMouseTracking(true);
+    setMinimumSize(60, 30);
+    myDrawStyle = PaletteDrawStyle::RECT;
 }
 
 QSize
 PaletteRow::sizeHint() const
 {
     const int boxWidth = 50;
-    const int height = 40;
+    const int height = 50;
     return QSize(myBoxCount * boxWidth, height);
 }
 
@@ -48,21 +50,48 @@ PaletteRow::paintEvent(QPaintEvent *event)
 
     // the idea behind this padding is that
     // we get a bit of space between each rectangle
-    const int width = this->width() / myBoxCount;
+    const int width = this->width() / myBoxCount ;
     const int height = this->height();
     const int padding = 10;
 
     for (int i = 0; i < myBoxCount; ++i)
     {
-        const QColor color =
-            (i < myPalette->size()) ? myPalette->at(i) : Qt::black;
-        painter.fillRect(
-            start + (width * i),  // x
-            height / 2,           // y
-            width - padding,      // width
-            height,               // height
-            color
-        );
+        const QColor color = (i < myPalette->size()) 
+            ? myPalette->at(i) 
+            : Qt::black;
+
+        if (myDrawStyle == PaletteDrawStyle::RECT)
+        {
+            painter.fillRect(
+                start + (width * i),  // x
+                height / 2,           // y
+                width - padding,      // width
+                height,               // height
+                color
+            );
+        }
+        else if (myDrawStyle == PaletteDrawStyle::APPLE)
+        {
+            // the reason we set this NoPen
+            // is to avoid the circles having
+            // a disgusting white outline 
+            QPen pen;
+            pen.setStyle(Qt::NoPen);
+            painter.setPen(pen);
+            painter.setBrush(color);
+            const int rad = qMin(
+                (height - padding) / 2,
+                (width - padding) /  2   
+            );
+            painter.drawEllipse(
+                QPoint(
+                    (width / 2) + (width * i), 
+                    height / 2
+                ),         // center
+                rad,      // rx
+                rad      // ry
+            );
+        }
     }
 }
 
@@ -81,6 +110,15 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
         clipboard->setText(name_hex);
 
         SickLogger::log(QString("Copied: %1").arg(name_hex));
+    }
+    if (event->button() == Qt::MouseButton::RightButton)
+    {
+        //TODO: add context menu !!
+        // but maybe not ..
+        myDrawStyle = PaletteDrawStyle(
+            1 - static_cast<int>(myDrawStyle)    
+        );
+        this->repaint();
     }
 }
 
