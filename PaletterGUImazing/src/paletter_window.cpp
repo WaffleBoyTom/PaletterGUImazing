@@ -81,6 +81,8 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
 
+    QHBoxLayout *utils_layout = new QHBoxLayout();
+    
     myLogViewer = new SickLogViewer(this);
     connect(
         SickLogger::getInstance(),
@@ -89,7 +91,13 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
         &PaletterGUI::logMeHard
     );
 
-    mainLayout->addWidget(myLogViewer);
+    utils_layout->addWidget(myLogViewer);
+
+    myExporter = new SickExportOpts(nullptr);
+
+    utils_layout->addWidget(myExporter);
+
+    mainLayout->addLayout(utils_layout);
 
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());

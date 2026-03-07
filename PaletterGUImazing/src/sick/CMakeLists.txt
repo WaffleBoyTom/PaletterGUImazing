@@ -10,6 +10,8 @@ set(SOURCE
     sick_inspector.cpp
     sick_log_viewer.h
     sick_log_viewer.cpp
+    sick_export_opts.h
+    sick_export_opts.cpp
     sick_logger.h
     sick_logger.cpp
     sick_slider.h

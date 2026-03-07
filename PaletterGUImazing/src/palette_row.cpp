@@ -46,6 +46,7 @@ PaletteRow::paintEvent(QPaintEvent *event)
         return;
 
     QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
     const int start = 0;
 
     // the idea behind this padding is that

@@ -111,8 +111,8 @@ rgbToHsv(float3 rgb)
     // so we don't actually need the usual range..
     // which means we end up with a range from 0-6 for hue
     // and 0-1 for everything else
-    
-    // hsv.x *= 60.0;
+    // normalize
+    hsv.x = hsv.x * 60. / 360.;
     
     return hsv;
 
@@ -215,14 +215,17 @@ applyPaletteByHueKernel(
         {
             float3 palette_col = palette[j];
             float3 palette_hsv = rgbToHsv(palette_col);
-            float ldelta = abs(pixel.x - palette_hsv.x);
+            float ldelta = fminf(
+                abs(pixel.x - palette_hsv.x),
+                abs((pixel.x + 1.0) - palette_hsv.x)
+            );
             if (ldelta < delta)
             {
                 best = palette_col;
                 delta = ldelta;
             }
-            if (ldelta < 0.01)
-                break;
+            // if (ldelta < 0.01)
+            //     break;
         }
         pixels[i] = float3ToUChar4(best);
     }

@@ -6,6 +6,7 @@
 #include "image_viewer.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
+#include "sick_export_opts.h"
 
 QT_BEGIN_NAMESPACE
 class QCheckBox;
@@ -45,6 +46,7 @@ private:
     PaletteViewer *myPaletteViewer;
     ImageViewer *myConvertImgViewer;
     SickLogViewer *myLogViewer;
+    SickExportOpts *myExporter;
     [[maybe_unused]]QMenuBar *myMenuBar;
 };
 

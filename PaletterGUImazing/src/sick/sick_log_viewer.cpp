@@ -81,7 +81,8 @@ SickLogViewer::mouseMoveEvent(QMouseEvent *event)
 
     
     const QPoint pos = myStartDragPos - event->pos();
-    setFixedHeight(height() + pos.y());
+    // make sure we're at least 150 tall
+    setFixedHeight(qMax(150, height() + pos.y()));
     
     event->accept();
 }
