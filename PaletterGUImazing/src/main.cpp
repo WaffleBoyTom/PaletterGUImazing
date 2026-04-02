@@ -17,7 +17,7 @@ main(int argc, char *argv[])
         "QPushButton { color: cornsilk; background-color: #191919 }"    
     );
     PaletterGUI window;
-
+    window.setWindowFlags(Qt::Window);
     window.show();
 
     return app.exec();

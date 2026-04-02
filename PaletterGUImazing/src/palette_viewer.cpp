@@ -23,18 +23,18 @@ PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
         &PaletteViewer::onPaletteSizeChanged
     );
 
-    myExportButton = new QPushButton(tr("Export Palette"), this);
-    connect(
-        myExportButton,
-        &QPushButton::clicked,
-        this,
-        &PaletteViewer::exportPalette
-    );
+    // myExportButton = new QPushButton(tr("Export Palette"), this);
+    // connect(
+    //     myExportButton,
+    //     &QPushButton::clicked,
+    //     this,
+    //     &PaletteViewer::exportPalette
+    // );
     
 
     myLayout->addWidget(myPaletteRow);
     myLayout->addWidget(mySlider);
-    myLayout->addWidget(myExportButton);
+    // myLayout->addWidget(myExportButton);
 }
 
 void

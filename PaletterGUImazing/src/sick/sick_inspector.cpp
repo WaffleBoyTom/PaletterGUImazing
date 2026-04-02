@@ -9,7 +9,11 @@ SickInspector::displayColor(QColor color, QPoint position)
 
     inspector->myColor = color;
     inspector->move(position + QPoint(16, 16));
-    inspector->show();
+    // this check is important because otherwise we call 
+    // show repeatedly which triggers Gnomer(Mutter) to jiggle
+    // the icon like crazy which sucks big time
+    if (!inspector->isVisible())
+        inspector->show();
     inspector->repaint();
 }
 
@@ -69,11 +73,12 @@ SickInspector::getInstance()
 SickInspector::SickInspector() : QWidget(nullptr)
 {
     setWindowFlags(
-        Qt::Tool | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint |
+        Qt::ToolTip | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint |
         Qt::WindowDoesNotAcceptFocus | Qt::WindowTransparentForInput
     );
     setAttribute(Qt::WA_TransparentForMouseEvents);
     setAttribute(Qt::WA_TranslucentBackground);
+    // setAttribute(Qt::WA_ShowWithoutActivating);
     raise();
 
     setFixedSize(QSize(150, 75));
