@@ -21,7 +21,11 @@ public:
     enum class PaletteDrawStyle
     {
         RECT,
-        APPLE // they make everything super round don't they
+        APPLE,   // they make everything super round don't they
+        VK,      // if you wish to rasterize a triangle, 
+                 // you must first reinvent the universe
+                 // disabled as it looks baaad
+        INVALID
     };
     explicit PaletteRow(QWidget *parent);
 

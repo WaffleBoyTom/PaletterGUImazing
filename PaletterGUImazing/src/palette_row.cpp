@@ -60,38 +60,104 @@ PaletteRow::paintEvent(QPaintEvent *event)
         const QColor color = (i < myPalette->size()) 
             ? myPalette->at(i) 
             : Qt::black;
+        
+        switch (myDrawStyle)
+        {
+            case PaletteDrawStyle::RECT:
+            {
+                painter.fillRect(
+                    start + (width * i),  // x
+                    height / 2,           // y
+                    width - padding,      // width
+                    height,               // height
+                    color
+                );
+                break;
+            }
+            case PaletteDrawStyle::APPLE:
+            {
+                // the reason we set this NoPen
+                // is to avoid the circles having
+                // a disgusting white outline 
+                QPen pen;
+                pen.setStyle(Qt::NoPen);
+                painter.setPen(pen);
+                painter.setBrush(color);
+                const int rad = qMin(
+                    (height - padding) / 2,
+                    (width - padding) /  2   
+                );
+                painter.drawEllipse(
+                    QPoint(
+                        (width / 2) + (width * i), 
+                        height / 2
+                    ),         // center
+                    rad,      // rx
+                    rad      // ry
+                );
+                break;
+            }
+            case PaletteDrawStyle::VK:
+            {
 
-        if (myDrawStyle == PaletteDrawStyle::RECT)
-        {
-            painter.fillRect(
-                start + (width * i),  // x
-                height / 2,           // y
-                width - padding,      // width
-                height,               // height
-                color
-            );
-        }
-        else if (myDrawStyle == PaletteDrawStyle::APPLE)
-        {
-            // the reason we set this NoPen
-            // is to avoid the circles having
-            // a disgusting white outline 
-            QPen pen;
-            pen.setStyle(Qt::NoPen);
-            painter.setPen(pen);
-            painter.setBrush(color);
-            const int rad = qMin(
-                (height - padding) / 2,
-                (width - padding) /  2   
-            );
-            painter.drawEllipse(
-                QPoint(
-                    (width / 2) + (width * i), 
-                    height / 2
-                ),         // center
-                rad,      // rx
-                rad      // ry
-            );
+                // this looks like shit :) 
+                // no disabling it
+                QPoint barycenter((width / 2) + (width * i), height / 2);
+                const int rad = qMin(
+                    (height - padding) / 2,
+                    (width - padding) /  2   
+                );
+                /*
+                assuming this is our triangle
+                        C
+                
+                     A     B
+                
+                C is trivial -> barycenter.x, barycenter.y + rad
+                
+                A and B can be obtained by using circle
+                parametric formula
+                angle1 is 210 (240 - 30) as we rotated -30 degrees to
+                get our top to be aligned
+                angle2 is 330 (360 - 30)
+                
+                b.x = center.x + radius * cos(radians(angle1));
+                b.y = center.y + radius * sin(radians(angle1));
+                a.x = center.x + radius * cos(radians(angle2));
+                a.y = center.y + radius * sin(radians(angle2));
+
+                found this out after prototyping in Houdini
+                cuz stackoverflow led me astray lol
+
+                */
+                QPoint c(barycenter.x(), barycenter.y()  + rad);
+                
+                QPoint b(
+                      c.x()  + rad * qCos(qDegreesToRadians(210)),
+                      c.y()  + rad * qSin(qDegreesToRadians(210))
+                );
+                
+                QPoint a(
+                      c.x()  + rad * qCos(qDegreesToRadians(330)),
+                      c.y()  + rad * qSin(qDegreesToRadians(330))
+                );
+                
+                QPen pen;
+                pen.setStyle(Qt::NoPen);
+                painter.setPen(pen);
+                painter.setBrush(color);
+
+                const int vtx = 3;
+                QPoint points[vtx];
+                points[0] = c;
+                points[1] = b;
+                points[2] = a;
+                painter.drawPolygon(points, vtx);
+
+                break;
+            }
+            case PaletteDrawStyle::INVALID:
+                break; // what happened??
         }
     }
 }
@@ -114,10 +180,11 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
     }
     if (event->button() == Qt::MouseButton::RightButton)
     {
-        //TODO: add context menu !!
-        // but maybe not ..
+        // FIXME
+        // this 2 should not be hardcoded and
+        // should be based on length of enum
         myDrawStyle = PaletteDrawStyle(
-            1 - static_cast<int>(myDrawStyle)    
+            (static_cast<int>(myDrawStyle) + 1) % 2    
         );
         this->repaint();
     }
