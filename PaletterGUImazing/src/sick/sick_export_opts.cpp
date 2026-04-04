@@ -15,10 +15,7 @@ SickExportOpts::SickExportOpts(QWidget *parent)
         this,
         &SickExportOpts::exportPalette
     );
-    myExportPath = new QLineEdit(tr("~/Desktop/exported_palette.json"));
-    myExportPath->setStyleSheet(
-        "color: cornsilk; background-color: #232323"    
-    );
+    myExportPath = new SickFileLineEdit(this, tr("Export Path"));
 
     myExportFormat = new SickDropDown(nullptr, tr("Format"));
     myExportFormat->addMenuItem(tr("RGB"));

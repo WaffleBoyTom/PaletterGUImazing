@@ -25,6 +25,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [ ] UI
     - [ ] Fix ImageViewer hierarchy
     - [ ] Fix layout issues
+    - [ ] Sick File Line Edit for all file choosers and writers !
 - [ ] GPU
     - [x] Use to apply palette to second image
     - [ ] Use to run K-Means for palette generation

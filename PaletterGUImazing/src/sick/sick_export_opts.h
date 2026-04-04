@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include "sick_dropdown.h"
+#include "sick_file_line_edit.h"
 
 
 class SickExportOpts : public QWidget
@@ -24,10 +25,10 @@ private:
     
     void exportPalette();
     
-    QVBoxLayout   *myLayout;
-    QPushButton   *myExportButton;
-    QLineEdit     *myExportPath;
-    SickDropDown  *myExportFormat;
+    QVBoxLayout          *myLayout;
+    QPushButton          *myExportButton;
+    SickFileLineEdit     *myExportPath;
+    SickDropDown         *myExportFormat;
 };
 
 #endif  // SICK_EXPORT_OPTS_H

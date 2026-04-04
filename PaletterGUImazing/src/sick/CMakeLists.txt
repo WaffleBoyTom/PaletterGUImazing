@@ -4,6 +4,8 @@ set(SOURCE
     sick_dropdown.cpp
     sick_fileio.h
     sick_fileio.cpp
+    sick_file_line_edit.h
+    sick_file_line_edit.cpp
     sick_imageholder.h
     sick_imageholder.cpp
     sick_inspector.h
