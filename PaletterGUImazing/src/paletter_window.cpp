@@ -94,6 +94,12 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     utils_layout->addWidget(myLogViewer);
 
     myExporter = new SickExportOpts(nullptr);
+    connect(
+        myExporter,
+        &SickExportOpts::tellBossAboutExportOpts,
+        this,
+        &PaletterGUI::exportPalette
+    );
 
     utils_layout->addWidget(myExporter);
 
@@ -136,4 +142,11 @@ void
 PaletterGUI::logMeHard(const QString msg, const SickLogSeverity sev)
 {
     myLogViewer->appendLine(msg, sev);
+}
+
+void
+PaletterGUI::exportPalette(const QString &path, 
+                           SickExportOpts::ExportFormat fmt)
+{
+    myPaletteViewer->exportPalette(path, fmt);
 }

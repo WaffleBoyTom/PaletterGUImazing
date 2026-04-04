@@ -9,12 +9,12 @@ SickExportOpts::SickExportOpts(QWidget *parent)
     myLayout = new QVBoxLayout();
     myLayout->setAlignment(Qt::AlignTop);
     myExportButton = new QPushButton(tr("Export Palette"));
-    // connect(
-    //     myExportButton,
-    //     &QPushButton::clicked,
-    //     this,
-    //     &PaletteViewer::exportPalette
-    // );
+    connect(
+        myExportButton,
+        &QPushButton::clicked,
+        this,
+        &SickExportOpts::exportPalette
+    );
     myExportPath = new QLineEdit(tr("~/Desktop/exported_palette.json"));
     myExportPath->setStyleSheet(
         "color: cornsilk; background-color: #232323"    
@@ -31,3 +31,11 @@ SickExportOpts::SickExportOpts(QWidget *parent)
     setLayout(myLayout);
 }
 
+void 
+SickExportOpts::exportPalette()
+{
+    emit tellBossAboutExportOpts(
+        myExportPath->text(),
+        ExportFormat(myExportFormat->item())
+    );
+}

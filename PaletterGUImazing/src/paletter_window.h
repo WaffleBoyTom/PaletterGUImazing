@@ -39,6 +39,8 @@ public slots:
     void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
     void logMeHard(const QString msg, const SickLogSeverity sev);
+    void exportPalette(const QString &path, SickExportOpts::ExportFormat fmt);
+
 
 private:
     QLabel *paletterLabel;

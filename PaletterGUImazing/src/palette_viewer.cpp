@@ -53,26 +53,30 @@ PaletteViewer::onPaletteChanged(QList<QColor> *palette)
 }
 
 void
-PaletteViewer::exportPalette()
+PaletteViewer::exportPalette(const QString &path,
+                             SickExportOpts::ExportFormat fmt)
 {
     SickLogger::log("Exporting Palette !");
-    QFileDialog dialog(this);
+    // QFileDialog dialog(this);
     
-    dialog.setWindowTitle(tr("Exporto Palettum !"));
-    dialog.setDirectory(QDir::homePath());
-    dialog.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
-    dialog.setDefaultSuffix(QString(".json"));
+    // dialog.setWindowTitle(tr("Exporto Palettum !"));
+    // dialog.setDirectory(QDir::homePath());
+    // dialog.setAcceptMode(QFileDialog::AcceptMode::AcceptSave);
+    // dialog.setDefaultSuffix(QString(".json"));
 
-    if (dialog.exec() != QDialog::Accepted)
-    {
-        SickLogger::log("Not doing nothing... Change of heart ?");
-        return;
-    }
+    // if (dialog.exec() != QDialog::Accepted)
+    // {
+    //     SickLogger::log("Not doing nothing... Change of heart ?");
+    //     return;
+    // }
     
-    QString file_path = dialog.selectedFiles().first();
+    // QString file_path = dialog.selectedFiles().first();
+
+    // FIXME
+    // SickExportOpts::ExportFormat does nawt right now ....
     
-    const QString native_path = QDir::toNativeSeparators(file_path);
-        
+    const QString native_path = QDir::toNativeSeparators(path);
+    
     QJsonObject json;
     bool can_serialize = myPaletteRow->serialize(json);
     if (!can_serialize)

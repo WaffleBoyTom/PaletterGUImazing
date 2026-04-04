@@ -7,6 +7,7 @@
 
 #include "palette_row.h"
 #include "sick_slider.h"
+#include "sick_export_opts.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -21,6 +22,7 @@ class PaletteViewer : public QWidget
 
 public:
     explicit PaletteViewer(QWidget *parent);
+    void exportPalette(const QString &path, SickExportOpts::ExportFormat fmt);
 
 public slots:
     void onPaletteSizeChanged();
@@ -30,7 +32,6 @@ signals:
     void tellBossAboutPaletteDisplaySize(int count);
 
 protected:
-    void exportPalette();
 
 private:
     QVBoxLayout *myLayout;

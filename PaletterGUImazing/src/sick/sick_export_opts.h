@@ -11,8 +11,19 @@ class SickExportOpts : public QWidget
 
 public:
     explicit SickExportOpts(QWidget *parent);
+    enum class ExportFormat
+    {
+        RGB = 0,
+        HEX
+    };
+
+signals:
+    void tellBossAboutExportOpts(QString file_path, ExportFormat format);
 
 private:
+    
+    void exportPalette();
+    
     QVBoxLayout   *myLayout;
     QPushButton   *myExportButton;
     QLineEdit     *myExportPath;

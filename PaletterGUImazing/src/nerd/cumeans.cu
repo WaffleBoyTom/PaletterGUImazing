@@ -18,10 +18,6 @@ palettize(
     int block_size = 256;
     int blocks = (pixel_count + block_size - 1) / block_size;
 
-    applyPaletteBySaturationKernel<<<blocks, block_size>>>(
-        img, pixel_count, palette, palette_size
-    );
-
     cudaDeviceSynchronize();
 }
 } // end namespace
