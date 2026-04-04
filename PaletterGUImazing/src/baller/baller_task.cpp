@@ -34,8 +34,22 @@ QuantizeTask::QuantizeTask(
 void
 QuantizeTask::runInternal()
 {
-    QList<QColor> palette =
-        Quantizer(myPaletteSize, myMethod).generatePalette(myImage);
+    QList<QColor> palette;
+    switch (myMethod)
+    {
+        case Quantizer::Method::MedianCut:
+        {
+            palette = Quantizer(myPaletteSize, 
+                        myMethod).generatePalette(
+                                              myImage);
+            break;
+        }
+        case Quantizer::Method::K_Means:
+        {
+            palette = KMeanifier(myPaletteSize).generatePalette(myImage);
+            break;
+        }
+    }
     emit finished(palette);
 }
 
@@ -57,7 +71,6 @@ RemapTask::runInternal()
 {
     Remapper remapper(myMethod, myPalette);
 
-    // stop going through the palette if we're within .05
     switch (myDevice)
     {
     case PaletteProcessorDevice::CPU:

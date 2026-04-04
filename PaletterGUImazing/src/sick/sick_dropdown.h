@@ -21,6 +21,7 @@ public:
     explicit SickDropDown(QWidget *parent, QString label);
     void addMenuItem(QString item);
     void setMenuItem(int idx);
+    // returns the current selected menu item
     int item() const;
 
 private:

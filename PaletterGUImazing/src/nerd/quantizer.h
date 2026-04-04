@@ -8,13 +8,24 @@
 class Quantizer
 {
 public:
+
+    /// TODO: move me out of here....
     enum class Method
     {
         MedianCut = 0,
         K_Means
     };
 
+    /// TODO: This probably shouldn't take a method as it only runs
+    /// median cut anyways. I don't think we want to stuff
+    /// all the methods inside one class....
+    /// should all these classes inherit from a base class
+    /// would that be OOPing way too hard ??
     Quantizer(int palette_size, Method method);
+
+    /// NOTE: C++ should generate the default dtor for the class
+    /// I don't think we need this
+    /// halloooo >?
     ~Quantizer() = default;
 
     // Generates a palette for the given image using median cut.

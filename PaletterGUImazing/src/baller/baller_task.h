@@ -5,6 +5,7 @@
 #include <QThread>
 
 #include "processor_device.h"
+#include "kmeanifier.h"
 #include "quantizer.h"
 #include "remapper.h"
 

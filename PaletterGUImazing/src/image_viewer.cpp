@@ -201,7 +201,9 @@ ImageViewer::generatePalette()
     // the ImageViewer should not create threads or tasks directly.
     QImage image = getImage();
     QuantizeTask *task = new QuantizeTask(
-        image, myPaletteDisplaySize, Quantizer::Method::MedianCut
+        image, 
+        myPaletteDisplaySize, 
+        Quantizer::Method(myModeDropdown->item())
     );
 
     connect(
