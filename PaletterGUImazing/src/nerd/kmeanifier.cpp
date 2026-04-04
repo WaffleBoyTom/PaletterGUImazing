@@ -52,10 +52,19 @@ KMeanifier::generatePalette(const QImage &image) const
     // initialize the palette
     QVector<float3> v_palette;
     v_palette.reserve(myPaletteSize);
-
+    
+    // the one magic number to rule them all
+    QRandomGenerator rng(67);
+    
+    // initialize our palette with random samples from the image 
     for (int i = 0; i < myPaletteSize; ++i)
     {
-        v_palette.push_back(make_float3(1., 0., 1.));
+        int x = rng.bounded(width);
+        int y = rng.bounded(height);
+        QColor sample = image.pixelColor(x, y);
+        v_palette.push_back(make_float3(sample.redF(), 
+                                        sample.greenF(), 
+                                        sample.blueF()));
     }
 
     /// upload palette to device
@@ -77,7 +86,18 @@ KMeanifier::generatePalette(const QImage &image) const
         pixel_count * sizeof(uchar4),
         cudaMemcpyHostToDevice
     );
-    
+
+    /// run KMeans
+
+    // CuMeans::palettize(
+    //     cu_palette,
+    //     cu_image,
+    //     width,
+    //     height,
+    //     myPaletteSize
+    // );
+
+        
     /// copy the palette back to host
     cudaMemcpy(
         v_palette.data(),
