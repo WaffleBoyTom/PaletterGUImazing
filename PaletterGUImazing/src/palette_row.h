@@ -4,6 +4,7 @@
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
+#include "sick_export_opts.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -32,7 +33,7 @@ public:
     QSize sizeHint() const override;
     // fills json with palette
     // returns false if the palette is empty
-    bool serialize(QJsonObject &json);
+    bool serialize(QJsonObject &json, SickExportOpts::ExportFormat fmt);
 
 public slots:
     void onPaletteDisplaySizeChanged(int size);

@@ -78,7 +78,7 @@ PaletteViewer::exportPalette(const QString &path,
     const QString native_path = QDir::toNativeSeparators(path);
     
     QJsonObject json;
-    bool can_serialize = myPaletteRow->serialize(json);
+    bool can_serialize = myPaletteRow->serialize(json, fmt);
     if (!can_serialize)
     {
         // shit went south big time

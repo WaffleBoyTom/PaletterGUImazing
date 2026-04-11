@@ -9,6 +9,7 @@
 #include "sick_logger.h"
 #include "sick_inspector.h"
 
+
 PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
     // receive mouseMouseEvent without needing to press a button
@@ -242,7 +243,7 @@ PaletteRow::findColor(QPoint position) const
 }
 
 bool
-PaletteRow::serialize(QJsonObject &json)
+PaletteRow::serialize(QJsonObject &json, SickExportOpts::ExportFormat fmt)
 {
 
     // assert big time, this should never happen !
@@ -251,10 +252,81 @@ PaletteRow::serialize(QJsonObject &json)
 
     for (int i = 0; i < myPalette->size(); ++i)
     {
-        QString name_hex = myPalette->at(i).name(QColor::HexRgb);
-        json.insert(QString("Color %1").arg(i + 1), name_hex);
+        QString col_str;
+        switch (fmt)
+        {
+            case SickExportOpts::ExportFormat::HEX:
+            {
+                col_str = myPalette->at(i).name(QColor::HexRgb);
+                break;
+            }
+            case SickExportOpts::ExportFormat::RGBF:
+            {
+                float r, g, b;
+                myPalette->at(i).getRgbF(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::RGBI:
+            {
+                int r, g, b;
+                myPalette->at(i).getRgb(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::HSVF:
+            {
+                float r, g, b;
+                myPalette->at(i).getHsvF(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::HSVI:
+            {
+                int r, g, b;
+                myPalette->at(i).getHsv(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::HSLF:
+            {
+                float r, g, b;
+                myPalette->at(i).getHslF(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::HSLI:
+            {
+                int r, g, b;
+                myPalette->at(i).getHsl(&r, &g, &b);
+                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::CMYKF:
+            {
+                float c, m, y, k;
+                myPalette->at(i).getCmykF(&c, &m, &y, &k);
+                col_str = QString("%1, %2, %3, %4").arg(c).arg(m).arg(y).arg(k);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::CMYKI:
+            {
+                int c, m, y, k;
+                myPalette->at(i).getCmyk(&c, &m, &y, &k);
+                col_str = QString("%1, %2, %3").arg(c).arg(m).arg(y).arg(k);
+                break;                
+            }
+            case SickExportOpts::ExportFormat::INVALID:
+                break;
+        }
+        
+        json.insert(QString("Color %1").arg(i + 1), col_str);
     }
     // sign the json like true gentlemen
+    json.insert(
+        QString("Export Format"),
+        SickExportOpts::getFormatToken(fmt)  
+    );
     json.insert(
         QString("Palette Generator"),
         QString("PaletterGUImazing 1.0 TM")  

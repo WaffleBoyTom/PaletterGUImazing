@@ -2,6 +2,23 @@
 #include <QTimer>
 
 
+static constexpr int 
+theNumberOfFormats = static_cast<int>(SickExportOpts::ExportFormat::INVALID);
+
+static const char 
+*theExportFormatMap[theNumberOfFormats] = {
+    "HEX",
+    "RGB (Float)",
+    "RGB (Int)",
+    "HSV (Float)",
+    "HSV (Int)",    
+    "HSL (Float)",
+    "HSL (Int)",
+    "CMYK (Float)",
+    "CMYK (Int)"
+};
+
+
 SickExportOpts::SickExportOpts(QWidget *parent) 
 : QWidget(parent)
 {
@@ -18,8 +35,8 @@ SickExportOpts::SickExportOpts(QWidget *parent)
     myExportPath = new SickFileLineEdit(this, tr("Export Path"));
 
     myExportFormat = new SickDropDown(nullptr, tr("Format"));
-    myExportFormat->addMenuItem(tr("RGB"));
-    myExportFormat->addMenuItem(tr("HEX"));
+    for (int i = 0; i < theNumberOfFormats; ++i)
+        myExportFormat->addMenuItem(tr(theExportFormatMap[i]));
     
     myLayout->addWidget(myExportPath);
     myLayout->addWidget(myExportFormat);
@@ -35,4 +52,16 @@ SickExportOpts::exportPalette()
         myExportPath->text(),
         ExportFormat(myExportFormat->item())
     );
+}
+
+QString
+SickExportOpts::getFormatToken(SickExportOpts::ExportFormat fmt)
+{
+    if (fmt == SickExportOpts::ExportFormat::INVALID)
+        return QString("INVALID");
+    const int index = static_cast<int>(fmt);
+    if (index > theNumberOfFormats)
+        return QString("INVALID");
+    return QString(theExportFormatMap[index]);
+    
 }

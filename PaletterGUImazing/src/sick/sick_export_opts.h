@@ -14,9 +14,20 @@ public:
     explicit SickExportOpts(QWidget *parent);
     enum class ExportFormat
     {
-        RGB = 0,
-        HEX
+        HEX = 0,
+        RGBF,
+        RGBI,
+        HSVF,
+        HSVI,
+        HSLF,
+        HSLI,
+        CMYKF,
+        CMYKI,
+        INVALID
     };
+
+    /// return token associated with export format
+    static QString getFormatToken(SickExportOpts::ExportFormat fmt);
 
 signals:
     void tellBossAboutExportOpts(QString file_path, ExportFormat format);
