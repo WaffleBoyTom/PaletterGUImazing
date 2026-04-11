@@ -18,6 +18,10 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myLayout = new QVBoxLayout();
     myLayout->setAlignment(Qt::AlignTop);
 
+    
+    // FIXME: Replace this with SickFileLineEdit ...
+    // but for that we probably need a flag to determine if the file
+    // chooser can load existing file or not...
     // my boy Ethan so good lookin'
     myLineEdit = new QLineEdit(tr("Ethan so sexy"));
     myLineEdit->setStyleSheet(

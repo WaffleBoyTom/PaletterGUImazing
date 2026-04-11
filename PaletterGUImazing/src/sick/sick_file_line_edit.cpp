@@ -37,26 +37,16 @@ SickFileLineEdit::text()
 void
 SickFileLineEdit::openNautilus()
 {
-    QFileDialog dialog;
-    dialog.setWindowTitle(tr("File Chooser"));
-    dialog.setDirectory(QDir::homePath());
-    dialog.setFileMode(QFileDialog::ExistingFile);
-
-    // TODO: We should be using dialog::getSaveFileName static 
-
-    if (dialog.exec() == QDialog::Accepted)
-    {
-        QString file_path = dialog.selectedFiles().first();
-        myLineEdit->setText(file_path);
-        {
-            const QString native_path = QDir::toNativeSeparators(file_path);
-            QString message = QString("Set Export Path: %1").arg(native_path);
-            SickLogger::log(message);
-        }
-    }
-    else
-    {
-        // User closed the dialog, so don't error out.
+    QString file_path = QFileDialog::getSaveFileName(
+        this, 
+        tr("File Chooser"),
+        QDir::homePath()
+    );
+    if (file_path.isEmpty())
         return;
-    }
+    myLineEdit->setText(file_path);
+    const QString native_path = QDir::toNativeSeparators(file_path);
+    QString message = QString("Set Export Path: %1").arg(native_path);
+    SickLogger::log(message);
+    
 }
