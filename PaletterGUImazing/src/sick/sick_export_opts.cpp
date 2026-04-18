@@ -39,6 +39,13 @@ SickExportOpts::SickExportOpts(QWidget *parent)
         SickFileLineEdit::Mode::WRITE
     );
 
+    connect(
+        myExportPath,
+        &SickFileLineEdit::tellBossAboutFileLoaded,
+        this,
+        &SickExportOpts::logPathSet
+    );
+    
     myExportFormat = new SickDropDown(nullptr, tr("Format"));
     for (int i = 0; i < theNumberOfFormats; ++i)
         myExportFormat->addMenuItem(tr(theExportFormatMap[i]));
@@ -69,4 +76,13 @@ SickExportOpts::getFormatToken(SickExportOpts::ExportFormat fmt)
         return QString("INVALID");
     return QString(theExportFormatMap[index]);
     
+}
+
+
+void
+SickExportOpts::logPathSet(const QString &filename)
+{
+    const QString native_path = QDir::toNativeSeparators(filename);
+    QString message = QString("Set Export Path: %1").arg(native_path);
+    SickLogger::log(message, SickLogSeverity::SEL); 
 }

@@ -37,6 +37,14 @@ SickLogViewer::appendLine(QString message, SickLogSeverity sev)
             format.setForeground(QBrush(Qt::white));
             break;
         }
+        case SickLogSeverity::SEL:
+        {
+            // Qt::cyan looks pretty cool
+            // maybe we could give the user an option
+            // to set the messages to cyan ...
+            format.setForeground(QBrush(QColorConstants::Svg::lightseagreen));
+            break;
+        }
         case SickLogSeverity::CUDA:
         {
             format.setForeground(QBrush(Qt::green));

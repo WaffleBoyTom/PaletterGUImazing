@@ -4,6 +4,7 @@
 #include <QtWidgets>
 #include "sick_dropdown.h"
 #include "sick_file_line_edit.h"
+#include "sick_logger.h"
 
 
 class SickExportOpts : public QWidget
@@ -31,6 +32,9 @@ public:
 
 signals:
     void tellBossAboutExportOpts(QString file_path, ExportFormat format);
+
+public slots:
+    void logPathSet(const QString &filename);
 
 private:
     

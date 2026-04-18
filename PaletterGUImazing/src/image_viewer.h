@@ -7,6 +7,7 @@
 
 #include "sick_dropdown.h"
 #include "sick_imageholder.h"
+#include "sick_file_line_edit.h"
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -46,11 +47,10 @@ protected:
 
 private slots:
 
-    // opens file explorer
-    void openNautilus();
-
     // loads image from file explorer into window
-    bool loadImage(const QString &filename);
+    void loadImage(const QString &filename);
+    // called when the editingFinished is fired by line edit
+    void loadImageFromLineEdit();
 
     // get QImage from image holder
     QImage getImage();
@@ -75,9 +75,9 @@ private slots:
 private:
     QVBoxLayout *myLayout;
 
-    QLineEdit *myLineEdit;
+    SickFileLineEdit *myLineEdit;
 
-    SickImageHolder *myImageHolder;
+    SickImageHolder  *myImageHolder;
 
     // keep reference to original image otherwise
     // we iteratively scale the pixmap
@@ -85,8 +85,8 @@ private:
     // and they aint delicious...
     QPixmap myLoadedImage;
 
-    // calls openNautilus
-    QPushButton *myNautilusButton;
+    // // calls openNautilus
+    // QPushButton *myNautilusButton;
 
     // calls processImage
     QPushButton *myProcessorButton;

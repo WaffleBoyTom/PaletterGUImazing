@@ -8,6 +8,7 @@
 enum class SickLogSeverity 
 {
     MSG,          //  white
+    SEL,          //  lightseagreen
     CUDA,         //  green
     METAL,        //  light gray
     WARNING,      //  yellow

@@ -20,7 +20,6 @@ class SickFileLineEdit : public QWidget
 
 public:
 
-
     /// this determines the behaviour of the file chooser
     /// Read means it only looks for existing files
     /// Write means it lets you write the name of a file as well.
@@ -41,6 +40,13 @@ public:
     
     bool isRead()  const { return myMode == Mode::READ;  }
     bool isWrite() const { return myMode == Mode::WRITE; }
+
+    /// accessor to be able to hook into signal
+    const QLineEdit *lineEdit() const { return myLineEdit; }
+
+signals:
+    /// emit a signal when a valid file is loaded
+    void tellBossAboutFileLoaded(QString &file);
 
 private:
     

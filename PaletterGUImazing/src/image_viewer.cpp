@@ -19,22 +19,26 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myLayout->setAlignment(Qt::AlignTop);
 
     
-    // FIXME: Replace this with SickFileLineEdit ...
-    // but for that we probably need a flag to determine if the file
-    // chooser can load existing file or not...
     // my boy Ethan so good lookin'
-    myLineEdit = new QLineEdit(tr("Ethan so sexy"));
-    myLineEdit->setStyleSheet(
-        "color: cornsilk; background-color: #232323"    
-    );
-
-    // nautilus button
-    myNautilusButton = new QPushButton(tr("Open Image"));
-    connect(
-        myNautilusButton,
-        &QPushButton::clicked,
+    // no need to specify mode as it is READ by default 
+    myLineEdit = new SickFileLineEdit(
         this,
-        &ImageViewer::openNautilus
+        tr("Ethan so sexy")
+    );
+    // load image when user has loaded image through file chooser
+    connect(
+        myLineEdit,
+        &SickFileLineEdit::tellBossAboutFileLoaded,
+        this,
+        &ImageViewer::loadImage    
+    );
+    // user can also type image in, try to load after they're done editing
+    // line edit
+    connect(
+        myLineEdit->lineEdit(),
+        &QLineEdit::editingFinished,
+        this,
+        &ImageViewer::loadImageFromLineEdit
     );
 
     // image holder
@@ -109,7 +113,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
 
     // populate layout
     myLayout->addWidget(myLineEdit);
-    myLayout->addWidget(myNautilusButton);
+    // myLayout->addWidget(myNautilusButton);
     myLayout->addWidget(myProcessorButton);
     dropdowns->addWidget(myModeDropdown);
     dropdowns->addWidget(myDeviceDropdown);
@@ -119,67 +123,39 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     setLayout(myLayout);
 }
 
+
 void
-ImageViewer::openNautilus()
-{
-    QFileDialog dialog;
-    dialog.setWindowTitle(tr("Palettize this geezer"));
-    dialog.setDirectory(QDir::homePath());
-    dialog.setFileMode(QFileDialog::ExistingFile);
-
-    QList<QByteArray> image_formats = QImageReader::supportedImageFormats();
-    QStringList format_filters;
-    for (const QByteArray &image_format : image_formats)
-        format_filters << QString("*.%1").arg(image_format);
-
-    format_filters.removeAll("*.gif");
-
-    QString all_name_filter =
-        QString("All Images (%1)").arg(format_filters.join(" "));
-
-    dialog.setNameFilter(all_name_filter);
-
-    if (dialog.exec() == QDialog::Accepted)
-    {
-        QString file_path = dialog.selectedFiles().first();
-        if (loadImage(file_path))
-        {
-            const QString native_path = QDir::toNativeSeparators(file_path);
-            QString message = QString("Loaded image file: %1").arg(native_path);
-            SickLogger::log(message);
-        }
-        else
-        {
-            QString message = "Failed to load image file";
-            SickLogger::log(message, SickLogSeverity::ERROR);
-            QMessageBox::information(
-                this, 
-                QGuiApplication::applicationDisplayName(), 
-                message
-            );
-        }
-    }
-    else
-    {
-        // User closed the dialog, so don't error out.
-        return;
-    }
-}
-
-bool
 ImageViewer::loadImage(const QString &filename)
 {
-    myLineEdit->setText(filename);
-
     if (!myLoadedImage.load(filename))
-        return false;
+    {
+        QString message = "Failed to load image file";
+        SickLogger::log(message, SickLogSeverity::ERROR);
+        QMessageBox::information(
+            this, 
+            QGuiApplication::applicationDisplayName(), 
+            message
+        );
+        return;
+    }
 
     myProcessorButton->setEnabled(true);
 
     handleResizing();
 
-    return true;
+    // send a message in log about image being loaded
+
+    const QString native_path = QDir::toNativeSeparators(filename);
+    QString message = QString("Loaded Image: %1").arg(native_path);
+    SickLogger::log(message, SickLogSeverity::SEL);
 }
+
+void
+ImageViewer::loadImageFromLineEdit()
+{
+    loadImage(myLineEdit->text());
+}
+
 
 QImage
 ImageViewer::getImage()
@@ -338,7 +314,7 @@ ImageViewer::resizeOnDrag(int width, int height)
 
     
     // FIXME: this means we override an image which has been
-    // palette : ( 
+    // paletted : ( 
     const QPixmap scaled = resizeImage(
         &myLoadedImage,
         width,

@@ -65,8 +65,6 @@ SickFileLineEdit::openNautilus()
         return;
     
     myLineEdit->setText(file_path);
-    const QString native_path = QDir::toNativeSeparators(file_path);
-    QString message = QString("Set Export Path: %1").arg(native_path);
-    SickLogger::log(message);
+    emit tellBossAboutFileLoaded(file_path);
     
 }
