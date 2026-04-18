@@ -1,7 +1,10 @@
 #include "sick_file_line_edit.h"
 #include "sick_logger.h"
+#include "sick_utils.h"
 
-SickFileLineEdit::SickFileLineEdit(QWidget *parent, QString label) : QWidget(parent)
+SickFileLineEdit::SickFileLineEdit(
+    QWidget *parent, QString label, SickFileLineEdit::Mode mode) 
+    : QWidget(parent), myMode(mode)
 {
     myLayout = new QHBoxLayout();
     myLineEdit = new QLineEdit(label);
@@ -28,22 +31,39 @@ SickFileLineEdit::SickFileLineEdit(QWidget *parent, QString label) : QWidget(par
     setLayout(myLayout);
 }
 
-QString
-SickFileLineEdit::text()
-{
-    return myLineEdit->text();
-}
 
 void
 SickFileLineEdit::openNautilus()
 {
-    QString file_path = QFileDialog::getSaveFileName(
-        this, 
-        tr("File Chooser"),
-        QDir::homePath()
-    );
+    
+    QString file_path;
+    switch (myMode)
+    {
+        case SickFileLineEdit::Mode::WRITE:
+        {
+            file_path = QFileDialog::getSaveFileName(
+                this,                                // parent
+                tr("File Writer"),                   // caption
+                QDir::homePath(),                    // dir
+                SickUtils::supportedPaletteFormats() // filter
+            );
+            break;
+        }
+        case SickFileLineEdit::Mode::READ:
+        {
+            file_path = QFileDialog::getOpenFileName(
+                this,                               // parent
+                tr("File Chooser"),                 // caption
+                QDir::homePath(),                   // dir
+                SickUtils::supportedImageFormats()  // filter
+            );
+            break;    
+        }
+    }
+    
     if (file_path.isEmpty())
         return;
+    
     myLineEdit->setText(file_path);
     const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Set Export Path: %1").arg(native_path);

@@ -18,6 +18,8 @@ set(SOURCE
     sick_logger.cpp
     sick_slider.h
     sick_slider.cpp
+    sick_utils.h
+    sick_utils.cpp
 )
 add_library(sick STATIC ${SOURCE})
 target_link_libraries(sick PRIVATE Qt${QT_VERSION_MAJOR}::Widgets PUBLIC baller)

@@ -32,7 +32,12 @@ SickExportOpts::SickExportOpts(QWidget *parent)
         this,
         &SickExportOpts::exportPalette
     );
-    myExportPath = new SickFileLineEdit(this, tr("Export Path"));
+    
+    myExportPath = new SickFileLineEdit(
+        this, 
+        tr("Export Path"),
+        SickFileLineEdit::Mode::WRITE
+    );
 
     myExportFormat = new SickDropDown(nullptr, tr("Format"));
     for (int i = 0; i < theNumberOfFormats; ++i)
