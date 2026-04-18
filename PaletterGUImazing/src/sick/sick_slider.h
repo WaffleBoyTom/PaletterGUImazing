@@ -11,6 +11,13 @@ class QLineEdit;
 class QHBoxLayout;
 QT_END_NAMESPACE
 
+/*
+
+A Sick Fuckin' Slider which 
+combines a slider and a line edit
+For Sick Duders and Dudettes only
+*/
+
 class SickSlider : public QWidget
 {
     Q_OBJECT

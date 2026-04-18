@@ -6,6 +6,14 @@
 #include "sick_file_line_edit.h"
 #include "sick_logger.h"
 
+/*
+
+Widget that handles the export of the palette
+has a SickFileLineEdit to get a file path to write to
+has a SickDropDown to handle the export format
+has a QPushButton to trigger the export
+
+*/
 
 class SickExportOpts : public QWidget
 {

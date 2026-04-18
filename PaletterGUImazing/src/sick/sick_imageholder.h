@@ -11,6 +11,11 @@ class QString;
 class QMouseEvent;
 QT_END_NAMESPACE
 
+/*
+Subclass of QLabel
+so you can resize an image
+*/
+
 class SickImageHolder : public QLabel
 {
     Q_OBJECT
