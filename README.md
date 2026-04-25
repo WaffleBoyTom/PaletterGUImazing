@@ -22,6 +22,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
     - [x] SickLogger
     - [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
     - [ ] It should be possible the hide the log viewer and/or to set a verbosity level 
+    - [ ] Some sort of progress bar to show the user that we are cooking. Some image or something.
 - [ ] UI
     - [ ] Fix ImageViewer hierarchy
     - [ ] Fix layout issues

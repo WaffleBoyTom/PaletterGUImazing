@@ -84,9 +84,8 @@ DstImageViewer::DstImageViewer(QWidget *parent)
 #endif
     
     // populate layout
-    myLayout->addWidget(myLineEdit);
-    // myLayout->addWidget(myNautilusButton);
-    myLayout->addWidget(myProcessorButton);
+    dropdowns->addWidget(myLineEdit);
+    dropdowns->addWidget(myProcessorButton);
     dropdowns->addWidget(myModeDropdown);
     dropdowns->addWidget(myDeviceDropdown);
     myLayout->addLayout(dropdowns);

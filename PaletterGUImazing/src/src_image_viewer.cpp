@@ -85,8 +85,8 @@ SrcImageViewer::SrcImageViewer(QWidget *parent)
     myPalette = QList<QColor>();
 
     // populate layout
-    myLayout->addWidget(myLineEdit);
-    myLayout->addWidget(myProcessorButton);
+    dropdowns->addWidget(myLineEdit);
+    dropdowns->addWidget(myProcessorButton);
     dropdowns->addWidget(myModeDropdown);
     dropdowns->addWidget(myDeviceDropdown);
     myLayout->addLayout(dropdowns);
