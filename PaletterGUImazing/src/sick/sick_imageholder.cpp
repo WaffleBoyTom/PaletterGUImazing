@@ -2,6 +2,9 @@
 
 #include <QString>
 #include <QtWidgets>
+#include <QMenu>
+#include <QMessageBox>
+#include <QAction>
 
 /*
 Subclass of QLabel
@@ -12,6 +15,15 @@ SickImageHolder::SickImageHolder(QWidget *parent,
                                  QString label) 
 : QLabel(label, parent)
 {
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(
+        this, 
+        QWidget::customContextMenuRequested, 
+        this, 
+        SickImageHolder::showContextMenu
+    );
+    
 }
 
 void 
@@ -45,4 +57,31 @@ void
 SickImageHolder::mouseReleaseEvent(QMouseEvent *event) 
 {
     QLabel::mouseReleaseEvent(event);
+}
+
+void
+SickImageHolder::showContextMenu(const QPoint &pos)
+{
+    QMenu contextMenu(tr("Context menu"), this);
+    QAction *act = new QAction("View Image Properties");
+    contextMenu.addAction(act);
+    connect(act, &QAction::triggered, this, &SickImageHolder::displayProperties);
+    contextMenu.exec(mapToGlobal(pos));
+}
+
+void 
+SickImageHolder::displayProperties()
+{
+    // FIXME: This isn't super useful, we probably want to ask parent about
+    // some more useful info ?
+    auto data = QString("Width: %1\nHeight: %2")
+                .arg(pixmap().width())
+                .arg(pixmap().height());
+    
+    QMessageBox::information(
+        this, 
+        "Image Properties", 
+        data
+    );
+    
 }

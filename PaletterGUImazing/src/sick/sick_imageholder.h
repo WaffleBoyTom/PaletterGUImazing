@@ -26,6 +26,10 @@ public:
 signals:
     void tellBossToResize(int width, int height);
 
+public slots:
+    void showContextMenu(const QPoint &pos);
+    void displayProperties();
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
