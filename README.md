@@ -25,7 +25,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [ ] UI
     - [ ] Fix ImageViewer hierarchy
     - [ ] Fix layout issues
-    - [ ] Sick File Line Edit for all file choosers and writers !
+    - [x] Sick File Line Edit for all file choosers and writers !
 - [ ] GPU
     - [x] Use to apply palette to second image
     - [ ] Use to run K-Means for palette generation
@@ -38,7 +38,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
     - [ ] The image with the palette applied
 
 - [ ] Misc
-    - [ ] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
+    - [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
 # BUGS
 - [ ] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
 # creedentials

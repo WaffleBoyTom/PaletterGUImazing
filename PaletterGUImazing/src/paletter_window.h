@@ -3,7 +3,8 @@
 
 #include <QWidget>
 
-#include "image_viewer.h"
+#include "src_image_viewer.h"
+#include "dst_image_viewer.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
 #include "sick_export_opts.h"
@@ -44,9 +45,9 @@ public slots:
 
 private:
     QLabel *paletterLabel;
-    ImageViewer *myImgViewer;
+    SrcImageViewer *mySrcImgViewer;
     PaletteViewer *myPaletteViewer;
-    ImageViewer *myConvertImgViewer;
+    DstImageViewer *myConvertImgViewer;
     SickLogViewer *myLogViewer;
     SickExportOpts *myExporter;
     [[maybe_unused]]QMenuBar *myMenuBar;

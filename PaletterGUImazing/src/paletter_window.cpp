@@ -4,7 +4,6 @@
 #include <QThread>
 #include <QtWidgets>
 
-#include "image_viewer.h"
 #include "sick_logger.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
@@ -33,12 +32,12 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     QHBoxLayout *viewersLayout = new QHBoxLayout();
 
     // add the image viewer here
-    myImgViewer = new ImageViewer(this, true /*paletteSource*/);
-    viewersLayout->addWidget(myImgViewer);
+    mySrcImgViewer = new SrcImageViewer(this);
+    viewersLayout->addWidget(mySrcImgViewer);
 
     // add the other image viewer here
     // this is the one where you can apply the palette to an image
-    myConvertImgViewer = new ImageViewer(this, false /* paletteSource */);
+    myConvertImgViewer = new DstImageViewer(this);
     viewersLayout->addWidget(myConvertImgViewer);
 
     mainLayout->addLayout(viewersLayout);
@@ -63,20 +62,20 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     );
 
     connect(
-        myImgViewer,
-        &ImageViewer::tellBossAboutPaletteFill,
+        mySrcImgViewer,
+        &SrcImageViewer::tellBossAboutPaletteFill,
         this,
         &PaletterGUI::setPalette
     );
 
     connect(
         myConvertImgViewer,
-        &ImageViewer::askBossForPalette,
+        &DstImageViewer::askBossForPalette,
         this,
         &PaletterGUI::applyPaletteToSecondViewer
     );
 
-    setPalette(myImgViewer->palette());
+    setPalette(mySrcImgViewer->palette());
 
     paletteviewerlayout->addWidget(myPaletteViewer);
     mainLayout->addLayout(paletteviewerlayout);
@@ -115,7 +114,7 @@ void
 PaletterGUI::resizeEvent(QResizeEvent *event)
 {
     // scale image with window
-    myImgViewer->handleResizing();
+    mySrcImgViewer->handleResizing();
     // we have myConvertImgViewer,
     // it probably shoud be resized here
 }
@@ -123,7 +122,7 @@ PaletterGUI::resizeEvent(QResizeEvent *event)
 void
 PaletterGUI::setPaletteDisplaySize(int size)
 {
-    myImgViewer->setPaletteDisplaySize(size);
+    mySrcImgViewer->setPaletteDisplaySize(size);
 }
 
 void
@@ -135,7 +134,7 @@ PaletterGUI::setPalette(QList<QColor> *palette)
 void
 PaletterGUI::applyPaletteToSecondViewer()
 {
-    myConvertImgViewer->applyPalette(myImgViewer->palette());
+    myConvertImgViewer->applyPalette(mySrcImgViewer->palette());
 }
 
 void
