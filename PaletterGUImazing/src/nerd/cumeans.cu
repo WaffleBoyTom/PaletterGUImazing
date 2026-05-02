@@ -1,18 +1,18 @@
-#include "cumeans.cuh"
 #include <cuda_runtime.h>
+
+#include "cumeans.cuh"
 
 namespace CuMeans
 {
-void 
+void
 palettize(
     float3 *palette,
     const uchar4 *img,
     const int width,
     const int height,
-    const int palette_size  
+    const int palette_size
 )
 {
-    
     const int pixel_count = width * height;
     // somewhat arbitrary block size
     int block_size = 256;
@@ -20,4 +20,4 @@ palettize(
 
     cudaDeviceSynchronize();
 }
-} // end namespace
+}  // end namespace

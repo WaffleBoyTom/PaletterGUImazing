@@ -13,6 +13,8 @@ if (USE_CUDA)
     )
 else()
     set(SOURCE
+        kmeanifier.h
+        kmeanifier.cpp
         quantizer.h
         quantizer.cpp
         remapper.h

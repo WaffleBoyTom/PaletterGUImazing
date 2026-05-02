@@ -6,22 +6,8 @@
 #include <QWidget>
 
 #include "sick_dropdown.h"
-#include "sick_imageholder.h"
 #include "sick_file_line_edit.h"
-
-QT_BEGIN_NAMESPACE
-class QAction;
-class QComboBox;
-class QLabel;
-class QMenu;
-class QScrollArea;
-class QScrollBar;
-class QVBoxLayout;
-class QLineEdit;
-class QPushButton;
-class QPixmap;
-class QWidget;
-QT_END_NAMESPACE
+#include "sick_imageholder.h"
 
 class DstImageViewer : public QWidget
 {
@@ -30,7 +16,7 @@ class DstImageViewer : public QWidget
 public:
     explicit DstImageViewer(QWidget *parent);
     void handleResizing();
-    
+
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
 
@@ -54,10 +40,10 @@ private slots:
     void onApplyPaletteFinished(QImage image);
 
     void askForPalette();
-    
+
     // resizes image based on drag
     void resizeOnDrag(int width, int height);
-    
+
     // Resizes image based on parent size.
     QPixmap resizeImage(QPixmap *image, int width, int height);
 
@@ -66,15 +52,15 @@ private:
 
     SickFileLineEdit *myLineEdit;
 
-    SickImageHolder  *myImageHolder;
+    SickImageHolder *myImageHolder;
 
     // keep reference to original image otherwise
     // we iteratively scale the pixmap
     // and end up with mashed pixeloes
     // and they aint delicious...
     QPixmap myLoadedImage;
-    
-    // image that we've applied the palette to 
+
+    // image that we've applied the palette to
     QPixmap myModifiedImage;
 
     // calls processImage
@@ -85,7 +71,6 @@ private:
 
     // dropdown for specifying device
     SickDropDown *myDeviceDropdown;
-
 };
 
 #endif  // DST_IMAGE_VIEWER_H

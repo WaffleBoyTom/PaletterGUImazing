@@ -3,14 +3,6 @@
 
 #include <QtWidgets>
 
-QT_BEGIN_NAMESPACE
-class QLabel;
-class QWidget;
-class QPoint;
-class QString;
-class QMouseEvent;
-QT_END_NAMESPACE
-
 /*
 Subclass of QLabel
 so you can resize an image
@@ -36,9 +28,7 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
 
 private:
-
     QPoint myStartDragPos;
-
 };
 
 #endif  // SICK_IMAGEHOLDER_H

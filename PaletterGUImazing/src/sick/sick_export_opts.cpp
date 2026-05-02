@@ -1,26 +1,25 @@
 #include "sick_export_opts.h"
+
 #include <QTimer>
 
+#include "sick_logger.h"
 
-static constexpr int 
-theNumberOfFormats = static_cast<int>(SickExportOpts::ExportFormat::INVALID);
+static constexpr int theNumberOfFormats =
+    static_cast<int>(SickExportOpts::ExportFormat::INVALID);
 
-static const char 
-*theExportFormatMap[theNumberOfFormats] = {
+static const char *theExportFormatMap[theNumberOfFormats] = {
     "HEX",
     "RGB (Float)",
     "RGB (Int)",
     "HSV (Float)",
-    "HSV (Int)",    
+    "HSV (Int)",
     "HSL (Float)",
     "HSL (Int)",
     "CMYK (Float)",
     "CMYK (Int)"
 };
 
-
-SickExportOpts::SickExportOpts(QWidget *parent) 
-: QWidget(parent)
+SickExportOpts::SickExportOpts(QWidget *parent) : QWidget(parent)
 {
     // setMinimumSize(screen()->geometry().width() / 2, 150);
     myLayout = new QVBoxLayout();
@@ -32,11 +31,9 @@ SickExportOpts::SickExportOpts(QWidget *parent)
         this,
         &SickExportOpts::exportPalette
     );
-    
+
     myExportPath = new SickFileLineEdit(
-        this, 
-        tr("Export Path"),
-        SickFileLineEdit::Mode::WRITE
+        this, tr("Export Path"), SickFileLineEdit::Mode::WRITE
     );
 
     connect(
@@ -45,11 +42,11 @@ SickExportOpts::SickExportOpts(QWidget *parent)
         this,
         &SickExportOpts::logPathSet
     );
-    
+
     myExportFormat = new SickDropDown(nullptr, tr("Format"));
     for (int i = 0; i < theNumberOfFormats; ++i)
         myExportFormat->addMenuItem(tr(theExportFormatMap[i]));
-    
+
     myLayout->addWidget(myExportPath);
     myLayout->addWidget(myExportFormat);
     myLayout->addWidget(myExportButton);
@@ -57,12 +54,11 @@ SickExportOpts::SickExportOpts(QWidget *parent)
     setLayout(myLayout);
 }
 
-void 
+void
 SickExportOpts::exportPalette()
 {
     emit tellBossAboutExportOpts(
-        myExportPath->text(),
-        ExportFormat(myExportFormat->item())
+        myExportPath->text(), ExportFormat(myExportFormat->item())
     );
 }
 
@@ -75,14 +71,12 @@ SickExportOpts::getFormatToken(SickExportOpts::ExportFormat fmt)
     if (index > theNumberOfFormats)
         return QString("INVALID");
     return QString(theExportFormatMap[index]);
-    
 }
-
 
 void
 SickExportOpts::logPathSet(const QString &filename)
 {
     const QString native_path = QDir::toNativeSeparators(filename);
     QString message = QString("Set Export Path: %1").arg(native_path);
-    SickLogger::log(message, SickLogSeverity::SEL); 
+    SickLogger::log(message, SickLogSeverity::SEL);
 }

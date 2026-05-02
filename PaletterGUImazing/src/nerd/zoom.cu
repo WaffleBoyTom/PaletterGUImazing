@@ -16,7 +16,6 @@ uchar3ToFloat3(uchar3 pixel)
     return make_float3(pixel.x / 255.0f, pixel.y / 255.0f, pixel.z / 255.0f);
 }
 
-
 inline __device__ uchar4
 float3ToUChar4(float3 color)
 {
@@ -78,7 +77,7 @@ rgbToHsv(float3 rgb)
     float cmax = fmaxf(rgb.x, fmaxf(rgb.y, rgb.z));
     float cmin = fminf(rgb.x, fminf(rgb.y, rgb.z));
     float d = cmax - cmin;
-    
+
     float value = cmax;
     float sat = cmax == 0.0 ? 0.0 : d / cmax;
     float hue = 0.0;
@@ -113,9 +112,8 @@ rgbToHsv(float3 rgb)
     // and 0-1 for everything else
     // normalize
     hsv.x = hsv.x * 60. / 360.;
-    
-    return hsv;
 
+    return hsv;
 }
 
 // FIXME: do something less stupid to avoid duplicate code
@@ -190,7 +188,6 @@ applyPaletteByLuminanceKernel(
         pixels[i] = float3ToUChar4(best);
     }
 }
-
 
 __global__ void
 applyPaletteByHueKernel(

@@ -3,23 +3,11 @@
 
 #include <QtWidgets>
 
-QT_BEGIN_NAMESPACE
-class QAction;
-class QWidget;
-class QPushButton;
-class QLineEdit;
-class QHBoxLayout;
-class QString;
-QT_END_NAMESPACE
-
-
 class SickFileLineEdit : public QWidget
 {
-
     Q_OBJECT
 
 public:
-
     /// this determines the behaviour of the file chooser
     /// Read means it only looks for existing files
     /// Write means it lets you write the name of a file as well.
@@ -30,38 +18,54 @@ public:
     };
 
     explicit SickFileLineEdit(
-        QWidget *parent, 
+        QWidget *parent,
         QString label,
-        SickFileLineEdit::Mode mode = SickFileLineEdit::Mode::READ);
-    
-    QString text() const { return myLineEdit->text(); }
-    
-    SickFileLineEdit::Mode mode()  const { return myMode; }
-    
-    bool isRead()  const { return myMode == Mode::READ;  }
-    bool isWrite() const { return myMode == Mode::WRITE; }
+        SickFileLineEdit::Mode mode = SickFileLineEdit::Mode::READ
+    );
+
+    QString
+    text() const
+    {
+        return myLineEdit->text();
+    }
+
+    SickFileLineEdit::Mode
+    mode() const
+    {
+        return myMode;
+    }
+
+    bool
+    isRead() const
+    {
+        return myMode == Mode::READ;
+    }
+    bool
+    isWrite() const
+    {
+        return myMode == Mode::WRITE;
+    }
 
     /// accessor to be able to hook into signal
-    const QLineEdit *lineEdit() const { return myLineEdit; }
+    const QLineEdit *
+    lineEdit() const
+    {
+        return myLineEdit;
+    }
 
 signals:
     /// emit a signal when a valid file is loaded
     void tellBossAboutFileLoaded(QString &file);
 
 private:
-    
     /// called when button is pushed
     void openNautilus();
-    
-    
+
     QHBoxLayout *myLayout;
     QPushButton *myFileChooser;
-    QLineEdit   *myLineEdit;
-    
-    
+    QLineEdit *myLineEdit;
+
     SickFileLineEdit::Mode myMode;
-    
-    
 };
 
 #endif  // SICK_FILELINEEDIT_H

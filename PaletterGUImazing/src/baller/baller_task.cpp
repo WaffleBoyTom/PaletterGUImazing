@@ -1,5 +1,7 @@
 #include "baller_task.h"
 
+#include "kmeanifier.h"
+
 BallerTask::BallerTask()
 {
 }
@@ -37,18 +39,16 @@ QuantizeTask::runInternal()
     QList<QColor> palette;
     switch (myMethod)
     {
-        case Quantizer::Method::MedianCut:
-        {
-            palette = Quantizer(myPaletteSize, 
-                        myMethod).generatePalette(
-                                              myImage);
-            break;
-        }
-        case Quantizer::Method::K_Means:
-        {
-            palette = KMeanifier(myPaletteSize).generatePalette(myImage);
-            break;
-        }
+    case Quantizer::Method::MedianCut:
+    {
+        palette = Quantizer(myPaletteSize, myMethod).generatePalette(myImage);
+        break;
+    }
+    case Quantizer::Method::K_Means:
+    {
+        palette = KMeanifier(myPaletteSize).generatePalette(myImage);
+        break;
+    }
     }
     emit finished(palette);
 }

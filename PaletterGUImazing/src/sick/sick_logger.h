@@ -5,14 +5,14 @@
 
 // determines the color of the
 // text being logged
-enum class SickLogSeverity 
+enum class SickLogSeverity
 {
-    MSG,          //  white
-    SEL,          //  lightseagreen
-    CUDA,         //  green
-    METAL,        //  light gray
-    WARNING,      //  yellow
-    ERROR         //  red
+    MSG,      //  white
+    SEL,      //  lightseagreen
+    CUDA,     //  green
+    METAL,    //  light gray
+    WARNING,  //  yellow
+    ERROR     //  red
 };
 
 class SickLogger : public QObject
@@ -22,8 +22,9 @@ class SickLogger : public QObject
 public:
     static SickLogger *getInstance();
 
-    static void log(QString message, 
-                    SickLogSeverity sev = SickLogSeverity::MSG);
+    static void log(
+        QString message, SickLogSeverity sev = SickLogSeverity::MSG
+    );
 
 signals:
     void tellBossToLog(QString message, SickLogSeverity sev);

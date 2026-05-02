@@ -2,8 +2,8 @@
 #define SICK_LOG_VIEWER_H
 
 #include <QtWidgets>
-#include "sick_logger.h"
 
+#include "sick_logger.h"
 
 class SickLogViewer : public QPlainTextEdit
 {
@@ -14,8 +14,9 @@ public:
 
 public slots:
     void append(QString message);
-    void appendLine(QString message, 
-                    SickLogSeverity sev = SickLogSeverity::MSG);
+    void appendLine(
+        QString message, SickLogSeverity sev = SickLogSeverity::MSG
+    );
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;

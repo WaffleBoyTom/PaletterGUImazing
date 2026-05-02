@@ -4,33 +4,28 @@
 #include <QtWidgets>
 
 #include "baller_task.h"
-#include "sick_logger.h"
 #include "remapper.h"
+#include "sick_logger.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-DstImageViewer::DstImageViewer(QWidget *parent)
-    : QWidget(parent)
+DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
 {
     // main layout
     myLayout = new QVBoxLayout();
     myLayout->setAlignment(Qt::AlignTop);
 
-    
     // my boy Ethan so good lookin'
-    // no need to specify mode as it is READ by default 
-    myLineEdit = new SickFileLineEdit(
-        this,
-        tr("Ethan so sexy")
-    );
+    // no need to specify mode as it is READ by default
+    myLineEdit = new SickFileLineEdit(this, tr("Ethan so sexy"));
     // load image when user has loaded image through file chooser
     connect(
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &DstImageViewer::loadImage    
+        &DstImageViewer::loadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -82,7 +77,7 @@ DstImageViewer::DstImageViewer(QWidget *parent)
     // the default as it is the better option !
     myDeviceDropdown->setMenuItem(1);
 #endif
-    
+
     // populate layout
     dropdowns->addWidget(myLineEdit);
     dropdowns->addWidget(myProcessorButton);
@@ -90,10 +85,9 @@ DstImageViewer::DstImageViewer(QWidget *parent)
     dropdowns->addWidget(myDeviceDropdown);
     myLayout->addLayout(dropdowns);
     myLayout->addWidget(myImageHolder);
-    
+
     setLayout(myLayout);
 }
-
 
 void
 DstImageViewer::loadImage(const QString &filename)
@@ -103,9 +97,7 @@ DstImageViewer::loadImage(const QString &filename)
         QString message = "Failed to load image file";
         SickLogger::log(message, SickLogSeverity::ERROR);
         QMessageBox::information(
-            this, 
-            QGuiApplication::applicationDisplayName(), 
-            message
+            this, QGuiApplication::applicationDisplayName(), message
         );
         return;
     }
@@ -126,7 +118,6 @@ DstImageViewer::loadImageFromLineEdit()
 {
     loadImage(myLineEdit->text());
 }
-
 
 QImage
 DstImageViewer::getImage()
@@ -155,9 +146,9 @@ DstImageViewer::applyPalette(QList<QColor> *palette)
     RemapTask *task = new RemapTask(image, device, method, *palette);
 
     connect(
-        task, 
-        &RemapTask::finished, 
-        this, 
+        task,
+        &RemapTask::finished,
+        this,
         &DstImageViewer::onApplyPaletteFinished
     );
 
@@ -176,14 +167,12 @@ DstImageViewer::onApplyPaletteFinished(QImage image)
 
     // keep the modified image around.
     myModifiedImage = pixmap;
-    
-    myImageHolder->setPixmap(
-        resizeImage(
-            &pixmap,            
-            myImageHolder->pixmap().width(),
-            myImageHolder->pixmap().height()
-        )
-    );
+
+    myImageHolder->setPixmap(resizeImage(
+        &pixmap,
+        myImageHolder->pixmap().width(),
+        myImageHolder->pixmap().height()
+    ));
 
     myProcessorButton->setEnabled(true);
 }
@@ -195,8 +184,7 @@ DstImageViewer::askForPalette()
 }
 
 QPixmap
-DstImageViewer::resizeImage(QPixmap *imagedisplay, 
-                         int width, int height)
+DstImageViewer::resizeImage(QPixmap *imagedisplay, int width, int height)
 {
     // by default images are pretty big
     // unlike other things...
@@ -205,8 +193,7 @@ DstImageViewer::resizeImage(QPixmap *imagedisplay,
     // dividing by 2 for now, idk
 
     return imagedisplay->scaled(
-        width, height,
-        Qt::KeepAspectRatio /* ar */
+        width, height, Qt::KeepAspectRatio /* ar */
     );
 }
 
@@ -220,7 +207,7 @@ DstImageViewer::handleResizing()
     const QPixmap scaled = resizeImage(
         !myModifiedImage.isNull() ? &myModifiedImage : &myLoadedImage,
         parentWidget()->height() / theImageScaleFactor, /* width */
-        parentWidget()->width() / theImageScaleFactor  /* height */
+        parentWidget()->width() / theImageScaleFactor   /* height */
     );
 
     myImageHolder->setPixmap(scaled);
@@ -232,17 +219,15 @@ DstImageViewer::resizeOnDrag(int width, int height)
     if (myLoadedImage.isNull() && myModifiedImage.isNull())
         return;
 
-    
     // FIXME: this means we override an image which has been
-    // paletted : ( 
+    // paletted : (
     const QPixmap scaled = resizeImage(
         !myModifiedImage.isNull() ? &myModifiedImage : &myLoadedImage,
         width,
-        height    
+        height
     );
-    
-    myImageHolder->setPixmap(scaled);
 
+    myImageHolder->setPixmap(scaled);
 }
 
 void
@@ -255,9 +240,8 @@ DstImageViewer::paintEvent(QPaintEvent *event)
     // const QPoint topleft = myImageHolder->rect().center();
     // painter.drawRect(
     //     topleft.x(),
-    //     topleft.y(),        
+    //     topleft.y(),
     //     myImageHolder->width(),
     //     myImageHolder->height()
     // );
 }
-

@@ -1,4 +1,5 @@
 #include "remapper.h"
+
 #include "sick_logger.h"
 
 // THIS CAN'T BE INCLUDED BECAUSE NVCC DOESNT LIKE IT !!!!!!
@@ -26,8 +27,9 @@
 */
 
 #ifdef USE_CUDA
-#include "zoom.cuh"
 #include <cuda_runtime.h>
+
+#include "zoom.cuh"
 #endif
 
 Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
@@ -40,31 +42,32 @@ Remapper::remap(QImage &image) const
 {
 #ifdef USE_CUDA
 
-    // FIXME: 
+    // FIXME:
     // should this be in ImageViewer::applyPalette instead ?
     // this being here means nerd lib has to include sick lib
     // which maybe is fine but seems a bit sketch ...
-    
+
     int deviceCount = 0;
     cudaError_t err = cudaGetDeviceCount(&deviceCount);
 
     if (err == cudaSuccess && deviceCount > 0)
     {
         SickLogger::log("Using CUDA !", SickLogSeverity::CUDA);
-        for (int dev = 0; dev < deviceCount; ++dev) 
+        for (int dev = 0; dev < deviceCount; ++dev)
         {
             cudaDeviceProp deviceProp;
             cudaGetDeviceProperties(&deviceProp, dev);
             QString dev_name(deviceProp.name);
-            SickLogger::log(QString("Device %1").arg(dev_name),
-                            SickLogSeverity::CUDA);
+            SickLogger::log(
+                QString("Device %1").arg(dev_name), SickLogSeverity::CUDA
+            );
         }
-    
     }
     else
     {
-        SickLogger::log("Failed to find a CUDA device !!",
-                        SickLogSeverity::ERROR);
+        SickLogger::log(
+            "Failed to find a CUDA device !!", SickLogSeverity::ERROR
+        );
         return;
     }
 
@@ -105,39 +108,34 @@ Remapper::remap(QImage &image) const
 
     switch (myCompareMethod)
     {
-        case Remapper::CompareMethod::Distance:
-        {
-            Zoom::applyPaletteByLength(
-                cu_image, width, height, 
-                cu_palette, v_palette.size()
-            );
-            break;
-        }
-        case Remapper::CompareMethod::Luminance:
-        {
-            Zoom::applyPaletteByLuminance(
-                cu_image, width, height, 
-                cu_palette, v_palette.size()
-            );
-            break;
-        }
-        case Remapper::CompareMethod::Hue:
-        {
-            Zoom::applyPaletteByHue(
-                cu_image, width, height, 
-                cu_palette, v_palette.size()
-            );
-            break;
-        }
-        case Remapper::CompareMethod::Saturation:
-        {
-            Zoom::applyPaletteBySaturation(
-                cu_image, width, height, 
-                cu_palette, v_palette.size()
-            );
-            break;
-        }
-
+    case Remapper::CompareMethod::Distance:
+    {
+        Zoom::applyPaletteByLength(
+            cu_image, width, height, cu_palette, v_palette.size()
+        );
+        break;
+    }
+    case Remapper::CompareMethod::Luminance:
+    {
+        Zoom::applyPaletteByLuminance(
+            cu_image, width, height, cu_palette, v_palette.size()
+        );
+        break;
+    }
+    case Remapper::CompareMethod::Hue:
+    {
+        Zoom::applyPaletteByHue(
+            cu_image, width, height, cu_palette, v_palette.size()
+        );
+        break;
+    }
+    case Remapper::CompareMethod::Saturation:
+    {
+        Zoom::applyPaletteBySaturation(
+            cu_image, width, height, cu_palette, v_palette.size()
+        );
+        break;
+    }
     }
     cudaMemcpy(
         image.bits(),

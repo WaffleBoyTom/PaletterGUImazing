@@ -8,7 +8,6 @@
 class Quantizer
 {
 public:
-
     /// TODO: move me out of here....
     enum class Method
     {

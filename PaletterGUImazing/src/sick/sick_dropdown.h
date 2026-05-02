@@ -3,16 +3,6 @@
 
 #include <QtWidgets>
 
-QT_BEGIN_NAMESPACE
-class QAction;
-class QComboBox;
-class QWidget;
-class QSlider;
-class QLineEdit;
-class QHBoxLayout;
-class QString;
-QT_END_NAMESPACE
-
 class SickDropDown : public QWidget
 {
     Q_OBJECT

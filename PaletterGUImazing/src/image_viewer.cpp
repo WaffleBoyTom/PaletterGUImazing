@@ -5,7 +5,6 @@
 
 #include "baller_task.h"
 #include "sick_logger.h"
-#include "remapper.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
@@ -18,19 +17,15 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     myLayout = new QVBoxLayout();
     myLayout->setAlignment(Qt::AlignTop);
 
-    
     // my boy Ethan so good lookin'
-    // no need to specify mode as it is READ by default 
-    myLineEdit = new SickFileLineEdit(
-        this,
-        tr("Ethan so sexy")
-    );
+    // no need to specify mode as it is READ by default
+    myLineEdit = new SickFileLineEdit(this, tr("Ethan so sexy"));
     // load image when user has loaded image through file chooser
     connect(
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &ImageViewer::loadImage    
+        &ImageViewer::loadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -107,7 +102,7 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     // the default as it is the better option !
     myDeviceDropdown->setMenuItem(1);
 #endif
-    
+
     setPaletteDisplaySize(INIT_PALETTE_SIZE);
     myPalette = QList<QColor>();
 
@@ -119,10 +114,9 @@ ImageViewer::ImageViewer(QWidget *parent, bool paletteSource = true)
     dropdowns->addWidget(myDeviceDropdown);
     myLayout->addLayout(dropdowns);
     myLayout->addWidget(myImageHolder);
-    
+
     setLayout(myLayout);
 }
-
 
 void
 ImageViewer::loadImage(const QString &filename)
@@ -132,9 +126,7 @@ ImageViewer::loadImage(const QString &filename)
         QString message = "Failed to load image file";
         SickLogger::log(message, SickLogSeverity::ERROR);
         QMessageBox::information(
-            this, 
-            QGuiApplication::applicationDisplayName(), 
-            message
+            this, QGuiApplication::applicationDisplayName(), message
         );
         return;
     }
@@ -155,7 +147,6 @@ ImageViewer::loadImageFromLineEdit()
 {
     loadImage(myLineEdit->text());
 }
-
 
 QImage
 ImageViewer::getImage()
@@ -181,9 +172,7 @@ ImageViewer::generatePalette()
     // the ImageViewer should not create threads or tasks directly.
     QImage image = getImage();
     QuantizeTask *task = new QuantizeTask(
-        image, 
-        myPaletteDisplaySize, 
-        Quantizer::Method(myModeDropdown->item())
+        image, myPaletteDisplaySize, Quantizer::Method(myModeDropdown->item())
     );
 
     connect(
@@ -209,13 +198,11 @@ ImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
     myLoadedImage = QPixmap::fromImage(image);
 
     // myImageHolder->setPixmap(resizeImage(&myLoadedImage));
-    myImageHolder->setPixmap(
-        resizeImage(
-            &myLoadedImage,            
-            myImageHolder->pixmap().width(),
-            myImageHolder->pixmap().height()
-        )
-    );
+    myImageHolder->setPixmap(resizeImage(
+        &myLoadedImage,
+        myImageHolder->pixmap().width(),
+        myImageHolder->pixmap().height()
+    ));
     emit tellBossAboutPaletteFill(&myPalette);
 
     myProcessorButton->setEnabled(true);
@@ -240,10 +227,7 @@ ImageViewer::applyPalette(QList<QColor> *palette)
     RemapTask *task = new RemapTask(image, device, method, *palette);
 
     connect(
-        task, 
-        &RemapTask::finished, 
-        this, 
-        &ImageViewer::onApplyPaletteFinished
+        task, &RemapTask::finished, this, &ImageViewer::onApplyPaletteFinished
     );
 
     QThread *thread = new QThread();
@@ -258,13 +242,11 @@ ImageViewer::onApplyPaletteFinished(QImage image)
     // don't override original !
     // myLoadedImage = QPixmap::fromImage(image);
     QPixmap pixmap = QPixmap::fromImage(image);
-    myImageHolder->setPixmap(
-        resizeImage(
-            &pixmap,            
-            myImageHolder->pixmap().width(),
-            myImageHolder->pixmap().height()
-        )
-    );
+    myImageHolder->setPixmap(resizeImage(
+        &pixmap,
+        myImageHolder->pixmap().width(),
+        myImageHolder->pixmap().height()
+    ));
 
     myProcessorButton->setEnabled(true);
 }
@@ -276,8 +258,7 @@ ImageViewer::askForPalette()
 }
 
 QPixmap
-ImageViewer::resizeImage(QPixmap *imagedisplay, 
-                         int width, int height)
+ImageViewer::resizeImage(QPixmap *imagedisplay, int width, int height)
 {
     // by default images are pretty big
     // unlike other things...
@@ -286,8 +267,7 @@ ImageViewer::resizeImage(QPixmap *imagedisplay,
     // dividing by 2 for now, idk
 
     return imagedisplay->scaled(
-        width, height,
-        Qt::KeepAspectRatio /* ar */
+        width, height, Qt::KeepAspectRatio /* ar */
     );
 }
 
@@ -300,7 +280,7 @@ ImageViewer::handleResizing()
     const QPixmap scaled = resizeImage(
         &myLoadedImage,
         parentWidget()->height() / theImageScaleFactor, /* width */
-        parentWidget()->width() / theImageScaleFactor  /* height */
+        parentWidget()->width() / theImageScaleFactor   /* height */
     );
 
     myImageHolder->setPixmap(scaled);
@@ -312,17 +292,11 @@ ImageViewer::resizeOnDrag(int width, int height)
     if (myLoadedImage.isNull())
         return;
 
-    
     // FIXME: this means we override an image which has been
-    // paletted : ( 
-    const QPixmap scaled = resizeImage(
-        &myLoadedImage,
-        width,
-        height    
-    );
-    
-    myImageHolder->setPixmap(scaled);
+    // paletted : (
+    const QPixmap scaled = resizeImage(&myLoadedImage, width, height);
 
+    myImageHolder->setPixmap(scaled);
 }
 
 void
@@ -335,7 +309,7 @@ ImageViewer::paintEvent(QPaintEvent *event)
     // const QPoint topleft = myImageHolder->rect().center();
     // painter.drawRect(
     //     topleft.x(),
-    //     topleft.y(),        
+    //     topleft.y(),
     //     myImageHolder->width(),
     //     myImageHolder->height()
     // );

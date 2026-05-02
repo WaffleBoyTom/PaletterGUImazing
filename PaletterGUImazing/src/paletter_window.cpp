@@ -4,9 +4,9 @@
 #include <QThread>
 #include <QtWidgets>
 
-#include "sick_logger.h"
 #include "palette_viewer.h"
 #include "sick_log_viewer.h"
+#include "sick_logger.h"
 
 static const int theMinSizeScaleFactor = 4;
 
@@ -25,7 +25,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     // QMenu *menu = new QMenu("File");
     // menu->addMenu("Hell Yeah !");
     // myMenuBar->addMenu(menu);
-    
+
     // Outermost layout of the app.
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
@@ -81,7 +81,7 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     mainLayout->addLayout(paletteviewerlayout);
 
     QHBoxLayout *utils_layout = new QHBoxLayout();
-    
+
     myLogViewer = new SickLogViewer(this);
     connect(
         SickLogger::getInstance(),
@@ -144,8 +144,9 @@ PaletterGUI::logMeHard(const QString msg, const SickLogSeverity sev)
 }
 
 void
-PaletterGUI::exportPalette(const QString &path, 
-                           SickExportOpts::ExportFormat fmt)
+PaletterGUI::exportPalette(
+    const QString &path, SickExportOpts::ExportFormat fmt
+)
 {
     myPaletteViewer->exportPalette(path, fmt);
 }

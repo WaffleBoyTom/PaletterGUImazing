@@ -9,7 +9,7 @@ SickInspector::displayColor(QColor color, QPoint position)
 
     inspector->myColor = color;
     inspector->move(position + QPoint(16, 16));
-    // this check is important because otherwise we call 
+    // this check is important because otherwise we call
     // show repeatedly which triggers Gnomer(Mutter) to jiggle
     // the icon like crazy which sucks big time
     if (!inspector->isVisible())

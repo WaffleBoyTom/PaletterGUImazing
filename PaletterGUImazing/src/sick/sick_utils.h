@@ -12,10 +12,9 @@ namespace SickUtils
 /// maybe this should live elsewhere ?
 QString supportedImageFormats();
 /// returns a QString of the support export file formats
-/// for the palette which is just JSON right now  
+/// for the palette which is just JSON right now
 QString supportedPaletteFormats();
 
+}  // end namespace
 
-} // end namespace
-
-#endif // SICK_UTILS_H
+#endif  // SICK_UTILS_H

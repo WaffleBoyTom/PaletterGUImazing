@@ -36,6 +36,4 @@ void applyPaletteBySaturation(
     const int palette_size
 );
 
-
-
 }  // end namespace

@@ -6,9 +6,8 @@
 #include <QToolTip>
 #include <QtWidgets>
 
-#include "sick_logger.h"
 #include "sick_inspector.h"
-
+#include "sick_logger.h"
 
 PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
@@ -52,113 +51,105 @@ PaletteRow::paintEvent(QPaintEvent *event)
 
     // the idea behind this padding is that
     // we get a bit of space between each rectangle
-    const int width = this->width() / myBoxCount ;
+    const int width = this->width() / myBoxCount;
     const int height = this->height();
     const int padding = 10;
 
     for (int i = 0; i < myBoxCount; ++i)
     {
-        const QColor color = (i < myPalette->size()) 
-            ? myPalette->at(i) 
-            : Qt::black;
-        
+        const QColor color =
+            (i < myPalette->size()) ? myPalette->at(i) : Qt::black;
+
         switch (myDrawStyle)
         {
-            case PaletteDrawStyle::RECT:
-            {
-                painter.fillRect(
-                    start + (width * i),  // x
-                    height / 2,           // y
-                    width - padding,      // width
-                    height,               // height
-                    color
-                );
-                break;
-            }
-            case PaletteDrawStyle::APPLE:
-            {
-                // the reason we set this NoPen
-                // is to avoid the circles having
-                // a disgusting white outline 
-                QPen pen;
-                pen.setStyle(Qt::NoPen);
-                painter.setPen(pen);
-                painter.setBrush(color);
-                const int rad = qMin(
-                    (height - padding) / 2,
-                    (width - padding) /  2   
-                );
-                painter.drawEllipse(
-                    QPoint(
-                        (width / 2) + (width * i), 
-                        height / 2
-                    ),         // center
-                    rad,      // rx
-                    rad      // ry
-                );
-                break;
-            }
-            case PaletteDrawStyle::VK:
-            {
+        case PaletteDrawStyle::RECT:
+        {
+            painter.fillRect(
+                start + (width * i),  // x
+                height / 2,           // y
+                width - padding,      // width
+                height,               // height
+                color
+            );
+            break;
+        }
+        case PaletteDrawStyle::APPLE:
+        {
+            // the reason we set this NoPen
+            // is to avoid the circles having
+            // a disgusting white outline
+            QPen pen;
+            pen.setStyle(Qt::NoPen);
+            painter.setPen(pen);
+            painter.setBrush(color);
+            const int rad = qMin((height - padding) / 2, (width - padding) / 2);
+            painter.drawEllipse(
+                QPoint(
+                    (width / 2) + (width * i),
+                    height / 2
+                ),    // center
+                rad,  // rx
+                rad   // ry
+            );
+            break;
+        }
+        case PaletteDrawStyle::VK:
+        {
+            // this looks like shit :)
+            // no disabling it
+            QPoint barycenter((width / 2) + (width * i), height / 2);
+            const int rad = qMin((height - padding) / 2, (width - padding) / 2);
+            /*
+            assuming this is our triangle
+                    C
 
-                // this looks like shit :) 
-                // no disabling it
-                QPoint barycenter((width / 2) + (width * i), height / 2);
-                const int rad = qMin(
-                    (height - padding) / 2,
-                    (width - padding) /  2   
-                );
-                /*
-                assuming this is our triangle
-                        C
-                
-                     A     B
-                
-                C is trivial -> barycenter.x, barycenter.y + rad
-                
-                A and B can be obtained by using circle
-                parametric formula
-                angle1 is 210 (240 - 30) as we rotated -30 degrees to
-                get our top to be aligned
-                angle2 is 330 (360 - 30)
-                
-                b.x = center.x + radius * cos(radians(angle1));
-                b.y = center.y + radius * sin(radians(angle1));
-                a.x = center.x + radius * cos(radians(angle2));
-                a.y = center.y + radius * sin(radians(angle2));
+                 A     B
 
-                found this out after prototyping in Houdini
-                cuz stackoverflow led me astray lol
+            C is trivial -> barycenter.x, barycenter.y + rad
 
-                */
-                QPoint c(barycenter.x(), barycenter.y()  + rad);
-                
-                QPoint b(
-                      c.x()  + rad * qCos(qDegreesToRadians(210)),
-                      c.y()  + rad * qSin(qDegreesToRadians(210))
-                );
-                
-                QPoint a(
-                      c.x()  + rad * qCos(qDegreesToRadians(330)),
-                      c.y()  + rad * qSin(qDegreesToRadians(330))
-                );
-                
-                QPen pen;
-                pen.setStyle(Qt::NoPen);
-                painter.setPen(pen);
-                painter.setBrush(color);
+            A and B can be obtained by using circle
+            parametric formula
+            angle1 is 210 (240 - 30) as we rotated -30 degrees to
+            get our top to be aligned
+            angle2 is 330 (360 - 30)
 
-                const int vtx = 3;
-                QPoint points[vtx];
-                points[0] = c;
-                points[1] = b;
-                points[2] = a;
-                painter.drawPolygon(points, vtx);
+            b.x = center.x + radius * cos(radians(angle1));
+            b.y = center.y + radius * sin(radians(angle1));
+            a.x = center.x + radius * cos(radians(angle2));
+            a.y = center.y + radius * sin(radians(angle2));
 
-                break;
-            }
-            case PaletteDrawStyle::INVALID:
-                break; // what happened??
+            found this out after prototyping in Houdini
+            cuz stackoverflow led me astray lol
+
+            */
+            QPoint c(barycenter.x(), barycenter.y() + rad);
+
+            QPoint b(
+                c.x() + rad * qCos(qDegreesToRadians(210)),
+                c.y() + rad * qSin(qDegreesToRadians(210))
+            );
+
+            QPoint a(
+                c.x() + rad * qCos(qDegreesToRadians(330)),
+                c.y() + rad * qSin(qDegreesToRadians(330))
+            );
+
+            QPen pen;
+            pen.setStyle(Qt::NoPen);
+            painter.setPen(pen);
+            painter.setBrush(color);
+
+            const int vtx = 3;
+            QPoint points[vtx];
+            points[0] = c;
+            points[1] = b;
+            points[2] = a;
+            painter.drawPolygon(points, vtx);
+
+            break;
+        }
+        case PaletteDrawStyle::INVALID:
+            break;  // what happened??
         }
     }
 }
@@ -184,9 +175,7 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
         // FIXME
         // this 2 should not be hardcoded and
         // should be based on length of enum
-        myDrawStyle = PaletteDrawStyle(
-            (static_cast<int>(myDrawStyle) + 1) % 2    
-        );
+        myDrawStyle = PaletteDrawStyle((static_cast<int>(myDrawStyle) + 1) % 2);
         this->repaint();
     }
 }
@@ -245,7 +234,6 @@ PaletteRow::findColor(QPoint position) const
 bool
 PaletteRow::serialize(QJsonObject &json, SickExportOpts::ExportFormat fmt)
 {
-
     // assert big time, this should never happen !
     if (!myPalette || myPalette->size() < 2)
         return false;
@@ -255,82 +243,77 @@ PaletteRow::serialize(QJsonObject &json, SickExportOpts::ExportFormat fmt)
         QString col_str;
         switch (fmt)
         {
-            case SickExportOpts::ExportFormat::HEX:
-            {
-                col_str = myPalette->at(i).name(QColor::HexRgb);
-                break;
-            }
-            case SickExportOpts::ExportFormat::RGBF:
-            {
-                float r, g, b;
-                myPalette->at(i).getRgbF(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::RGBI:
-            {
-                int r, g, b;
-                myPalette->at(i).getRgb(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::HSVF:
-            {
-                float r, g, b;
-                myPalette->at(i).getHsvF(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::HSVI:
-            {
-                int r, g, b;
-                myPalette->at(i).getHsv(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::HSLF:
-            {
-                float r, g, b;
-                myPalette->at(i).getHslF(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::HSLI:
-            {
-                int r, g, b;
-                myPalette->at(i).getHsl(&r, &g, &b);
-                col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::CMYKF:
-            {
-                float c, m, y, k;
-                myPalette->at(i).getCmykF(&c, &m, &y, &k);
-                col_str = QString("%1, %2, %3, %4").arg(c).arg(m).arg(y).arg(k);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::CMYKI:
-            {
-                int c, m, y, k;
-                myPalette->at(i).getCmyk(&c, &m, &y, &k);
-                col_str = QString("%1, %2, %3").arg(c).arg(m).arg(y).arg(k);
-                break;                
-            }
-            case SickExportOpts::ExportFormat::INVALID:
-                break;
+        case SickExportOpts::ExportFormat::HEX:
+        {
+            col_str = myPalette->at(i).name(QColor::HexRgb);
+            break;
         }
-        
+        case SickExportOpts::ExportFormat::RGBF:
+        {
+            float r, g, b;
+            myPalette->at(i).getRgbF(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::RGBI:
+        {
+            int r, g, b;
+            myPalette->at(i).getRgb(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::HSVF:
+        {
+            float r, g, b;
+            myPalette->at(i).getHsvF(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::HSVI:
+        {
+            int r, g, b;
+            myPalette->at(i).getHsv(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::HSLF:
+        {
+            float r, g, b;
+            myPalette->at(i).getHslF(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::HSLI:
+        {
+            int r, g, b;
+            myPalette->at(i).getHsl(&r, &g, &b);
+            col_str = QString("%1, %2, %3").arg(r).arg(g).arg(b);
+            break;
+        }
+        case SickExportOpts::ExportFormat::CMYKF:
+        {
+            float c, m, y, k;
+            myPalette->at(i).getCmykF(&c, &m, &y, &k);
+            col_str = QString("%1, %2, %3, %4").arg(c).arg(m).arg(y).arg(k);
+            break;
+        }
+        case SickExportOpts::ExportFormat::CMYKI:
+        {
+            int c, m, y, k;
+            myPalette->at(i).getCmyk(&c, &m, &y, &k);
+            col_str = QString("%1, %2, %3").arg(c).arg(m).arg(y).arg(k);
+            break;
+        }
+        case SickExportOpts::ExportFormat::INVALID:
+            break;
+        }
+
         json.insert(QString("Color %1").arg(i + 1), col_str);
     }
     // sign the json like true gentlemen
+    json.insert(QString("Export Format"), SickExportOpts::getFormatToken(fmt));
     json.insert(
-        QString("Export Format"),
-        SickExportOpts::getFormatToken(fmt)  
-    );
-    json.insert(
-        QString("Palette Generator"),
-        QString("PaletterGUImazing 1.0 TM")  
+        QString("Palette Generator"), QString("PaletterGUImazing 1.0 TM")
     );
     return true;
-
 }

@@ -6,22 +6,8 @@
 #include <QWidget>
 
 #include "sick_dropdown.h"
-#include "sick_imageholder.h"
 #include "sick_file_line_edit.h"
-
-QT_BEGIN_NAMESPACE
-class QAction;
-class QComboBox;
-class QLabel;
-class QMenu;
-class QScrollArea;
-class QScrollBar;
-class QVBoxLayout;
-class QLineEdit;
-class QPushButton;
-class QPixmap;
-class QWidget;
-QT_END_NAMESPACE
+#include "sick_imageholder.h"
 
 class SrcImageViewer : public QWidget
 {
@@ -32,7 +18,6 @@ public:
     void handleResizing();
     void setPaletteDisplaySize(int size);
     QList<QColor> *palette();
-
 
     constexpr static int INIT_PALETTE_SIZE = 6;
 
@@ -54,7 +39,7 @@ private slots:
 
     // resizes image based on drag
     void resizeOnDrag(int width, int height);
-    
+
     // Generate a new palette from the image.
     void generatePalette();
 
@@ -69,7 +54,7 @@ private:
 
     SickFileLineEdit *myLineEdit;
 
-    SickImageHolder  *myImageHolder;
+    SickImageHolder *myImageHolder;
 
     // keep reference to original image otherwise
     // we iteratively scale the pixmap

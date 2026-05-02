@@ -3,17 +3,9 @@
 
 #include <QtWidgets>
 
-QT_BEGIN_NAMESPACE
-class QAction;
-class QWidget;
-class QSlider;
-class QLineEdit;
-class QHBoxLayout;
-QT_END_NAMESPACE
-
 /*
 
-A Sick Fuckin' Slider which 
+A Sick Fuckin' Slider which
 combines a slider and a line edit
 For Sick Duders and Dudettes only
 */

@@ -6,15 +6,8 @@
 #include <QWidget>
 
 #include "palette_row.h"
-#include "sick_slider.h"
 #include "sick_export_opts.h"
-
-QT_BEGIN_NAMESPACE
-class QAction;
-class QWidget;
-class QVBoxLayout;
-class QPushButton;
-QT_END_NAMESPACE
+#include "sick_slider.h"
 
 class PaletteViewer : public QWidget
 {
@@ -32,7 +25,6 @@ signals:
     void tellBossAboutPaletteDisplaySize(int count);
 
 protected:
-
 private:
     QVBoxLayout *myLayout;
     PaletteRow *myPaletteRow;

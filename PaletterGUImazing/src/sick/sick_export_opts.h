@@ -2,9 +2,9 @@
 #define SICK_EXPORT_OPTS_H
 
 #include <QtWidgets>
+
 #include "sick_dropdown.h"
 #include "sick_file_line_edit.h"
-#include "sick_logger.h"
 
 /*
 
@@ -45,13 +45,12 @@ public slots:
     void logPathSet(const QString &filename);
 
 private:
-    
     void exportPalette();
-    
-    QVBoxLayout          *myLayout;
-    QPushButton          *myExportButton;
-    SickFileLineEdit     *myExportPath;
-    SickDropDown         *myExportFormat;
+
+    QVBoxLayout *myLayout;
+    QPushButton *myExportButton;
+    SickFileLineEdit *myExportPath;
+    SickDropDown *myExportFormat;
 };
 
 #endif  // SICK_EXPORT_OPTS_H

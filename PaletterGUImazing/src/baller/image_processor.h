@@ -14,7 +14,6 @@
 class ImageProcessor
 {
 public:
-    
     ImageProcessor();
 
     // removes green component from an image

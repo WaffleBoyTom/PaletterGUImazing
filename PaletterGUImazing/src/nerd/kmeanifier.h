@@ -8,7 +8,6 @@
 class KMeanifier
 {
 public:
-
     KMeanifier(int palette_size);
 
     // does the kmeans to generate palette
@@ -19,4 +18,4 @@ private:
     int myPaletteSize;
 };
 
-#endif // KMEANIFIER_H
+#endif  // KMEANIFIER_H
