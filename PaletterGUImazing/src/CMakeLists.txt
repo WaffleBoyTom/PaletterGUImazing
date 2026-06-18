@@ -40,6 +40,18 @@ else()
     endif()
 endif()
 
+target_compile_options(PaletterGUImazing PRIVATE
+    -g
+    -D_THREAD_SAFE
+    -fms-extensions
+    -Wall
+    -Wpedantic
+    -Werror
+    -Wno-attributes
+    -Wno-unused-variable
+    -Wno-gnu-anonymous-struct
+)
+
 target_link_libraries(PaletterGUImazing PUBLIC baller sick)
 
 target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
@@ -49,8 +61,18 @@ if(USE_CUDA)
     set_target_properties(PaletterGUImazing PROPERTIES CUDA_ARCHITECTURES native)
     add_definitions(-DUSE_CUDA)
 elseif(USE_METAL)
-    target_link_libraries(PaletterGUImazing PRIVATE ${METAL_LIB} ${FOUNDATION_LIB})
+    target_link_libraries(PaletterGUImazing PRIVATE ${METAL_LIB} ${FOUNDATION_LIB} ${QUARTZCORE_LIB})
     add_definitions(-DUSE_METAL)
+
+    add_dependencies(PaletterGUImazing MetalShaders)
+
+    get_target_property(METALLIB_PATH MetalShaders METALLIB_PATH)
+
+    add_custom_command(
+        TARGET PaletterGUImazing
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy ${METALLIB_PATH} $<TARGET_FILE_DIR:PaletterGUImazing>/shaders.metallib
+    )
 endif()
 
 if(APPLE)

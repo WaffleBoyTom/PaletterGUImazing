@@ -32,6 +32,10 @@
 #include "zoom.cuh"
 #endif
 
+#ifdef USE_METAL
+#include "metal_remapper.h"
+#endif
+
 Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
     : myCompareMethod(method), myPalette(palette)
 {
@@ -40,8 +44,20 @@ Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
 void
 Remapper::remap(QImage &image) const
 {
-#ifdef USE_CUDA
+#if defined(USE_CUDA)
+    remapCuda(image);
+#elif defined(USE_METAL)
+    remapMetal(image);
+#else
+    // Just forward to host
+    remapHost(image);
+#endif
+}
 
+void
+Remapper::remapCuda(QImage &image) const
+{
+#ifdef USE_CUDA
     // FIXME:
     // should this be in ImageViewer::applyPalette instead ?
     // this being here means nerd lib has to include sick lib
@@ -146,12 +162,37 @@ Remapper::remap(QImage &image) const
 
     cudaFree(cu_palette);
     cudaFree(cu_image);
+#endif
+}
 
-    // TODO: #elif USE_METAL
-
-#else
-    // Just forward to host
-    remapHost(image);
+void
+Remapper::remapMetal(QImage &image) const
+{
+#ifdef USE_METAL
+    RemapperMetal remapper_metal(image, myPalette);
+    switch (myCompareMethod)
+    {
+    case Remapper::CompareMethod::Distance:
+    {
+        image = remapper_metal.quantizeEuclidean();
+        break;
+    }
+    case Remapper::CompareMethod::Luminance:
+    {
+        image = remapper_metal.quantizeValue();
+        break;
+    }
+    case Remapper::CompareMethod::Hue:
+    {
+        image = remapper_metal.quantizeHue();
+        break;
+    }
+    case Remapper::CompareMethod::Saturation:
+    {
+        image = remapper_metal.quantizeSaturation();
+        break;
+    }
+    }
 #endif
 }
 

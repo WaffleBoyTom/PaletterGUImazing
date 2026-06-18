@@ -9,21 +9,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # CXX
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS
-    "${CMAKE_CXX_FLAGS} \
-    -g \
-    -D_THREAD_SAFE \
-    -fms-extensions \
-    -pedantic \
-    -Wall \
-    -Wno-attributes \
-    -Wno-unused-variable \
-    -Wpedantic"
-)
 
 # Project
 project(PaletterGUImazing VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
+set(EXTERNAL_DIR ${CMAKE_SOURCE_DIR}/external)
 
 if(APPLE)
     find_package(OpenGL REQUIRED)
@@ -57,10 +47,12 @@ if (CUDAToolkit_FOUND)
 elseif(APPLE)
     find_library(METAL_LIB Metal)
     find_library(FOUNDATION_LIB Foundation)
+    find_library(QUARTZCORE_LIB QuartzCore)
 
     if (METAL_LIB)
         message(STATUS "Metal library found at: ${METAL_LIB}")
         message(STATUS "Foundation library found at: ${FOUNDATION_LIB}")
+        message(STATUS "QuartzCore library found at: ${QUARTZCORE_LIB}")
 
         set(USE_METAL TRUE)
     endif()
