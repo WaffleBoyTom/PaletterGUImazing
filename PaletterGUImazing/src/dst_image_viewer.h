@@ -1,6 +1,7 @@
 #ifndef DST_IMAGE_VIEWER_H
 #define DST_IMAGE_VIEWER_H
 
+#include <QtWidgets/qpushbutton.h>
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
@@ -15,7 +16,6 @@ class DstImageViewer : public QWidget
 
 public:
     explicit DstImageViewer(QWidget *parent);
-    void handleResizing();
 
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);
@@ -29,12 +29,10 @@ protected:
 private slots:
 
     // loads image from file explorer into window
-    void loadImage(const QString &filename);
-    // called when the editingFinished is fired by line edit
-    void loadImageFromLineEdit();
+    void onLoadImage(const QString &filename);
 
-    // get QImage from image holder
-    QImage getImage();
+    // called when the editingFinished is fired by line edit
+    void onLoadImageFromLineEdit();
 
     // Called after palette apply completes.
     void onApplyPaletteFinished(QImage image);
@@ -44,11 +42,17 @@ private slots:
     // resizes image based on drag
     void resizeOnDrag(int width, int height);
 
-    // Resizes image based on parent size.
-    QPixmap resizeImage(QPixmap *image, int width, int height);
+    // Resets the image
+    void resetImage();
 
 private:
-    QVBoxLayout *myLayout;
+
+    void resetImageSize();
+
+    void resizeImage(const int width, const int height);
+
+    int initialImageWidth() const;
+    int initialImageHeight() const;
 
     SickFileLineEdit *myLineEdit;
 
@@ -58,10 +62,12 @@ private:
     // we iteratively scale the pixmap
     // and end up with mashed pixeloes
     // and they aint delicious...
-    QPixmap myLoadedImage;
+    QImage myUnfilteredImage;
 
     // image that we've applied the palette to
-    QPixmap myModifiedImage;
+    QImage myImage;
+
+    QPushButton *myResetButton;
 
     // calls processImage
     QPushButton *myProcessorButton;

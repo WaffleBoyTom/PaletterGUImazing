@@ -7,16 +7,10 @@
 #include "remapper.h"
 #include "sick_logger.h"
 
-// TODO: scaling factor hardcoded to 1/2 right now
-// might wanna change that innit
-static const int theImageScaleFactor = 2;
+static const int theInitialScaleFactor = 2;
 
 DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
 {
-    // main layout
-    myLayout = new QVBoxLayout();
-    myLayout->setAlignment(Qt::AlignTop);
-
     // my boy Ethan so good lookin'
     // no need to specify mode as it is READ by default
     myLineEdit = new SickFileLineEdit(this, tr("Ethan so sexy"));
@@ -25,7 +19,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &DstImageViewer::loadImage
+        &DstImageViewer::onLoadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -33,7 +27,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit->lineEdit(),
         &QLineEdit::editingFinished,
         this,
-        &DstImageViewer::loadImageFromLineEdit
+        &DstImageViewer::onLoadImageFromLineEdit
     );
 
     // image holder
@@ -46,21 +40,25 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         &DstImageViewer::resizeOnDrag
     );
 
-    auto dropdowns = new QHBoxLayout();
+    myResetButton = new QPushButton("Reset");
+    connect(
+        myResetButton,
+        &QPushButton::clicked,
+        this,
+        &DstImageViewer::resetImage
+    );
+    myResetButton->setEnabled(false);
 
-    myModeDropdown = new SickDropDown(this, tr("Mode"));
-
-    myProcessorButton = new QPushButton(tr("Apply Palette to Image"));
-
+    myProcessorButton = new QPushButton(tr("Apply Palette"));
     connect(
         myProcessorButton,
         &QPushButton::clicked,
         this,
         &DstImageViewer::askForPalette
     );
-
     myProcessorButton->setEnabled(false);
 
+    myModeDropdown = new SickDropDown(this, tr("Mode"));
     myModeDropdown->addMenuItem(tr("Distance"));
     myModeDropdown->addMenuItem(tr("Luminance"));
     myModeDropdown->addMenuItem(tr("Hue"));
@@ -78,21 +76,27 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
     myDeviceDropdown->setMenuItem(1);
 #endif
 
-    // populate layout
-    dropdowns->addWidget(myLineEdit);
-    dropdowns->addWidget(myProcessorButton);
-    dropdowns->addWidget(myModeDropdown);
-    dropdowns->addWidget(myDeviceDropdown);
-    myLayout->addLayout(dropdowns);
-    myLayout->addWidget(myImageHolder);
+    // toolbar layout
+    QHBoxLayout *toolbar = new QHBoxLayout();
+    toolbar->addWidget(myLineEdit);
+    toolbar->addWidget(myResetButton);
+    toolbar->addWidget(myProcessorButton);
+    toolbar->addWidget(myModeDropdown);
+    toolbar->addWidget(myDeviceDropdown);
 
-    setLayout(myLayout);
+    // main layout
+    QVBoxLayout *layout = new QVBoxLayout();
+    layout->setAlignment(Qt::AlignTop);
+    layout->addLayout(toolbar);
+    layout->addWidget(myImageHolder);
+
+    setLayout(layout);
 }
 
 void
-DstImageViewer::loadImage(const QString &filename)
+DstImageViewer::onLoadImage(const QString &filename)
 {
-    if (!myLoadedImage.load(filename))
+    if (!myUnfilteredImage.load(filename))
     {
         QString message = "Failed to load image file";
         SickLogger::log(message, SickLogSeverity::ERROR);
@@ -102,29 +106,22 @@ DstImageViewer::loadImage(const QString &filename)
         return;
     }
 
-    myProcessorButton->setEnabled(true);
+    myImage = myUnfilteredImage.copy();
+    resetImageSize();
 
-    handleResizing();
+    myProcessorButton->setEnabled(true);
+    myResetButton->setEnabled(true);
 
     // send a message in log about image being loaded
-
     const QString native_path = QDir::toNativeSeparators(filename);
     QString message = QString("Loaded Image: %1").arg(native_path);
     SickLogger::log(message, SickLogSeverity::SEL);
 }
 
 void
-DstImageViewer::loadImageFromLineEdit()
+DstImageViewer::onLoadImageFromLineEdit()
 {
-    loadImage(myLineEdit->text());
-}
-
-QImage
-DstImageViewer::getImage()
-{
-    // we want to load in the original image
-    // not the resized one
-    return myLoadedImage.toImage();
+    onLoadImage(myLineEdit->text());
 }
 
 void
@@ -134,8 +131,6 @@ DstImageViewer::applyPalette(QList<QColor> *palette)
 
     SickLogger::log("Applying color palette");
 
-    QImage image = getImage();
-
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
     SickLogger::log(QString("Using: %1").arg(getDeviceStr(device)));
 
@@ -143,7 +138,7 @@ DstImageViewer::applyPalette(QList<QColor> *palette)
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.
-    RemapTask *task = new RemapTask(image, device, method, *palette);
+    RemapTask *task = new RemapTask(myImage, device, method, *palette);
 
     connect(
         task,
@@ -161,18 +156,11 @@ DstImageViewer::onApplyPaletteFinished(QImage image)
 {
     SickLogger::log("Done applying color palette");
 
-    // don't override original !
-    // myLoadedImage = QPixmap::fromImage(image);
-    QPixmap pixmap = QPixmap::fromImage(image);
+    myImage = image.copy();
+    const int width = myImageHolder->pixmap().width();
+    const int height = myImageHolder->pixmap().height();
 
-    // keep the modified image around.
-    myModifiedImage = pixmap;
-
-    myImageHolder->setPixmap(resizeImage(
-        &pixmap,
-        myImageHolder->pixmap().width(),
-        myImageHolder->pixmap().height()
-    ));
+    resizeImage(width, height);
 
     myProcessorButton->setEnabled(true);
 }
@@ -183,51 +171,61 @@ DstImageViewer::askForPalette()
     emit askBossForPalette();
 }
 
-QPixmap
-DstImageViewer::resizeImage(QPixmap *imagedisplay, int width, int height)
-{
-    // by default images are pretty big
-    // unlike other things...
-    // this probably should scale based on
-    // main window size
-    // dividing by 2 for now, idk
-
-    return imagedisplay->scaled(
-        width, height, Qt::KeepAspectRatio /* ar */
-    );
-}
-
-void
-DstImageViewer::handleResizing()
-{
-    // we have nothing, do nothing
-    if (myLoadedImage.isNull() && myModifiedImage.isNull())
-        return;
-
-    const QPixmap scaled = resizeImage(
-        !myModifiedImage.isNull() ? &myModifiedImage : &myLoadedImage,
-        parentWidget()->height() / theImageScaleFactor, /* width */
-        parentWidget()->width() / theImageScaleFactor   /* height */
-    );
-
-    myImageHolder->setPixmap(scaled);
-}
-
 void
 DstImageViewer::resizeOnDrag(int width, int height)
 {
-    if (myLoadedImage.isNull() && myModifiedImage.isNull())
+    if (myImage.isNull())
         return;
 
-    // FIXME: this means we override an image which has been
-    // paletted : (
-    const QPixmap scaled = resizeImage(
-        !myModifiedImage.isNull() ? &myModifiedImage : &myLoadedImage,
+    resizeImage(width, height);
+}
+
+void
+DstImageViewer::resetImage()
+{
+    if (myUnfilteredImage.isNull())
+        return;
+
+    myImage = myUnfilteredImage.copy();
+
+    resetImageSize();
+}
+
+void
+DstImageViewer::resetImageSize()
+{
+    resizeImage(
+        initialImageWidth(),
+        initialImageHeight()
+    );
+}
+
+void
+DstImageViewer::resizeImage(const int width, const int height)
+{
+    if (myImage.isNull())
+        return;
+
+    const QPixmap pixmap = QPixmap::fromImage(myImage);
+    const QPixmap scaled = pixmap.scaled(
         width,
-        height
+        height,
+        Qt::KeepAspectRatio /* ar */
     );
 
     myImageHolder->setPixmap(scaled);
+}
+
+int
+DstImageViewer::initialImageWidth() const
+{
+    return parentWidget()->height() / theInitialScaleFactor;
+}
+
+int
+DstImageViewer::initialImageHeight() const
+{
+    return parentWidget()->width() / theInitialScaleFactor;
 }
 
 void
