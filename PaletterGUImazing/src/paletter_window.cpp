@@ -108,17 +108,6 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     resize(screenSize.width(), screenSize.height());
 }
 
-// resive event override
-// this should handle resizing the image
-void
-PaletterGUI::resizeEvent(QResizeEvent *event)
-{
-    // scale image with window
-    mySrcImgViewer->handleResizing();
-    // we have myConvertImgViewer,
-    // it probably shoud be resized here
-}
-
 void
 PaletterGUI::setPaletteDisplaySize(int size)
 {

@@ -7,7 +7,7 @@
 
 #include "sick_dropdown.h"
 #include "sick_file_line_edit.h"
-#include "sick_imageholder.h"
+#include "sick_image_viewer.h"
 
 class SourcePane : public QWidget
 {
@@ -15,11 +15,12 @@ class SourcePane : public QWidget
 
 public:
     explicit SourcePane(QWidget *parent);
-    void handleResizing();
-    void setPaletteDisplaySize(int size);
+
+    // Retrieve the stored palette.
     QList<QColor> *palette();
 
-    constexpr static int INIT_PALETTE_SIZE = 6;
+    // Set the number of palette visualizers.
+    void setPaletteDisplaySize(int size);
 
 signals:
     void tellBossAboutPaletteFill(QList<QColor> *palette);
@@ -29,16 +30,11 @@ protected:
 
 private slots:
 
-    // loads image from file explorer into window
-    void loadImage(const QString &filename);
-    // called when the editingFinished is fired by line edit
-    void loadImageFromLineEdit();
+    // Called when an image selected from the file explorer is loaded.
+    void onLoadImage(const QString &filename);
 
-    // get QImage from image holder
-    QImage getImage();
-
-    // resizes image based on drag
-    void resizeOnDrag(int width, int height);
+    // Called when editingFinished is fired by the line edit.
+    void onLoadImageFromLineEdit();
 
     // Generate a new palette from the image.
     void generatePalette();
@@ -46,30 +42,25 @@ private slots:
     // Called after palette is generated.
     void onGeneratePaletteFinished(QList<QColor> palette);
 
-    // Resizes image based on parent size.
-    QPixmap resizeImage(QPixmap *image, int width, int height);
-
 private:
-    QVBoxLayout *myLayout;
+
+    constexpr static int INIT_PALETTE_SIZE = 6;
 
     SickFileLineEdit *myLineEdit;
 
-    SickImageHolder *myImageHolder;
+    SickImageViewer *myImageViewer;
 
-    // keep reference to original image otherwise
-    // we iteratively scale the pixmap
-    // and end up with mashed pixeloes
-    // and they aint delicious...
-    QPixmap myLoadedImage;
-
-    // calls processImage
+    // Calls applyPalette.
     QPushButton *myProcessorButton;
 
-    // dropdown for processing method
-    SickDropDown *myModeDropdown;
+    // Quantization method.
+    SickDropDown *myQuantizationMethodDropdown;
 
-    // dropdown for specifying device
+    // Processing device.
     SickDropDown *myDeviceDropdown;
+
+    // smn about mashed pixeloes, and they aint delicious...
+    QImage myImage;
 
     QList<QColor> myPalette;
     int myPaletteDisplaySize;

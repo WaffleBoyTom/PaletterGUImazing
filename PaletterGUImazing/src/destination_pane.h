@@ -27,10 +27,10 @@ protected:
 
 private slots:
 
-    // loads image from file explorer into window
+    // Called when an image selected from the file explorer is loaded.
     void onLoadImage(const QString &filename);
 
-    // called when the editingFinished is fired by line edit
+    // Called when editingFinished is fired by the line edit.
     void onLoadImageFromLineEdit();
 
     // Called after palette apply completes.
@@ -47,24 +47,23 @@ private:
 
     SickImageViewer *myImageViewer;
 
-    // keep reference to original image otherwise
-    // we iteratively scale the pixmap
-    // and end up with mashed pixeloes
-    // and they aint delicious...
+    // Original unfiltered image. Successive quantizations are applied
+    // to this image.
     QImage myUnfilteredImage;
 
-    // image that we've applied the palette to
+    // Displayed image.
     QImage myImage;
 
+    // Calls resetImage.
     QPushButton *myResetButton;
 
-    // calls processImage
-    QPushButton *myProcessorButton;
+    // Calls applyPalette.
+    QPushButton *myApplyPaletteButton;
 
-    // dropdown for processing method
-    SickDropDown *myModeDropdown;
+    // Quantization method.
+    SickDropDown *myQuantizationMethodDropdown;
 
-    // dropdown for specifying device
+    // Processing device.
     SickDropDown *myDeviceDropdown;
 };
 

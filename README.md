@@ -37,11 +37,11 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [ ] Export
     - [x] JSON palette string
     - [ ] The image with the palette applied
-
-- [ ] Misc
-    - [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
+- [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
 # BUGS
 - [ ] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
+- [ ] "Apply Palette" is still applying to the filtered image
+- [ ] Logger scroll does not jump to bottom properly.
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE

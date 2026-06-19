@@ -10,8 +10,6 @@ set(SOURCE
     sick_graphics_view.cpp
     sick_image_viewer.h
     sick_image_viewer.cpp
-    sick_imageholder.h
-    sick_imageholder.cpp
     sick_inspector.h
     sick_inspector.cpp
     sick_log_viewer.h

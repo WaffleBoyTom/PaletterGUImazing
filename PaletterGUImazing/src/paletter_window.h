@@ -17,9 +17,6 @@ class PaletterGUI : public QWidget
 public:
     PaletterGUI();
 
-protected:
-    void resizeEvent(QResizeEvent *event) override;
-
 public slots:
     void setPaletteDisplaySize(int size);
     void setPalette(QList<QColor> *palette);

@@ -31,8 +31,6 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
         &DestinationPane::onLoadImageFromLineEdit
     );
 
-    myImageViewer = new SickImageViewer(this);
-
     myResetButton = new QPushButton("Reset");
     connect(
         myResetButton,
@@ -42,20 +40,20 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     );
     myResetButton->setEnabled(false);
 
-    myProcessorButton = new QPushButton(tr("Apply Palette"));
+    myApplyPaletteButton = new QPushButton(tr("Apply Palette"));
     connect(
-        myProcessorButton,
+        myApplyPaletteButton,
         &QPushButton::clicked,
         this,
         &DestinationPane::askForPalette
     );
-    myProcessorButton->setEnabled(false);
+    myApplyPaletteButton->setEnabled(false);
 
-    myModeDropdown = new SickDropDown(this, tr("Mode"));
-    myModeDropdown->addMenuItem(tr("Distance"));
-    myModeDropdown->addMenuItem(tr("Luminance"));
-    myModeDropdown->addMenuItem(tr("Hue"));
-    myModeDropdown->addMenuItem(tr("Saturation"));
+    myQuantizationMethodDropdown = new SickDropDown(this, tr("Mode"));
+    myQuantizationMethodDropdown->addMenuItem(tr("Distance"));
+    myQuantizationMethodDropdown->addMenuItem(tr("Luminance"));
+    myQuantizationMethodDropdown->addMenuItem(tr("Hue"));
+    myQuantizationMethodDropdown->addMenuItem(tr("Saturation"));
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
     myDeviceDropdown->addMenuItem(tr("CPU"));
@@ -73,9 +71,11 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     QHBoxLayout *toolbar = new QHBoxLayout();
     toolbar->addWidget(myLineEdit);
     toolbar->addWidget(myResetButton);
-    toolbar->addWidget(myProcessorButton);
-    toolbar->addWidget(myModeDropdown);
+    toolbar->addWidget(myApplyPaletteButton);
+    toolbar->addWidget(myQuantizationMethodDropdown);
     toolbar->addWidget(myDeviceDropdown);
+
+    myImageViewer = new SickImageViewer(this);
 
     // main layout
     QVBoxLayout *layout = new QVBoxLayout();
@@ -103,7 +103,7 @@ DestinationPane::onLoadImage(const QString &filename)
     myImageViewer->setImage(myImage);
     myImageViewer->frameImage();
 
-    myProcessorButton->setEnabled(true);
+    myApplyPaletteButton->setEnabled(true);
     myResetButton->setEnabled(true);
 
     // send a message in log about image being loaded
@@ -121,14 +121,14 @@ DestinationPane::onLoadImageFromLineEdit()
 void
 DestinationPane::applyPalette(QList<QColor> *palette)
 {
-    myProcessorButton->setEnabled(false);
+    myApplyPaletteButton->setEnabled(false);
 
     SickLogger::log("Applying color palette");
 
     auto device = PaletteProcessorDevice(myDeviceDropdown->item());
     SickLogger::log(QString("Using: %1").arg(getDeviceStr(device)));
 
-    auto method = Remapper::CompareMethod(myModeDropdown->item());
+    auto method = Remapper::CompareMethod(myQuantizationMethodDropdown->item());
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.
@@ -153,7 +153,7 @@ DestinationPane::onApplyPaletteFinished(QImage image)
     myImage = image.copy();
     myImageViewer->setImage(myImage);
 
-    myProcessorButton->setEnabled(true);
+    myApplyPaletteButton->setEnabled(true);
 }
 
 void
