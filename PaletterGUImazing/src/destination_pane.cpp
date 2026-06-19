@@ -1,4 +1,4 @@
-#include "dst_image_viewer.h"
+#include "destination_pane.h"
 
 #include <QMessageBox>
 #include <QtWidgets>
@@ -10,7 +10,7 @@
 
 static const int theInitialScaleFactor = 2;
 
-DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
+DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
 {
     // my boy Ethan so good lookin'
     // no need to specify mode as it is READ by default
@@ -20,7 +20,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &DstImageViewer::onLoadImage
+        &DestinationPane::onLoadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -28,7 +28,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit->lineEdit(),
         &QLineEdit::editingFinished,
         this,
-        &DstImageViewer::onLoadImageFromLineEdit
+        &DestinationPane::onLoadImageFromLineEdit
     );
 
     myImageViewer = new SickImageViewer(this);
@@ -38,7 +38,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myResetButton,
         &QPushButton::clicked,
         this,
-        &DstImageViewer::resetImage
+        &DestinationPane::resetImage
     );
     myResetButton->setEnabled(false);
 
@@ -47,7 +47,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         myProcessorButton,
         &QPushButton::clicked,
         this,
-        &DstImageViewer::askForPalette
+        &DestinationPane::askForPalette
     );
     myProcessorButton->setEnabled(false);
 
@@ -87,7 +87,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
 }
 
 void
-DstImageViewer::onLoadImage(const QString &filename)
+DestinationPane::onLoadImage(const QString &filename)
 {
     if (!myUnfilteredImage.load(filename))
     {
@@ -113,13 +113,13 @@ DstImageViewer::onLoadImage(const QString &filename)
 }
 
 void
-DstImageViewer::onLoadImageFromLineEdit()
+DestinationPane::onLoadImageFromLineEdit()
 {
     onLoadImage(myLineEdit->text());
 }
 
 void
-DstImageViewer::applyPalette(QList<QColor> *palette)
+DestinationPane::applyPalette(QList<QColor> *palette)
 {
     myProcessorButton->setEnabled(false);
 
@@ -138,7 +138,7 @@ DstImageViewer::applyPalette(QList<QColor> *palette)
         task,
         &RemapTask::finished,
         this,
-        &DstImageViewer::onApplyPaletteFinished
+        &DestinationPane::onApplyPaletteFinished
     );
 
     QThread *thread = new QThread();
@@ -146,7 +146,7 @@ DstImageViewer::applyPalette(QList<QColor> *palette)
 }
 
 void
-DstImageViewer::onApplyPaletteFinished(QImage image)
+DestinationPane::onApplyPaletteFinished(QImage image)
 {
     SickLogger::log("Done applying color palette");
 
@@ -157,13 +157,13 @@ DstImageViewer::onApplyPaletteFinished(QImage image)
 }
 
 void
-DstImageViewer::askForPalette()
+DestinationPane::askForPalette()
 {
     emit askBossForPalette();
 }
 
 void
-DstImageViewer::paintEvent(QPaintEvent *event)
+DestinationPane::paintEvent(QPaintEvent *event)
 {
     // FIXME : It'd be lit if we could
     // drag a rectangle around the image
@@ -179,7 +179,7 @@ DstImageViewer::paintEvent(QPaintEvent *event)
 }
 
 void
-DstImageViewer::resetImage()
+DestinationPane::resetImage()
 {
     if (myUnfilteredImage.isNull())
         return;

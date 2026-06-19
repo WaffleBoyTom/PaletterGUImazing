@@ -1,17 +1,16 @@
-#include "src_image_viewer.h"
+#include "source_pane.h"
 
 #include <QMessageBox>
 #include <QtWidgets>
 
 #include "baller_task.h"
-#include "remapper.h"
 #include "sick_logger.h"
 
 // TODO: scaling factor hardcoded to 1/2 right now
 // might wanna change that innit
 static const int theImageScaleFactor = 2;
 
-SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
+SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 {
     // main layout
     myLayout = new QVBoxLayout();
@@ -25,7 +24,7 @@ SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &SrcImageViewer::loadImage
+        &SourcePane::loadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -33,7 +32,7 @@ SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
         myLineEdit->lineEdit(),
         &QLineEdit::editingFinished,
         this,
-        &SrcImageViewer::loadImageFromLineEdit
+        &SourcePane::loadImageFromLineEdit
     );
 
     // image holder
@@ -43,7 +42,7 @@ SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
         myImageHolder,
         &SickImageHolder::tellBossToResize,
         this,
-        &SrcImageViewer::resizeOnDrag
+        &SourcePane::resizeOnDrag
     );
 
     auto dropdowns = new QHBoxLayout();
@@ -56,7 +55,7 @@ SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
         myProcessorButton,
         &QPushButton::clicked,
         this,
-        &SrcImageViewer::generatePalette
+        &SourcePane::generatePalette
     );
 
     myProcessorButton->setEnabled(false);
@@ -92,7 +91,7 @@ SrcImageViewer::SrcImageViewer(QWidget *parent) : QWidget(parent)
 }
 
 void
-SrcImageViewer::loadImage(const QString &filename)
+SourcePane::loadImage(const QString &filename)
 {
     if (!myLoadedImage.load(filename))
     {
@@ -116,13 +115,13 @@ SrcImageViewer::loadImage(const QString &filename)
 }
 
 void
-SrcImageViewer::loadImageFromLineEdit()
+SourcePane::loadImageFromLineEdit()
 {
     loadImage(myLineEdit->text());
 }
 
 QImage
-SrcImageViewer::getImage()
+SourcePane::getImage()
 {
     // we want to load in the original image
     // not the resized one
@@ -130,7 +129,7 @@ SrcImageViewer::getImage()
 }
 
 void
-SrcImageViewer::generatePalette()
+SourcePane::generatePalette()
 {
     if (myLoadedImage.isNull())
     {
@@ -152,7 +151,7 @@ SrcImageViewer::generatePalette()
         task,
         &QuantizeTask::finished,
         this,
-        &SrcImageViewer::onGeneratePaletteFinished
+        &SourcePane::onGeneratePaletteFinished
     );
 
     QThread *thread = new QThread();
@@ -160,7 +159,7 @@ SrcImageViewer::generatePalette()
 }
 
 void
-SrcImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
+SourcePane::onGeneratePaletteFinished(QList<QColor> palette)
 {
     myPalette = std::move(palette);
     SickLogger::log("Filled color palette");
@@ -182,7 +181,7 @@ SrcImageViewer::onGeneratePaletteFinished(QList<QColor> palette)
 }
 
 QPixmap
-SrcImageViewer::resizeImage(QPixmap *imagedisplay, int width, int height)
+SourcePane::resizeImage(QPixmap *imagedisplay, int width, int height)
 {
     // by default images are pretty big
     // unlike other things...
@@ -196,7 +195,7 @@ SrcImageViewer::resizeImage(QPixmap *imagedisplay, int width, int height)
 }
 
 void
-SrcImageViewer::handleResizing()
+SourcePane::handleResizing()
 {
     if (myLoadedImage.isNull())
         return;
@@ -211,7 +210,7 @@ SrcImageViewer::handleResizing()
 }
 
 void
-SrcImageViewer::resizeOnDrag(int width, int height)
+SourcePane::resizeOnDrag(int width, int height)
 {
     if (myLoadedImage.isNull())
         return;
@@ -222,7 +221,7 @@ SrcImageViewer::resizeOnDrag(int width, int height)
 }
 
 void
-SrcImageViewer::paintEvent(QPaintEvent *event)
+SourcePane::paintEvent(QPaintEvent *event)
 {
     // FIXME : It'd be lit if we could
     // drag a rectangle around the image
@@ -238,13 +237,13 @@ SrcImageViewer::paintEvent(QPaintEvent *event)
 }
 
 void
-SrcImageViewer::setPaletteDisplaySize(int size)
+SourcePane::setPaletteDisplaySize(int size)
 {
     myPaletteDisplaySize = size;
 }
 
 QList<QColor> *
-SrcImageViewer::palette()
+SourcePane::palette()
 {
     return &myPalette;
 }

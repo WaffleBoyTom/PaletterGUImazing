@@ -1,7 +1,6 @@
 #ifndef DST_IMAGE_VIEWER_H
 #define DST_IMAGE_VIEWER_H
 
-#include <QtWidgets/qpushbutton.h>
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
@@ -10,12 +9,12 @@
 #include "sick_file_line_edit.h"
 #include "sick_image_viewer.h"
 
-class DstImageViewer : public QWidget
+class DestinationPane : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit DstImageViewer(QWidget *parent);
+    explicit DestinationPane(QWidget *parent);
 
     // Apply the palette to the image.
     void applyPalette(QList<QColor> *palette);

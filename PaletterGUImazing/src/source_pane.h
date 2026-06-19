@@ -9,12 +9,12 @@
 #include "sick_file_line_edit.h"
 #include "sick_imageholder.h"
 
-class SrcImageViewer : public QWidget
+class SourcePane : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit SrcImageViewer(QWidget *parent);
+    explicit SourcePane(QWidget *parent);
     void handleResizing();
     void setPaletteDisplaySize(int size);
     QList<QColor> *palette();
