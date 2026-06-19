@@ -5,6 +5,7 @@
 
 #include "baller_task.h"
 #include "remapper.h"
+#include "sick_image_viewer.h"
 #include "sick_logger.h"
 
 static const int theInitialScaleFactor = 2;
@@ -30,15 +31,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
         &DstImageViewer::onLoadImageFromLineEdit
     );
 
-    // image holder
-    myImageHolder = new SickImageHolder(nullptr, tr(""));
-    myImageHolder->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-    connect(
-        myImageHolder,
-        &SickImageHolder::tellBossToResize,
-        this,
-        &DstImageViewer::resizeOnDrag
-    );
+    myImageViewer = new SickImageViewer(this);
 
     myResetButton = new QPushButton("Reset");
     connect(
@@ -88,7 +81,7 @@ DstImageViewer::DstImageViewer(QWidget *parent) : QWidget(parent)
     QVBoxLayout *layout = new QVBoxLayout();
     layout->setAlignment(Qt::AlignTop);
     layout->addLayout(toolbar);
-    layout->addWidget(myImageHolder);
+    layout->addWidget(myImageViewer);
 
     setLayout(layout);
 }
@@ -107,7 +100,8 @@ DstImageViewer::onLoadImage(const QString &filename)
     }
 
     myImage = myUnfilteredImage.copy();
-    resetImageSize();
+    myImageViewer->setImage(myImage);
+    myImageViewer->frameImage();
 
     myProcessorButton->setEnabled(true);
     myResetButton->setEnabled(true);
@@ -157,10 +151,7 @@ DstImageViewer::onApplyPaletteFinished(QImage image)
     SickLogger::log("Done applying color palette");
 
     myImage = image.copy();
-    const int width = myImageHolder->pixmap().width();
-    const int height = myImageHolder->pixmap().height();
-
-    resizeImage(width, height);
+    myImageViewer->setImage(myImage);
 
     myProcessorButton->setEnabled(true);
 }
@@ -169,63 +160,6 @@ void
 DstImageViewer::askForPalette()
 {
     emit askBossForPalette();
-}
-
-void
-DstImageViewer::resizeOnDrag(int width, int height)
-{
-    if (myImage.isNull())
-        return;
-
-    resizeImage(width, height);
-}
-
-void
-DstImageViewer::resetImage()
-{
-    if (myUnfilteredImage.isNull())
-        return;
-
-    myImage = myUnfilteredImage.copy();
-
-    resetImageSize();
-}
-
-void
-DstImageViewer::resetImageSize()
-{
-    resizeImage(
-        initialImageWidth(),
-        initialImageHeight()
-    );
-}
-
-void
-DstImageViewer::resizeImage(const int width, const int height)
-{
-    if (myImage.isNull())
-        return;
-
-    const QPixmap pixmap = QPixmap::fromImage(myImage);
-    const QPixmap scaled = pixmap.scaled(
-        width,
-        height,
-        Qt::KeepAspectRatio /* ar */
-    );
-
-    myImageHolder->setPixmap(scaled);
-}
-
-int
-DstImageViewer::initialImageWidth() const
-{
-    return parentWidget()->height() / theInitialScaleFactor;
-}
-
-int
-DstImageViewer::initialImageHeight() const
-{
-    return parentWidget()->width() / theInitialScaleFactor;
 }
 
 void
@@ -242,4 +176,16 @@ DstImageViewer::paintEvent(QPaintEvent *event)
     //     myImageHolder->width(),
     //     myImageHolder->height()
     // );
+}
+
+void
+DstImageViewer::resetImage()
+{
+    if (myUnfilteredImage.isNull())
+        return;
+
+    myImage = myUnfilteredImage.copy();
+
+    myImageViewer->setImage(myImage);
+    myImageViewer->frameImage();
 }

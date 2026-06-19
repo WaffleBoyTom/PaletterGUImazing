@@ -8,7 +8,7 @@
 
 #include "sick_dropdown.h"
 #include "sick_file_line_edit.h"
-#include "sick_imageholder.h"
+#include "sick_image_viewer.h"
 
 class DstImageViewer : public QWidget
 {
@@ -39,24 +39,14 @@ private slots:
 
     void askForPalette();
 
-    // resizes image based on drag
-    void resizeOnDrag(int width, int height);
-
     // Resets the image
     void resetImage();
 
 private:
 
-    void resetImageSize();
-
-    void resizeImage(const int width, const int height);
-
-    int initialImageWidth() const;
-    int initialImageHeight() const;
-
     SickFileLineEdit *myLineEdit;
 
-    SickImageHolder *myImageHolder;
+    SickImageViewer *myImageViewer;
 
     // keep reference to original image otherwise
     // we iteratively scale the pixmap
