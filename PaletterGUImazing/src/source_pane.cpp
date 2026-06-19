@@ -114,6 +114,7 @@ SourcePane::generatePalette()
         Q_ASSERT("How the fuck did we get here !");
         return;
     }
+    myProcessorButton->clearFocus();
     myProcessorButton->setEnabled(false);
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
