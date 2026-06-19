@@ -41,7 +41,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 # BUGS
 - [x] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
 - [x] "Apply Palette" is still applying to the filtered image
-- [ ] Logger scroll does not jump to bottom properly.
+- [x] Logger scroll does not jump to bottom properly.
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE
