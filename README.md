@@ -40,7 +40,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
 # BUGS
 - [x] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
-- [ ] "Apply Palette" is still applying to the filtered image
+- [x] "Apply Palette" is still applying to the filtered image
 - [ ] Logger scroll does not jump to bottom properly.
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT

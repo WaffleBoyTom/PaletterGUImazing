@@ -132,7 +132,7 @@ DestinationPane::applyPalette(QList<QColor> *palette)
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.
-    RemapTask *task = new RemapTask(myImage, device, method, *palette);
+    RemapTask *task = new RemapTask(myUnfilteredImage, device, method, *palette);
 
     connect(
         task,
