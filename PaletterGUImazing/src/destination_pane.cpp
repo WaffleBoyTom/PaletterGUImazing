@@ -20,7 +20,7 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &DestinationPane::onLoadImage
+        &DestinationPane::loadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -87,9 +87,9 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
 }
 
 void
-DestinationPane::onLoadImage(const QString &filename)
+DestinationPane::loadImage(const QString &file_path)
 {
-    if (!myUnfilteredImage.load(filename))
+    if (!myUnfilteredImage.load(file_path))
     {
         QString message = "Failed to load image file";
         SickLogger::log(message, SickLogSeverity::ERROR);
@@ -107,7 +107,7 @@ DestinationPane::onLoadImage(const QString &filename)
     myResetButton->setEnabled(true);
 
     // send a message in log about image being loaded
-    const QString native_path = QDir::toNativeSeparators(filename);
+    const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
     SickLogger::log(message, SickLogSeverity::SEL);
 }
@@ -115,7 +115,7 @@ DestinationPane::onLoadImage(const QString &filename)
 void
 DestinationPane::onLoadImageFromLineEdit()
 {
-    onLoadImage(myLineEdit->text());
+    loadImage(myLineEdit->text());
 }
 
 void

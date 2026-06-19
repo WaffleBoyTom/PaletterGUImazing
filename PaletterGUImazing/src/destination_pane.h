@@ -27,8 +27,8 @@ protected:
 
 private slots:
 
-    // Called when an image selected from the file explorer is loaded.
-    void onLoadImage(const QString &filename);
+    // Loads an image with the specified path.
+    void loadImage(const QString &file_path);
 
     // Called when editingFinished is fired by the line edit.
     void onLoadImageFromLineEdit();

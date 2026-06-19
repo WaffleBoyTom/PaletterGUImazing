@@ -1,6 +1,7 @@
 #ifndef SRC_IMAGE_VIEWER_H
 #define SRC_IMAGE_VIEWER_H
 
+#include <QtGui/qevent.h>
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
@@ -28,10 +29,13 @@ signals:
 protected:
     void paintEvent(QPaintEvent *event) override;
 
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+
 private slots:
 
-    // Called when an image selected from the file explorer is loaded.
-    void onLoadImage(const QString &filename);
+    // Loads an image with the specified path.
+    void loadImage(const QString &file_path);
 
     // Called when editingFinished is fired by the line edit.
     void onLoadImageFromLineEdit();

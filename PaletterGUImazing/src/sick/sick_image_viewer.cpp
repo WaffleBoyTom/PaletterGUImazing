@@ -7,6 +7,9 @@ SickImageViewer::SickImageViewer(QWidget *parent): QWidget(parent)
 
     mySceneView = new SickGraphicsView(myScene, this);
 
+    // Disable drag-and-drop support otherwise the graphics view will eat all the DnD events.
+    mySceneView->setAcceptDrops(false);
+
     QVBoxLayout *layout = new QVBoxLayout(this);
     layout->addWidget(mySceneView);
     setLayout(layout);

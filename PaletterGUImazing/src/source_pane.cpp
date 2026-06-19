@@ -16,7 +16,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
         myLineEdit,
         &SickFileLineEdit::tellBossAboutFileLoaded,
         this,
-        &SourcePane::onLoadImage
+        &SourcePane::loadImage
     );
     // user can also type image in, try to load after they're done editing
     // line edit
@@ -72,12 +72,15 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     layout->addWidget(myImageViewer);
 
     setLayout(layout);
+
+    // Enable drag-and-drop support.
+    setAcceptDrops(true);
 }
 
 void
-SourcePane::onLoadImage(const QString &filename)
+SourcePane::loadImage(const QString &file_path)
 {
-    if (!myImage.load(filename))
+    if (!myImage.load(file_path))
     {
         QString message = "Failed to load image file";
         SickLogger::log(message, SickLogSeverity::ERROR);
@@ -93,7 +96,7 @@ SourcePane::onLoadImage(const QString &filename)
     myProcessorButton->setEnabled(true);
 
     // send a message in log about image being loaded
-    const QString native_path = QDir::toNativeSeparators(filename);
+    const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
     SickLogger::log(message, SickLogSeverity::SEL);
 }
@@ -101,7 +104,7 @@ SourcePane::onLoadImage(const QString &filename)
 void
 SourcePane::onLoadImageFromLineEdit()
 {
-    onLoadImage(myLineEdit->text());
+    loadImage(myLineEdit->text());
 }
 
 void
@@ -159,6 +162,26 @@ SourcePane::paintEvent(QPaintEvent *event)
     //     myImageHolder->width(),
     //     myImageHolder->height()
     // );
+}
+
+void
+SourcePane::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls() && (event->possibleActions() & Qt::CopyAction))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void
+SourcePane::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+        return;
+
+    const QUrl &url = urls.first();
+    loadImage(url.path());
 }
 
 void
