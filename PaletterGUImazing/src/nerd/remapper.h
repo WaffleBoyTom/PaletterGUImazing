@@ -23,6 +23,10 @@ public:
     void remapHost(QImage &image) const;
 
 private:
+    void remapCuda(QImage &image) const;
+    void remapMetal(QImage &image) const;
+
+    [[maybe_unused]]
     CompareMethod myCompareMethod;
     const QList<QColor> &myPalette;
 };
