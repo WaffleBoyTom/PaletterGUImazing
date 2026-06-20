@@ -1,4 +1,6 @@
 set(PROJECT_SOURCES
+    destination_pane.cpp
+    destination_pane.h
     main.cpp
     paletter_window.cpp
     paletter_window.h
@@ -6,10 +8,8 @@ set(PROJECT_SOURCES
     palette_viewer.h
     palette_row.cpp
     palette_row.h
-    src_image_viewer.cpp
-    src_image_viewer.h
-    dst_image_viewer.cpp
-    dst_image_viewer.h
+    source_pane.cpp
+    source_pane.h
 )
 
 add_subdirectory("nerd")

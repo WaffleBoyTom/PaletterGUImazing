@@ -12,36 +12,37 @@ cmake --build .
 # oh yeah
 Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 
-# we need to do this
-- [ ] Worker threads
-    - [x] BallerTask
-    - [x] QuantizeTask
-    - [x] RemapTask
-    - [ ] ImageProcessor as task manager
-- [x] Logging
-    - [x] SickLogger
-    - [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
-    - [ ] It should be possible the hide the log viewer and/or to set a verbosity level 
-    - [ ] Some sort of progress bar to show the user that we are cooking. Some image or something.
-- [ ] UI
-    - [ ] Fix ImageViewer hierarchy
-    - [ ] Fix layout issues
-    - [x] Sick File Line Edit for all file choosers and writers !
-- [ ] GPU
-    - [x] Use to apply palette to second image
-    - [ ] Use to run K-Means for palette generation
-    - [ ] Metal support
-    - [ ] Compute backend abstraction layer
+# TODO
+## Baller library
+- [x] BallerTask
+- [x] QuantizeTask
+- [x] RemapTask
+- [ ] ImageProcessor as task manager
+## Logging
+- [x] SickLogger
+- [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
+- [ ] It should be possible the hide the log viewer and/or to set a verbosity level 
+- [ ] Some sort of progress bar to show the user that we are cooking. Some image or something.
+## UI
+- [x] Fix ImageViewer hierarchy
+- [x] Fix layout issues
+- [x] Sick File Line Edit for all file choosers and writers !
+## GPU
+- [x] Use to apply palette to second image
+- [ ] Use to run K-Means for palette generation
+- [ ] Metal support
+## Features
 - [ ] Application method
 - [ ] Color sorting methods
-- [ ] Export
-    - [x] JSON palette string
-    - [ ] The image with the palette applied
+## Export
+- [x] JSON palette string
+- [ ] The image with the palette applied
+- [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
+## Bugs
+- [x] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
+- [x] "Apply Palette" is still applying to the filtered image
+- [x] Logger scroll does not jump to bottom properly.
 
-- [ ] Misc
-    - [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
-# BUGS
-- [ ] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE

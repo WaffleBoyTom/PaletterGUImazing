@@ -19,6 +19,8 @@ SickLogViewer::append(QString message)
 {
     moveCursor(QTextCursor::MoveOperation::Start);
     insertPlainText(message);
+
+    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
 void
@@ -74,6 +76,8 @@ SickLogViewer::appendLine(QString message, SickLogSeverity sev)
     cursor.setCharFormat(format);
     cursor.insertText(message);
     cursor.insertText("\n");
+
+    verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 void
 SickLogViewer::mousePressEvent(QMouseEvent *event)

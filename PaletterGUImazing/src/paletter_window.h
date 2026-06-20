@@ -3,11 +3,11 @@
 
 #include <QWidget>
 
-#include "dst_image_viewer.h"
+#include "destination_pane.h"
 #include "palette_viewer.h"
 #include "sick_export_opts.h"
 #include "sick_log_viewer.h"
-#include "src_image_viewer.h"
+#include "source_pane.h"
 
 // FIXME: This should be a QMainWindow ?? :sadpanda:
 class PaletterGUI : public QWidget
@@ -16,9 +16,6 @@ class PaletterGUI : public QWidget
 
 public:
     PaletterGUI();
-
-protected:
-    void resizeEvent(QResizeEvent *event) override;
 
 public slots:
     void setPaletteDisplaySize(int size);
@@ -29,9 +26,9 @@ public slots:
 
 private:
     QLabel *paletterLabel;
-    SrcImageViewer *mySrcImgViewer;
+    SourcePane *mySrcImgViewer;
     PaletteViewer *myPaletteViewer;
-    DstImageViewer *myConvertImgViewer;
+    DestinationPane *myConvertImgViewer;
     SickLogViewer *myLogViewer;
     SickExportOpts *myExporter;
     [[maybe_unused]] QMenuBar *myMenuBar;

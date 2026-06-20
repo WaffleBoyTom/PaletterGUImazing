@@ -32,12 +32,12 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
     QHBoxLayout *viewersLayout = new QHBoxLayout();
 
     // add the image viewer here
-    mySrcImgViewer = new SrcImageViewer(this);
+    mySrcImgViewer = new SourcePane(this);
     viewersLayout->addWidget(mySrcImgViewer);
 
     // add the other image viewer here
     // this is the one where you can apply the palette to an image
-    myConvertImgViewer = new DstImageViewer(this);
+    myConvertImgViewer = new DestinationPane(this);
     viewersLayout->addWidget(myConvertImgViewer);
 
     mainLayout->addLayout(viewersLayout);
@@ -63,14 +63,14 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     connect(
         mySrcImgViewer,
-        &SrcImageViewer::tellBossAboutPaletteFill,
+        &SourcePane::tellBossAboutPaletteFill,
         this,
         &PaletterGUI::setPalette
     );
 
     connect(
         myConvertImgViewer,
-        &DstImageViewer::askBossForPalette,
+        &DestinationPane::askBossForPalette,
         this,
         &PaletterGUI::applyPaletteToSecondViewer
     );
@@ -106,17 +106,6 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     setWindowTitle(tr("PaletterGUImazing"));
     resize(screenSize.width(), screenSize.height());
-}
-
-// resive event override
-// this should handle resizing the image
-void
-PaletterGUI::resizeEvent(QResizeEvent *event)
-{
-    // scale image with window
-    mySrcImgViewer->handleResizing();
-    // we have myConvertImgViewer,
-    // it probably shoud be resized here
 }
 
 void
