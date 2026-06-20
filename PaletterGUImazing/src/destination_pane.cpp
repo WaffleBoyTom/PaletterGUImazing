@@ -84,6 +84,9 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     layout->addWidget(myImageViewer);
 
     setLayout(layout);
+
+    // Enable drag-and-drop support.
+    setAcceptDrops(true);
 }
 
 void
@@ -176,6 +179,26 @@ DestinationPane::paintEvent(QPaintEvent *event)
     //     myImageHolder->width(),
     //     myImageHolder->height()
     // );
+}
+
+void
+DestinationPane::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls() && (event->possibleActions() & Qt::CopyAction))
+    {
+        event->acceptProposedAction();
+    }
+}
+
+void
+DestinationPane::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    if (urls.isEmpty())
+        return;
+
+    const QUrl &url = urls.first();
+    loadImage(url.path());
 }
 
 void

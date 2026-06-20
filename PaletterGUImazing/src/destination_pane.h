@@ -25,6 +25,9 @@ signals:
 protected:
     void paintEvent(QPaintEvent *event) override;
 
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+
 private slots:
 
     // Loads an image with the specified path.
