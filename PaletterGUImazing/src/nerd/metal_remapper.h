@@ -18,13 +18,13 @@ class RemapperMetal
 public:
     RemapperMetal(QImage &image, const QList<QColor> &palette);
 
-    QImage quantizeEuclidean();
-    QImage quantizeHue();
-    QImage quantizeSaturation();
-    QImage quantizeValue();
+    QImage remapEuclidean();
+    QImage remapHue();
+    QImage remapSaturation();
+    QImage remapValue();
 
 private:
-    QImage quantizeInternal(MTL::ComputePipelineState *pipeline);
+    QImage remapInternal(MTL::ComputePipelineState *pipeline);
 
     QSize myResolution;
     std::size_t myPaletteLength;
@@ -32,10 +32,10 @@ private:
     // Metal-specific
     MetalContext myContext;
 
-    MTL::ComputePipelineState *myQuantizeEuclideanPipeline;
-    MTL::ComputePipelineState *myQuantizeHuePipeline;
-    MTL::ComputePipelineState *myQuantizeSaturationPipeline;
-    MTL::ComputePipelineState *myQuantizeValuePipeline;
+    MTL::ComputePipelineState *myRemapEuclideanPipeline;
+    MTL::ComputePipelineState *myRemapHuePipeline;
+    MTL::ComputePipelineState *myRemapSaturationPipeline;
+    MTL::ComputePipelineState *myRemapValuePipeline;
 
     MTL::Buffer *myImage;
     MTL::Buffer *myPalette;

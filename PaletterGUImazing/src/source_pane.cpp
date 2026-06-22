@@ -4,6 +4,7 @@
 #include <QtWidgets>
 
 #include "baller_task.h"
+#include "nerd_types.h"
 #include "sick_logger.h"
 
 SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
@@ -36,9 +37,9 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     );
     myProcessorButton->setEnabled(false);
 
-    myQuantizationMethodDropdown = new SickDropDown(this, tr("Mode"));
-    myQuantizationMethodDropdown->addMenuItem(tr("Median Cut"));
-    myQuantizationMethodDropdown->addMenuItem(tr("K-Means"));
+    myAlgorithmDropdown = new SickDropDown(this, tr("Mode"));
+    myAlgorithmDropdown->addMenuItem(tr("Median Cut"));
+    myAlgorithmDropdown->addMenuItem(tr("K-Means"));
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
     myDeviceDropdown->addMenuItem(tr("CPU"));
@@ -50,7 +51,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     // if we compile with CUDA, then it should be the
     // the default as it is the better option !
     myDeviceDropdown->setMenuItem(1);
-    myQuantizationMethodDropdown->setMenuItem(1);
+    myAlgorithmDropdown->setMenuItem(1);
 #endif
 
     myImageViewer = new SickImageViewer(this);
@@ -62,7 +63,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     QHBoxLayout *toolbar = new QHBoxLayout();
     toolbar->addWidget(myLineEdit);
     toolbar->addWidget(myProcessorButton);
-    toolbar->addWidget(myQuantizationMethodDropdown);
+    toolbar->addWidget(myAlgorithmDropdown);
     toolbar->addWidget(myDeviceDropdown);
 
     // main layout
@@ -122,13 +123,15 @@ SourcePane::generatePalette()
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.
-    QuantizeTask *task = new QuantizeTask(
-        myImage, myPaletteDisplaySize, Quantizer::Method(myQuantizationMethodDropdown->item())
+    GeneratePaletteTask *task = new GeneratePaletteTask(
+        myImage,
+        myPaletteDisplaySize,
+        NerdPaletteAlgorithm(myAlgorithmDropdown->item())
     );
 
     connect(
         task,
-        &QuantizeTask::finished,
+        &GeneratePaletteTask::finished,
         this,
         &SourcePane::onGeneratePaletteFinished
     );

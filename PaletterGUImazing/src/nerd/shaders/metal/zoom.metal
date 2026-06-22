@@ -69,7 +69,7 @@ float distanceValue(const float3 hsv1, const float3 hsv2)
     return abs(hsv1.z - hsv2.z);
 }
 
-kernel void quantizeEuclidean(
+kernel void remapEuclidean(
     device const uchar4* image,
     device const uchar4* palette,
     constant uint& paletteLength,
@@ -100,7 +100,7 @@ kernel void quantizeEuclidean(
     result[index] = uchar4(rgbFloatToUchar(rgb_out), color_in.w);
 }
 
-kernel void quantizeHue(
+kernel void remapHue(
     device const uchar4* image,
     device const uchar4* palette,
     constant uint& paletteLength,
@@ -134,7 +134,7 @@ kernel void quantizeHue(
     result[index] = uchar4(rgbFloatToUchar(rgb_out), color_in.w);
 }
 
-kernel void quantizeSaturation(
+kernel void remapSaturation(
     device const uchar4* image,
     device const uchar4* palette,
     constant uint& paletteLength,
@@ -168,7 +168,7 @@ kernel void quantizeSaturation(
     result[index] = uchar4(rgbFloatToUchar(rgb_out), color_in.w);
 }
 
-kernel void quantizeValue(
+kernel void remapValue(
     device const uchar4* image,
     device const uchar4* palette,
     constant uint& paletteLength,

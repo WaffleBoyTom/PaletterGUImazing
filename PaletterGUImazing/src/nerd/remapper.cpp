@@ -36,7 +36,7 @@
 #include "metal_remapper.h"
 #endif
 
-Remapper::Remapper(CompareMethod method, const QList<QColor> &palette)
+Remapper::Remapper(NerdCompareMethod method, const QList<QColor> &palette)
     : myCompareMethod(method), myPalette(palette)
 {
 }
@@ -124,28 +124,28 @@ Remapper::remapCuda(QImage &image) const
 
     switch (myCompareMethod)
     {
-    case Remapper::CompareMethod::Distance:
+    case NerdCompareMethod::Distance:
     {
         Zoom::applyPaletteByLength(
             cu_image, width, height, cu_palette, v_palette.size()
         );
         break;
     }
-    case Remapper::CompareMethod::Luminance:
+    case NerdCompareMethod::Luminance:
     {
         Zoom::applyPaletteByLuminance(
             cu_image, width, height, cu_palette, v_palette.size()
         );
         break;
     }
-    case Remapper::CompareMethod::Hue:
+    case NerdCompareMethod::Hue:
     {
         Zoom::applyPaletteByHue(
             cu_image, width, height, cu_palette, v_palette.size()
         );
         break;
     }
-    case Remapper::CompareMethod::Saturation:
+    case NerdCompareMethod::Saturation:
     {
         Zoom::applyPaletteBySaturation(
             cu_image, width, height, cu_palette, v_palette.size()
@@ -172,24 +172,24 @@ Remapper::remapMetal(QImage &image) const
     RemapperMetal remapper_metal(image, myPalette);
     switch (myCompareMethod)
     {
-    case Remapper::CompareMethod::Distance:
+    case NerdCompareMethod::Distance:
     {
-        image = remapper_metal.quantizeEuclidean();
+        image = remapper_metal.remapEuclidean();
         break;
     }
-    case Remapper::CompareMethod::Luminance:
+    case NerdCompareMethod::Luminance:
     {
-        image = remapper_metal.quantizeValue();
+        image = remapper_metal.remapValue();
         break;
     }
-    case Remapper::CompareMethod::Hue:
+    case NerdCompareMethod::Hue:
     {
-        image = remapper_metal.quantizeHue();
+        image = remapper_metal.remapHue();
         break;
     }
-    case Remapper::CompareMethod::Saturation:
+    case NerdCompareMethod::Saturation:
     {
-        image = remapper_metal.quantizeSaturation();
+        image = remapper_metal.remapSaturation();
         break;
     }
     }

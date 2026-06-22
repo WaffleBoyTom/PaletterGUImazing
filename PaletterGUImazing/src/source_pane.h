@@ -57,8 +57,8 @@ private:
     // Calls applyPalette.
     QPushButton *myProcessorButton;
 
-    // Quantization method.
-    SickDropDown *myQuantizationMethodDropdown;
+    // Palette generation algorithm.
+    SickDropDown *myAlgorithmDropdown;
 
     // Processing device.
     SickDropDown *myDeviceDropdown;

@@ -4,7 +4,7 @@
 #include <QtWidgets>
 
 #include "baller_task.h"
-#include "remapper.h"
+#include "nerd_types.h"
 #include "sick_image_viewer.h"
 #include "sick_logger.h"
 
@@ -49,11 +49,11 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     );
     myApplyPaletteButton->setEnabled(false);
 
-    myQuantizationMethodDropdown = new SickDropDown(this, tr("Mode"));
-    myQuantizationMethodDropdown->addMenuItem(tr("Distance"));
-    myQuantizationMethodDropdown->addMenuItem(tr("Luminance"));
-    myQuantizationMethodDropdown->addMenuItem(tr("Hue"));
-    myQuantizationMethodDropdown->addMenuItem(tr("Saturation"));
+    myRemapMethodDropdown = new SickDropDown(this, tr("Mode"));
+    myRemapMethodDropdown->addMenuItem(tr("Distance"));
+    myRemapMethodDropdown->addMenuItem(tr("Luminance"));
+    myRemapMethodDropdown->addMenuItem(tr("Hue"));
+    myRemapMethodDropdown->addMenuItem(tr("Saturation"));
 
     myDeviceDropdown = new SickDropDown(this, tr("Device"));
     myDeviceDropdown->addMenuItem(tr("CPU"));
@@ -72,7 +72,7 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     toolbar->addWidget(myLineEdit);
     toolbar->addWidget(myResetButton);
     toolbar->addWidget(myApplyPaletteButton);
-    toolbar->addWidget(myQuantizationMethodDropdown);
+    toolbar->addWidget(myRemapMethodDropdown);
     toolbar->addWidget(myDeviceDropdown);
 
     myImageViewer = new SickImageViewer(this);
@@ -128,10 +128,10 @@ DestinationPane::applyPalette(QList<QColor> *palette)
 
     SickLogger::log("Applying color palette");
 
-    auto device = PaletteProcessorDevice(myDeviceDropdown->item());
+    const BallerDevice device = BallerDevice(myDeviceDropdown->item());
     SickLogger::log(QString("Using: %1").arg(getDeviceStr(device)));
 
-    auto method = Remapper::CompareMethod(myQuantizationMethodDropdown->item());
+    const NerdCompareMethod method = NerdCompareMethod(myRemapMethodDropdown->item());
 
     // TODO: the task should be hidden behind an ImageProcessor interface.
     // the ImageViewer should not create threads or tasks directly.

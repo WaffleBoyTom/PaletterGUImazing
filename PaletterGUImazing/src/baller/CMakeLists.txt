@@ -1,7 +1,7 @@
 set(SOURCE
     baller_task.h
     baller_task.cpp
-    processor_device.h
+    baller_types.h
 )
 add_library(baller STATIC ${SOURCE})
 target_link_libraries(baller PRIVATE Qt${QT_VERSION_MAJOR}::Widgets PUBLIC nerd)

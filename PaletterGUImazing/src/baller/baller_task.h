@@ -1,12 +1,12 @@
 #ifndef BALLER_TASK_H
 #define BALLER_TASK_H
 
+#include <QImage>
 #include <QObject>
 #include <QThread>
 
-#include "processor_device.h"
-#include "quantizer.h"
-#include "remapper.h"
+#include "baller_types.h"
+#include "nerd_types.h"
 
 QT_BEGIN_NAMESPACE
 class QObject;
@@ -32,11 +32,11 @@ signals:
     void _postCompletion();
 };
 
-class QuantizeTask : public BallerTask
+class GeneratePaletteTask : public BallerTask
 {
     Q_OBJECT
 public:
-    QuantizeTask(QImage image, int palette_size, Quantizer::Method method);
+    GeneratePaletteTask(QImage image, int palette_size, NerdPaletteAlgorithm algorithm);
 
 signals:
     void finished(QList<QColor> palette);
@@ -47,7 +47,7 @@ protected:
 private:
     QImage myImage;
     int myPaletteSize;
-    Quantizer::Method myMethod;
+    NerdPaletteAlgorithm myAlgorithm;
 };
 
 class RemapTask : public BallerTask
@@ -56,8 +56,8 @@ class RemapTask : public BallerTask
 public:
     RemapTask(
         QImage image,
-        PaletteProcessorDevice device,
-        Remapper::CompareMethod method,
+        BallerDevice device,
+        NerdCompareMethod method,
         QList<QColor> palette
     );
 
@@ -69,8 +69,8 @@ protected:
 
 private:
     QImage myImage;
-    PaletteProcessorDevice myDevice;
-    Remapper::CompareMethod myMethod;
+    BallerDevice myDevice;
+    NerdCompareMethod myMethod;
     QList<QColor> myPalette;
 };
 

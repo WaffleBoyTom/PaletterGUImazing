@@ -1,20 +1,22 @@
 #ifndef IMAGE_PROCESSOR_H
 #define IMAGE_PROCESSOR_H
 
+#include <functional>
+
 #include <QColor>
 #include <QImage>
 #include <QList>
 #include <QPixmap>
-#include <functional>
 
-#include "processor_device.h"
-#include "quantizer.h"
-#include "remapper.h"
+#include "baller_types.h"
+#include "nerd_types.h"
 
-class ImageProcessor
+
+// TODO: UNUSED
+class BallerImageProcessor
 {
 public:
-    ImageProcessor();
+    BallerImageProcessor();
 
     // removes green component from an image
     // test function you know
@@ -25,15 +27,17 @@ public:
     );
 
     QVector<QColor> createColorPalette(
-        const QImage &image, int palette_size, Quantizer::Method method
+        const QImage &image,
+        int palette_size,
+        NerdPaletteAlgorithm algorithm
     ) const;
 
     void applyColorPalette(
         QImage &image,
         QList<QColor> *palette,
-        PaletteProcessorDevice dev,
-        Remapper::CompareMethod method
-    );
+        BallerDevice dev,
+        NerdCompareMethod method
+    ) const;
 
     void process(QImage &image, std::function<void(QRgb &)> processor);
 };

@@ -1,31 +1,26 @@
-#ifndef QUANTIZER_H
-#define QUANTIZER_H
+#ifndef PALETTE_GENERATOR_H
+#define PALETTE_GENERATOR_H
 
 #include <QColor>
 #include <QImage>
 #include <QVector>
 
-class Quantizer
+#include "nerd_types.h"
+
+class PaletteGenerator
 {
 public:
-    /// TODO: move me out of here....
-    enum class Method
-    {
-        MedianCut = 0,
-        K_Means
-    };
-
     /// TODO: This probably shouldn't take a method as it only runs
     /// median cut anyways. I don't think we want to stuff
     /// all the methods inside one class....
     /// should all these classes inherit from a base class
     /// would that be OOPing way too hard ??
-    Quantizer(int palette_size, Method method);
+    PaletteGenerator(int palette_size, NerdPaletteAlgorithm algorithm);
 
     /// NOTE: C++ should generate the default dtor for the class
     /// I don't think we need this
     /// halloooo >?
-    ~Quantizer() = default;
+    ~PaletteGenerator() = default;
 
     // Generates a palette for the given image using median cut.
     //
@@ -72,7 +67,7 @@ public:
 
 private:
     int myPaletteSize;
-    [[maybe_unused]] Method myMethod;
+    [[maybe_unused]] NerdPaletteAlgorithm myAlgorithm;
 };
 
-#endif  // QUANTIZER_H
+#endif  // PALETTE_GENERATOR_H

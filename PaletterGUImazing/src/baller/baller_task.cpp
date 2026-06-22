@@ -1,6 +1,9 @@
 #include "baller_task.h"
 
 #include "kmeanifier.h"
+#include "nerd_types.h"
+#include "palette_generator.h"
+#include "remapper.h"
 
 BallerTask::BallerTask()
 {
@@ -26,25 +29,25 @@ BallerTask::runOnThread(QThread *thread)
     thread->start();
 }
 
-QuantizeTask::QuantizeTask(
-    QImage image, int palette_size, Quantizer::Method method
+GeneratePaletteTask::GeneratePaletteTask(
+    QImage image, int palette_size, NerdPaletteAlgorithm algorithm
 )
-    : myImage(std::move(image)), myPaletteSize(palette_size), myMethod(method)
+    : myImage(std::move(image)), myPaletteSize(palette_size), myAlgorithm(algorithm)
 {
 }
 
 void
-QuantizeTask::runInternal()
+GeneratePaletteTask::runInternal()
 {
     QList<QColor> palette;
-    switch (myMethod)
+    switch (myAlgorithm)
     {
-    case Quantizer::Method::MedianCut:
+    case NerdPaletteAlgorithm::MedianCut:
     {
-        palette = Quantizer(myPaletteSize, myMethod).generatePalette(myImage);
+        palette = PaletteGenerator(myPaletteSize, myAlgorithm).generatePalette(myImage);
         break;
     }
-    case Quantizer::Method::K_Means:
+    case NerdPaletteAlgorithm::KMeans:
     {
         palette = KMeanifier(myPaletteSize).generatePalette(myImage);
         break;
@@ -55,8 +58,8 @@ QuantizeTask::runInternal()
 
 RemapTask::RemapTask(
     QImage image,
-    PaletteProcessorDevice device,
-    Remapper::CompareMethod method,
+    BallerDevice device,
+    NerdCompareMethod method,
     QList<QColor> palette
 )
     : myImage(std::move(image)),
@@ -73,12 +76,12 @@ RemapTask::runInternal()
 
     switch (myDevice)
     {
-    case PaletteProcessorDevice::CPU:
+    case BallerDevice::CPU:
     {
         remapper.remapHost(myImage);
         break;
     }
-    case PaletteProcessorDevice::GPU:
+    case BallerDevice::GPU:
     {
         remapper.remap(myImage);
         break;

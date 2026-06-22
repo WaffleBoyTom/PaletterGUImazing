@@ -13,10 +13,10 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette) :
     myPaletteLength(palette.length()),
     myContext()
 {
-    myQuantizeEuclideanPipeline = myContext.createPipelineState("quantizeEuclidean");
-    myQuantizeHuePipeline = myContext.createPipelineState("quantizeHue");
-    myQuantizeSaturationPipeline = myContext.createPipelineState("quantizeSaturation");
-    myQuantizeValuePipeline = myContext.createPipelineState("quantizeValue");
+    myRemapEuclideanPipeline = myContext.createPipelineState("remapEuclidean");
+    myRemapHuePipeline = myContext.createPipelineState("remapHue");
+    myRemapSaturationPipeline = myContext.createPipelineState("remapSaturation");
+    myRemapValuePipeline = myContext.createPipelineState("remapValue");
 
     // Create and load the image buffer.
     const std::size_t image_res = image.width() * image.height();
@@ -53,31 +53,31 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette) :
 }
 
 QImage
-RemapperMetal::quantizeEuclidean()
+RemapperMetal::remapEuclidean()
 {
-    return quantizeInternal(myQuantizeEuclideanPipeline);
+    return remapInternal(myRemapEuclideanPipeline);
 }
 
 QImage
-RemapperMetal::quantizeHue()
+RemapperMetal::remapHue()
 {
-    return quantizeInternal(myQuantizeHuePipeline);
+    return remapInternal(myRemapHuePipeline);
 }
 
 QImage
-RemapperMetal::quantizeSaturation()
+RemapperMetal::remapSaturation()
 {
-    return quantizeInternal(myQuantizeSaturationPipeline);
+    return remapInternal(myRemapSaturationPipeline);
 }
 
 QImage
-RemapperMetal::quantizeValue()
+RemapperMetal::remapValue()
 {
-    return quantizeInternal(myQuantizeValuePipeline);
+    return remapInternal(myRemapValuePipeline);
 }
 
 QImage
-RemapperMetal::quantizeInternal(MTL::ComputePipelineState *pipeline)
+RemapperMetal::remapInternal(MTL::ComputePipelineState *pipeline)
 {
     MetalDispatcher dispatcher(myContext, pipeline);
 

@@ -8,8 +8,9 @@ if(USE_CUDA)
     set(SOURCE
         kmeanifier.h
         kmeanifier.cpp
-        quantizer.h
-        quantizer.cpp
+        nerd_types.h
+        palette_generator.h
+        palette_generator.cpp
         remapper.h
         remapper.cpp
         zoom.cuh
@@ -31,8 +32,9 @@ elseif(USE_METAL)
         metal_implementation.cpp
         metal_remapper.h
         metal_remapper.cpp
-        quantizer.h
-        quantizer.cpp
+        nerd_types.h
+        palette_generator.h
+        palette_generator.cpp
         remapper.h
         remapper.cpp
     )
@@ -41,8 +43,9 @@ else ()
     set(SOURCE
         kmeanifier.h
         kmeanifier.cpp
-        quantizer.h
-        quantizer.cpp
+        nerd_types.h
+        palette_generator.h
+        palette_generator.cpp
         remapper.h
         remapper.cpp
     )

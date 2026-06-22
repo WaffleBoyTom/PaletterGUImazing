@@ -50,8 +50,7 @@ private:
 
     SickImageViewer *myImageViewer;
 
-    // Original unfiltered image. Successive quantizations are applied
-    // to this image.
+    // Original unfiltered image. Successive remaps are applied to this image.
     QImage myUnfilteredImage;
 
     // Displayed image.
@@ -63,8 +62,8 @@ private:
     // Calls applyPalette.
     QPushButton *myApplyPaletteButton;
 
-    // Quantization method.
-    SickDropDown *myQuantizationMethodDropdown;
+    // Remap method.
+    SickDropDown *myRemapMethodDropdown;
 
     // Processing device.
     SickDropDown *myDeviceDropdown;

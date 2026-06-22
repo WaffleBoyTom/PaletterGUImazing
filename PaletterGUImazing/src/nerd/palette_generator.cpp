@@ -1,6 +1,7 @@
-#include "quantizer.h"
+#include "palette_generator.h"
 
 #include <QDebug>
+#include "nerd_types.h"
 
 namespace
 {
@@ -175,15 +176,15 @@ sortByChannel(QSpan<QColor> colors, const Channel chan)
 
 }
 
-Quantizer::Quantizer(int palette_size, Method method)
-    : myPaletteSize(palette_size), myMethod(method)
+PaletteGenerator::PaletteGenerator(int palette_size, NerdPaletteAlgorithm algorithm)
+    : myPaletteSize(palette_size), myAlgorithm(algorithm)
 {
 }
 
 /// The main loop of median cut. The while loop will run myPaletteSize times.
 /// See the header comment for details.
 QVector<QColor>
-Quantizer::generatePalette(const QImage &image) const
+PaletteGenerator::generatePalette(const QImage &image) const
 {
     // Flatten the image into a 1D array of colors.
     QVector<QColor> colors_vec;

@@ -15,7 +15,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 # TODO
 ## Baller library
 - [x] BallerTask
-- [x] QuantizeTask
+- [x] QuantizeTask (now GeneratePaletteTask)
 - [x] RemapTask
 - [ ] ImageProcessor as task manager
 ## Logging

@@ -1,18 +1,21 @@
-#include "image_processor.h"
+#include "baller_image_processor.h"
 
 #include <QDebug>
 #include <QImage>
 #include <QPixmap>
 #include <QRgb>
 #include <QtMath>
-#include <functional>
 
-ImageProcessor::ImageProcessor()
+#include "nerd_types.h"
+#include "palette_generator.h"
+#include "remapper.h"
+
+BallerImageProcessor::BallerImageProcessor()
 {
 }
 
 void
-ImageProcessor::pixelStuff(QImage &image)
+BallerImageProcessor::pixelStuff(QImage &image)
 {
     // straight up copy from the Qt docs
     // just for testing you know
@@ -31,7 +34,7 @@ ImageProcessor::pixelStuff(QImage &image)
 }
 
 void
-ImageProcessor::fillColorPalette(
+BallerImageProcessor::fillColorPalette(
     QImage &image, QList<QColor> &palette, const int count
 )
 {
@@ -45,20 +48,22 @@ ImageProcessor::fillColorPalette(
 }
 
 QVector<QColor>
-ImageProcessor::createColorPalette(
-    const QImage &image, int palette_size, Quantizer::Method method
+BallerImageProcessor::createColorPalette(
+    const QImage &image,
+    int palette_size,
+    NerdPaletteAlgorithm algorithm
 ) const
 {
-    return Quantizer(palette_size, method).generatePalette(image);
+    return PaletteGenerator(palette_size, algorithm).generatePalette(image);
 }
 
 void
-ImageProcessor::applyColorPalette(
+BallerImageProcessor::applyColorPalette(
     QImage &image,
     QList<QColor> *palette,
-    PaletteProcessorDevice dev,
-    Remapper::CompareMethod method
-)
+    BallerDevice dev,
+    NerdCompareMethod method
+) const
 {
     if (palette == nullptr)
         return;
@@ -68,12 +73,12 @@ ImageProcessor::applyColorPalette(
     // stop going through the palette if we're within .05
     switch (dev)
     {
-    case PaletteProcessorDevice::CPU:
+    case BallerDevice::CPU:
     {
         remapper.remapHost(image);
         break;
     }
-    case PaletteProcessorDevice::GPU:
+    case BallerDevice::GPU:
     {
         remapper.remap(image);
         break;
@@ -82,7 +87,7 @@ ImageProcessor::applyColorPalette(
 }
 
 void
-ImageProcessor::process(QImage &image, std::function<void(QRgb &)> processor)
+BallerImageProcessor::process(QImage &image, std::function<void(QRgb &)> processor)
 {
     for (int y = 0; y < image.height(); ++y)
     {
