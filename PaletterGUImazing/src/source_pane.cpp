@@ -28,7 +28,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
         &SourcePane::onLoadImageFromLineEdit
     );
 
-    myProcessorButton = new QPushButton(tr("Process Image"));
+    myProcessorButton = new QPushButton(tr("Create Palette"));
     connect(
         myProcessorButton,
         &QPushButton::clicked,
