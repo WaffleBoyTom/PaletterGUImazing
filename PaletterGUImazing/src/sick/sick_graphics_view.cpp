@@ -76,6 +76,11 @@ SickGraphicsView::mouseMoveEvent(QMouseEvent *event)
                                             event->globalPosition().toPoint());
             }
         }
+        else
+        {   
+            // hide the inspector when out of bounds
+            SickInspector::hideColor();
+        }
     }
 
     QGraphicsView::mouseMoveEvent(event);
