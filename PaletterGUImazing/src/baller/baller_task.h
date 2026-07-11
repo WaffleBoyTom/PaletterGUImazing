@@ -27,6 +27,10 @@ public:
 protected:
     void run();
     virtual void runInternal() = 0;
+    // changes cursor to busy to show user we're doing stuff..
+    void setCursorBusy();
+    // when task has been completed, restore cursor
+    void restoreCursorToBoring();
 
 signals:
     void _postCompletion();

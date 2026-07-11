@@ -1,19 +1,33 @@
 #include "baller_task.h"
-
 #include "kmeanifier.h"
 #include "nerd_types.h"
 #include "palette_generator.h"
 #include "remapper.h"
+#include <QApplication>
 
 BallerTask::BallerTask()
 {
 }
 
 void
+BallerTask::setCursorBusy()
+{
+    // FIXME: This one is boring, we should make a custom one 
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+}
+void
+BallerTask::restoreCursorToBoring()
+{
+    QApplication::restoreOverrideCursor();
+}
+
+void
 BallerTask::run()
 {
+    setCursorBusy();
     runInternal();
     emit _postCompletion();
+    restoreCursorToBoring();
 }
 
 void
@@ -42,18 +56,19 @@ GeneratePaletteTask::runInternal()
     QList<QColor> palette;
     switch (myAlgorithm)
     {
-    case NerdPaletteAlgorithm::MedianCut:
-    {
-        palette = PaletteGenerator(myPaletteSize, myAlgorithm).generatePalette(myImage);
-        break;
-    }
-    case NerdPaletteAlgorithm::KMeans:
-    {
-        palette = KMeanifier(myPaletteSize).generatePalette(myImage);
-        break;
-    }
+        case NerdPaletteAlgorithm::MedianCut:
+        {
+            palette = PaletteGenerator(myPaletteSize, myAlgorithm).generatePalette(myImage);
+            break;
+        }
+        case NerdPaletteAlgorithm::KMeans:
+        {
+            palette = KMeanifier(myPaletteSize).generatePalette(myImage);
+            break;
+        }
     }
     emit finished(palette);
+    
 }
 
 RemapTask::RemapTask(
