@@ -48,10 +48,19 @@ SickInspector::paintEvent(QPaintEvent *)
     const QString hex_name = myColor.name(QColor::HexRgb);
     painter.drawText(QPoint(10, 30), hex_name);
 
-    const QString rgb_name = QString("(%1,%2,%3)")
-                                 .arg(myColor.red())
-                                 .arg(myColor.green())
-                                 .arg(myColor.blue());
+    QString rgb_name = QString("(%1,%2,%3)")
+                             .arg(myColor.red())
+                             .arg(myColor.green())
+                             .arg(myColor.blue());
+    if (myIsRgbFDisplay)
+    {
+        font.setPointSize(8);
+        painter.setFont(font);
+        rgb_name = QString("(%1,%2,%3)")
+                             .arg(myColor.redF(), 0, 'f', 2)
+                             .arg(myColor.greenF(), 0, 'f', 2)
+                             .arg(myColor.blueF(), 0, 'f', 2);
+    }
     painter.drawText(QPoint(10, 50), rgb_name);
 
     brush.setColor(myColor);

@@ -31,6 +31,7 @@ protected:
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
+    
 
 private slots:
 
@@ -68,6 +69,7 @@ private:
 
     QList<QColor> myPalette;
     int myPaletteDisplaySize;
+
 };
 
 #endif  // SRC_IMAGE_VIEWER_H

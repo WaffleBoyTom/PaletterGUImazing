@@ -76,6 +76,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 
     // Enable drag-and-drop support.
     setAcceptDrops(true);
+
 }
 
 void
@@ -154,18 +155,35 @@ SourcePane::onGeneratePaletteFinished(QList<QColor> palette)
 void
 SourcePane::paintEvent(QPaintEvent *event)
 {
-    // FIXME : It'd be lit if we could
-    // drag a rectangle around the image
-    // when it's being dragged !
-    // QPainter painter(this);
-    // const QPoint topleft = myImageHolder->rect().center();
-    // painter.drawRect(
-    //     topleft.x(),
-    //     topleft.y(),
-    //     myImageHolder->width(),
-    //     myImageHolder->height()
-    // );
+    // FIXME: when is being inspected is set to True we should trigger
+    // a repaint !
+    if (myImageViewer->isBeingInspected())
+    {
+        QPainter painter(this); 
+        painter.setRenderHint(QPainter::Antialiasing);
+
+        // FIXME : we should have an easy way to 
+        // get these colors ..
+        QBrush brush(QColorConstants::Svg::cornsilk);
+        painter.setBrush(brush);
+        QPen pen(QColorConstants::Svg::cornsilk);
+        pen.setWidth(3);
+        painter.setPen(pen);
+        QFont font = painter.font();
+        font.setPointSize(10);
+        painter.setFont(font);
+        QString info = QString(" Resolution: %1-%2")
+                              .arg(myImage.width()) 
+                              .arg(myImage.height());
+        QRect r = rect();
+        QPoint br = r.bottomLeft();
+        painter.drawText(br, info);
+
+    }
+
+
 }
+
 
 void
 SourcePane::dragEnterEvent(QDragEnterEvent *event)

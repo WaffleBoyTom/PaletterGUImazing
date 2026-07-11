@@ -14,6 +14,8 @@ public:
 
     void setImage(QImage image);
     void frameImage();
+    bool isBeingInspected() { return mySceneView->isBeingInspected(); }
+
 
 private:
     QGraphicsScene *myScene;

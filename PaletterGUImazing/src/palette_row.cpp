@@ -183,6 +183,8 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
 void
 PaletteRow::mouseMoveEvent(QMouseEvent *event)
 {
+    // FIXME ? : why does this not just return black when it fails instead of 
+    // returning a std::optional ?
     std::optional<QColor> color = findColor(event->position().toPoint());
 
     if (color)
@@ -208,6 +210,9 @@ PaletteRow::findColor(QPoint position) const
 {
     if (!myPalette)
         return std::nullopt;
+
+    // FIXME
+    // this fails when the palette is drawing circles !!!!
 
     const int width = this->width() / myBoxCount;
     const int height = this->height();
