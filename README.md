@@ -21,8 +21,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 ## Logging
 - [x] SickLogger
 - [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
-- [ ] It should be possible the hide the log viewer and/or to set a verbosity level 
-- [ ] Some sort of progress bar to show the user that we are cooking. Some image or something.
+- [x] Some sort of progress bar to show the user that we are cooking. Some image or something.
 ## UI
 - [x] Fix ImageViewer hierarchy
 - [x] Fix layout issues
@@ -30,19 +29,26 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 ## GPU
 - [x] Use to apply palette to second image
 - [ ] Use to run K-Means for palette generation
-- [ ] Metal support
+- [x] Metal support
 ## Features
-- [ ] Application method
-- [ ] Color sorting methods
+- [x] Application method
 ## Export
 - [x] JSON palette string
 - [ ] The image with the palette applied
 - [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
+# Release
+- [ ] Make a release build.
+- [ ] Test.
 ## Bugs
 - [x] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
 - [x] "Apply Palette" is still applying to the filtered image
 - [x] Logger scroll does not jump to bottom properly.
-
+- [ ] File path not populated on DnD.
+- [ ] Inspector doesn't persist across viewer.
+- [ ] Resolution text does not repaint on image load.
+- [ ] Inspector does not work with circles.
+- [ ] Resolution text should always be visible and aligned with the image.
+- [ ] Use SickLogSeverity::Metal.
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE
