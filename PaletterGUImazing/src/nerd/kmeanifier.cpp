@@ -125,10 +125,10 @@ KMeanifier::generatePalette(const QImage &image) const
     return colors;
 #else
     return {};
-#endif
+#endif // USE_CUDA
 }
 
-
+#ifdef USE_CUDA
 void 
 KMeanifier::palettize(
     float3 *palette,
@@ -138,7 +138,6 @@ KMeanifier::palettize(
     const int palette_size
 ) const
 {
-#ifdef USE_CUDA
     int pixel_count = width * height;
     
     int *d_assignments;
@@ -178,5 +177,5 @@ KMeanifier::palettize(
     // delete[] h_sums;
     // delete[] h_counts;
     // delete[] h_palette;
-#endif
 }
+#endif // USE_CUDA
