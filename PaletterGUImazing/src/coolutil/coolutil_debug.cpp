@@ -1,7 +1,7 @@
-#include "sick_debug.h"
+#include "coolutil_debug.h"
 
 void
-sickDebugGeometry(const QWidget *w, const std::string &name)
+coolUtilDebugGeometry(const QWidget *w, const std::string &name)
 {
     if (!name.empty())
         qDebug() << name;
@@ -20,7 +20,7 @@ sickDebugGeometry(const QWidget *w, const std::string &name)
 }
 
 void
-sickDebugSizing(const QWidget *w, const std::string &name)
+coolUtilDebugSizing(const QWidget *w, const std::string &name)
 {
     if (!name.empty())
         qDebug() << name;
@@ -45,7 +45,7 @@ sickDebugSizing(const QWidget *w, const std::string &name)
 }
 
 void
-sickDebugLayout(const QWidget *w, const std::string &name)
+coolUtilDebugLayout(const QWidget *w, const std::string &name)
 {
     if (!name.empty())
         qDebug() << name;

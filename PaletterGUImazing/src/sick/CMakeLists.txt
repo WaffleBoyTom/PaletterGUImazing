@@ -1,9 +1,6 @@
 set(SOURCE
-    sick_debug.h
     sick_dropdown.h
     sick_dropdown.cpp
-    sick_fileio.h
-    sick_fileio.cpp
     sick_file_line_edit.h
     sick_file_line_edit.cpp
     sick_graphics_view.h

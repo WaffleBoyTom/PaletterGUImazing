@@ -4,10 +4,10 @@
 #include <QtWidgets>
 
 // NOTE: should this just have static methods instead ?
-class SickJsonIO
+class CoolUtilJsonIO
 {
 public:
-    explicit SickJsonIO(const QJsonObject *json, const QString *path);
+    explicit CoolUtilJsonIO(const QJsonObject *json, const QString *path);
 
     // if returns false, operation failed,
     // error message is written to err

@@ -1,12 +1,12 @@
-#include "sick_fileio.h"
+#include "coolutil_fileio.h"
 
-SickJsonIO::SickJsonIO(const QJsonObject *json, const QString *path)
+CoolUtilJsonIO::CoolUtilJsonIO(const QJsonObject *json, const QString *path)
     : myJson(json), myPath(path)
 {
 }
 
 bool
-SickJsonIO::openFile(QFile &file)
+CoolUtilJsonIO::openFile(QFile &file)
 {
     // I don't trust these flags, idk what they do
     // TODO: look into these sus flags
@@ -16,7 +16,7 @@ SickJsonIO::openFile(QFile &file)
 }
 
 bool
-SickJsonIO::write(QString &err)
+CoolUtilJsonIO::write(QString &err)
 {
     if (!myJson)
     {

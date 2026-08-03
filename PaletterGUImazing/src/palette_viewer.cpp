@@ -2,9 +2,9 @@
 
 #include <QtWidgets>
 
+#include "coolutil/coolutil_fileio.h"
 #include "coolutil/coolutil_logger.h"
 #include "palette_row.h"
-#include "sick/sick_fileio.h"
 #include "sick/sick_slider.h"
 
 PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
@@ -91,7 +91,7 @@ PaletteViewer::exportPalette(
         return;
     }
 
-    SickJsonIO io(&json, &native_path);
+    CoolUtilJsonIO io(&json, &native_path);
     QString log;
     bool success = io.write(log);
     CoolUtilLogger::log(
