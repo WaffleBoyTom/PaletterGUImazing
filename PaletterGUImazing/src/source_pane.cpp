@@ -6,6 +6,7 @@
 
 #include "cool/cool_logger.h"
 #include "image_processor.h"
+#include "sick/sick_graphics_view.h"
 
 SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 {
@@ -55,6 +56,12 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 #endif
 
     myImageViewer = new SickImageViewer(this);
+    connect(
+        myImageViewer->graphicsView(),
+        &SickGraphicsView::inspectorEnabled,
+        this,
+        &SourcePane::onInspectorEnabled
+    );
 
     setPaletteDisplaySize(INIT_PALETTE_SIZE);
     myPalette = QList<QColor>();
@@ -79,6 +86,12 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 }
 
 void
+SourcePane::onInspectorEnabled(bool on)
+{
+    repaint();
+}
+
+void
 SourcePane::loadImage(const QString &file_path)
 {
     if (!myImage.load(file_path))
@@ -100,6 +113,8 @@ SourcePane::loadImage(const QString &file_path)
     const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
     CoolLogger::log(message, CoolLogSeverity::SEL);
+
+    repaint();
 }
 
 void
@@ -179,8 +194,6 @@ SourcePane::onGeneratePaletteFinished(QList<QColor> palette)
 void
 SourcePane::paintEvent(QPaintEvent *event)
 {
-    // FIXME: when is being inspected is set to True we should trigger
-    // a repaint !
     if (myImageViewer->isBeingInspected())
     {
         QPainter painter(this);

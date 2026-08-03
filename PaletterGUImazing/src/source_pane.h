@@ -47,6 +47,9 @@ private slots:
     // Called after palette is generated.
     void onGeneratePaletteFinished(QList<QColor> palette);
 
+    // Called when the inspector is enabled.
+    void onInspectorEnabled(bool on);
+
 private:
     constexpr static int INIT_PALETTE_SIZE = 6;
 

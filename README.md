@@ -27,7 +27,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [ ] Add an "Export Image" button for saving the quantized image.
 - [x] BUG: File path not populated on DnD.
 - [ ] BUG: Inspector doesn't persist across viewer.
-- [ ] BUG: Resolution text does not repaint on image load.
+- [x] BUG: Resolution text does not repaint on image load.
 - [ ] BUG: Inspector does not work with circles.
 - [ ] BUG: Resolution text should always be visible and aligned with the image.
 # Release

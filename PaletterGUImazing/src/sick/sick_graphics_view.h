@@ -17,6 +17,9 @@ public:
         return myIsBeingInspected;
     }
 
+signals:
+    void inspectorEnabled(bool on);
+
 protected:
     void mousePressEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;

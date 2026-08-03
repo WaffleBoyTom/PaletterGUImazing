@@ -20,6 +20,11 @@ public:
         return mySceneView->isBeingInspected();
     }
 
+    const SickGraphicsView *
+    graphicsView() const {
+        return mySceneView;
+    }
+
 private:
     QGraphicsScene *myScene;
     QGraphicsPixmapItem *myImageItem;

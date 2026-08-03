@@ -97,6 +97,7 @@ SickGraphicsView::keyPressEvent(QKeyEvent *event)
     if (!event || event->key() != Qt::Key_I)
         return;
     myIsBeingInspected = !myIsBeingInspected;
+    emit inspectorEnabled(myIsBeingInspected);
     if (!myIsBeingInspected)
     {
         SickInspector::hideColor();
