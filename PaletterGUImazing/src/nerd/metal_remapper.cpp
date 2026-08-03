@@ -3,19 +3,17 @@
 #include <QApplication>
 #include <QDebug>
 #include <QDir>
-#include <cassert>
 
 #include "metal_context.h"
 #include "metal_dispatcher.h"
 
-RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette) :
-    myResolution(image.size()),
-    myPaletteLength(palette.length()),
-    myContext()
+RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette)
+    : myResolution(image.size()), myPaletteLength(palette.length()), myContext()
 {
     myRemapEuclideanPipeline = myContext.createPipelineState("remapEuclidean");
     myRemapHuePipeline = myContext.createPipelineState("remapHue");
-    myRemapSaturationPipeline = myContext.createPipelineState("remapSaturation");
+    myRemapSaturationPipeline =
+        myContext.createPipelineState("remapSaturation");
     myRemapValuePipeline = myContext.createPipelineState("remapValue");
 
     // Create and load the image buffer.
@@ -24,7 +22,7 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette) :
     myImage = myContext.createSharedBuffer(image_size);
 
     QRgb *image_ptr = reinterpret_cast<QRgb *>(myImage->contents());
-    assert(image_ptr != nullptr);
+    Q_ASSERT(image_ptr != nullptr);
 
     for (std::size_t y = 0, height = image.height(); y < height; ++y)
     {
@@ -40,7 +38,7 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette) :
     myPalette = myContext.createSharedBuffer(palette_size);
 
     QRgb *palette_ptr = reinterpret_cast<QRgb *>(myPalette->contents());
-    assert(palette_ptr != nullptr);
+    Q_ASSERT(palette_ptr != nullptr);
 
     for (std::size_t i = 0; i < palette.length(); ++i)
     {
@@ -86,12 +84,13 @@ RemapperMetal::remapInternal(MTL::ComputePipelineState *pipeline)
     dispatcher.bindBytes(&myPaletteLength, sizeof(myPaletteLength), 2);
     dispatcher.bindBuffer(myImageOut, 0, 3);
 
-    const std::size_t pixel_count = myResolution.width() * myResolution.height();
+    const std::size_t pixel_count =
+        myResolution.width() * myResolution.height();
     const MTL::Size grid_size(pixel_count, 1, 1);
     dispatcher.dispatch(grid_size);
 
     QRgb *image_out_ptr = reinterpret_cast<QRgb *>(myImageOut->contents());
-    assert(image_out_ptr != nullptr);
+    Q_ASSERT(image_out_ptr != nullptr);
 
     QImage out_image(myResolution, QImage::Format_RGB32);
     for (std::size_t y = 0, height = myResolution.height(); y < height; ++y)

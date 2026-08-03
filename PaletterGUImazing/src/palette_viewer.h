@@ -6,8 +6,8 @@
 #include <QWidget>
 
 #include "palette_row.h"
-#include "sick_export_opts.h"
-#include "sick_slider.h"
+#include "sick/sick_export_opts.h"
+#include "sick/sick_slider.h"
 
 class PaletteViewer : public QWidget
 {

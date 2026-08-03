@@ -2,13 +2,14 @@
 #define SRC_IMAGE_VIEWER_H
 
 #include <QtGui/qevent.h>
+
 #include <QImage>
 #include <QMainWindow>
 #include <QWidget>
 
-#include "sick_dropdown.h"
-#include "sick_file_line_edit.h"
-#include "sick_image_viewer.h"
+#include "sick/sick_dropdown.h"
+#include "sick/sick_file_line_edit.h"
+#include "sick/sick_image_viewer.h"
 
 class SourcePane : public QWidget
 {
@@ -31,7 +32,6 @@ protected:
 
     void dragEnterEvent(QDragEnterEvent *event) override;
     void dropEvent(QDropEvent *event) override;
-    
 
 private slots:
 
@@ -48,7 +48,6 @@ private slots:
     void onGeneratePaletteFinished(QList<QColor> palette);
 
 private:
-
     constexpr static int INIT_PALETTE_SIZE = 6;
 
     SickFileLineEdit *myLineEdit;
@@ -61,15 +60,14 @@ private:
     // Palette generation algorithm.
     SickDropDown *myAlgorithmDropdown;
 
-    // Processing device.
-    SickDropDown *myDeviceDropdown;
+    // Execution provider.
+    SickDropDown *myExecutionProviderDropdown;
 
     // smn about mashed pixeloes, and they aint delicious...
     QImage myImage;
 
     QList<QColor> myPalette;
     int myPaletteDisplaySize;
-
 };
 
 #endif  // SRC_IMAGE_VIEWER_H

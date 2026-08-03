@@ -1,11 +1,11 @@
 #include "source_pane.h"
 
 #include <QMessageBox>
+#include <QtConcurrent>
 #include <QtWidgets>
 
-#include "baller_task.h"
-#include "nerd_types.h"
-#include "sick_logger.h"
+#include "coolutil/coolutil_logger.h"
+#include "image_processor.h"
 
 SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 {
@@ -41,16 +41,16 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     myAlgorithmDropdown->addMenuItem(tr("Median Cut"));
     myAlgorithmDropdown->addMenuItem(tr("K-Means"));
 
-    myDeviceDropdown = new SickDropDown(this, tr("Device"));
-    myDeviceDropdown->addMenuItem(tr("CPU"));
+    myExecutionProviderDropdown = new SickDropDown(this, tr("Provider"));
+    myExecutionProviderDropdown->addMenuItem(tr("CPU"));
 
 #if defined(USE_METAL)
-    myDeviceDropdown->addMenuItem(tr("Metal"));
+    myExecutionProviderDropdown->addMenuItem(tr("Metal"));
 #elif defined(USE_CUDA)
-    myDeviceDropdown->addMenuItem(tr("CUDA"));
+    myExecutionProviderDropdown->addMenuItem(tr("CUDA"));
     // if we compile with CUDA, then it should be the
     // the default as it is the better option !
-    myDeviceDropdown->setMenuItem(1);
+    myExecutionProviderDropdown->setMenuItem(1);
     myAlgorithmDropdown->setMenuItem(1);
 #endif
 
@@ -64,7 +64,7 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
     toolbar->addWidget(myLineEdit);
     toolbar->addWidget(myProcessorButton);
     toolbar->addWidget(myAlgorithmDropdown);
-    toolbar->addWidget(myDeviceDropdown);
+    toolbar->addWidget(myExecutionProviderDropdown);
 
     // main layout
     QVBoxLayout *layout = new QVBoxLayout();
@@ -76,7 +76,6 @@ SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
 
     // Enable drag-and-drop support.
     setAcceptDrops(true);
-
 }
 
 void
@@ -85,7 +84,7 @@ SourcePane::loadImage(const QString &file_path)
     if (!myImage.load(file_path))
     {
         QString message = "Failed to load image file";
-        SickLogger::log(message, SickLogSeverity::ERROR);
+        CoolUtilLogger::log(message, CoolUtilLogSeverity::ERROR);
         QMessageBox::information(
             this, QGuiApplication::applicationDisplayName(), message
         );
@@ -100,7 +99,7 @@ SourcePane::loadImage(const QString &file_path)
     // send a message in log about image being loaded
     const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
-    SickLogger::log(message, SickLogSeverity::SEL);
+    CoolUtilLogger::log(message, CoolUtilLogSeverity::SEL);
 }
 
 void
@@ -122,29 +121,54 @@ SourcePane::generatePalette()
     myProcessorButton->clearFocus();
     myProcessorButton->setEnabled(false);
 
-    // TODO: the task should be hidden behind an ImageProcessor interface.
-    // the ImageViewer should not create threads or tasks directly.
-    GeneratePaletteTask *task = new GeneratePaletteTask(
-        myImage,
-        myPaletteDisplaySize,
-        NerdPaletteAlgorithm(myAlgorithmDropdown->item())
+    QFuture<QList<QColor>> future = QtConcurrent::run(
+        [=]
+        {
+            return imageProcessorCreateColorPalette(
+                myImage,
+                myPaletteDisplaySize,
+                NerdPaletteAlgorithm(myAlgorithmDropdown->item())
+            );
+        }
     );
+
+    QFutureWatcher<QList<QColor>> *watcher =
+        new QFutureWatcher<QList<QColor>>(this);
 
     connect(
-        task,
-        &GeneratePaletteTask::finished,
+        watcher,
+        &QFutureWatcher<QList<QColor>>::finished,
         this,
-        &SourcePane::onGeneratePaletteFinished
+        [this, watcher]
+        {
+            onGeneratePaletteFinished(watcher->result());
+            watcher->deleteLater();
+        }
     );
 
-    QThread *thread = new QThread();
-    task->runOnThread(thread);
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+
+    connect(
+        watcher,
+        &QFutureWatcher<QList<QColor>>::finished,
+        this,
+        [this, watcher]
+        {
+            QApplication::restoreOverrideCursor();
+
+            onGeneratePaletteFinished(watcher->result());
+
+            watcher->deleteLater();
+        }
+    );
+
+    watcher->setFuture(future);
 }
 
 void
 SourcePane::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    SickLogger::log("Filled color palette");
+    CoolUtilLogger::log("Filled color palette");
 
     myPalette = std::move(palette);
     emit tellBossAboutPaletteFill(&myPalette);
@@ -159,10 +183,10 @@ SourcePane::paintEvent(QPaintEvent *event)
     // a repaint !
     if (myImageViewer->isBeingInspected())
     {
-        QPainter painter(this); 
+        QPainter painter(this);
         painter.setRenderHint(QPainter::Antialiasing);
 
-        // FIXME : we should have an easy way to 
+        // FIXME : we should have an easy way to
         // get these colors ..
         QBrush brush(QColorConstants::Svg::cornsilk);
         painter.setBrush(brush);
@@ -173,22 +197,19 @@ SourcePane::paintEvent(QPaintEvent *event)
         font.setPointSize(10);
         painter.setFont(font);
         QString info = QString(" Resolution: %1-%2")
-                              .arg(myImage.width()) 
-                              .arg(myImage.height());
+                           .arg(myImage.width())
+                           .arg(myImage.height());
         QRect r = rect();
         QPoint br = r.bottomLeft();
         painter.drawText(br, info);
-
     }
-
-
 }
-
 
 void
 SourcePane::dragEnterEvent(QDragEnterEvent *event)
 {
-    if (event->mimeData()->hasUrls() && (event->possibleActions() & Qt::CopyAction))
+    if (event->mimeData()->hasUrls() &&
+        (event->possibleActions() & Qt::CopyAction))
     {
         event->acceptProposedAction();
     }

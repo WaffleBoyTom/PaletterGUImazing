@@ -23,7 +23,6 @@ private:
 
     /// probably should be enum..
     bool myIsRgbFDisplay = true;
-
 };
 
 #endif  // SICK_INSPECTOR_H

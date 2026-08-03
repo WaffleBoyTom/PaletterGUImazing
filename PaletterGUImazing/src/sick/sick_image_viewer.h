@@ -14,8 +14,11 @@ public:
 
     void setImage(QImage image);
     void frameImage();
-    bool isBeingInspected() { return mySceneView->isBeingInspected(); }
-
+    bool
+    isBeingInspected()
+    {
+        return mySceneView->isBeingInspected();
+    }
 
 private:
     QGraphicsScene *myScene;
@@ -24,4 +27,4 @@ private:
     SickGraphicsView *mySceneView;
 };
 
-#endif // SICK_IMAGE_VIEWER_H
+#endif  // SICK_IMAGE_VIEWER_H

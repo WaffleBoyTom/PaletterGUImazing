@@ -2,7 +2,7 @@
 
 #include <QTimer>
 
-#include "sick_logger.h"
+#include "coolutil_logger.h"
 
 static constexpr int theNumberOfFormats =
     static_cast<int>(SickExportOpts::ExportFormat::INVALID);
@@ -78,5 +78,5 @@ SickExportOpts::logPathSet(const QString &filename)
 {
     const QString native_path = QDir::toNativeSeparators(filename);
     QString message = QString("Set Export Path: %1").arg(native_path);
-    SickLogger::log(message, SickLogSeverity::SEL);
+    CoolUtilLogger::log(message, CoolUtilLogSeverity::SEL);
 }

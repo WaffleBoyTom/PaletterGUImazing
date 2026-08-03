@@ -1,9 +1,13 @@
 #include "sick_graphics_view.h"
-#include "sick_inspector.h"
+
 #include <QApplication>
 
-SickGraphicsView::SickGraphicsView(QGraphicsScene *scene, QWidget *parent):
-    QGraphicsView(scene, parent), myInitialTransform{}, myInitialDragPosition{}
+#include "sick_inspector.h"
+
+SickGraphicsView::SickGraphicsView(QGraphicsScene *scene, QWidget *parent)
+    : QGraphicsView(scene, parent),
+      myInitialTransform{},
+      myInitialDragPosition{}
 {
     setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
@@ -59,25 +63,25 @@ SickGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     if (myIsBeingInspected)
     {
-        QGraphicsItem* item = itemAt(event->position().toPoint());
+        QGraphicsItem *item = itemAt(event->position().toPoint());
         if (item && item->type() == QGraphicsPixmapItem::Type)
         {
-            auto *pixmap_item = 
-                    qgraphicsitem_cast<QGraphicsPixmapItem*>(item);
+            auto *pixmap_item = qgraphicsitem_cast<QGraphicsPixmapItem *>(item);
 
             // scene space, parent space, image space, fuck you space
             QImage image = pixmap_item->pixmap().toImage();
             QPointF scene_pos = mapToScene(event->position().toPoint());
             QPointF local = pixmap_item->mapFromScene(scene_pos);
-            if (image.valid(local.toPoint())) 
+            if (image.valid(local.toPoint()))
             {
                 QColor pixel_color = image.pixelColor(local.toPoint());
-                SickInspector::displayColor(pixel_color, 
-                                            event->globalPosition().toPoint());
+                SickInspector::displayColor(
+                    pixel_color, event->globalPosition().toPoint()
+                );
             }
         }
         else
-        {   
+        {
             // hide the inspector when out of bounds
             SickInspector::hideColor();
         }
@@ -85,7 +89,6 @@ SickGraphicsView::mouseMoveEvent(QMouseEvent *event)
 
     QGraphicsView::mouseMoveEvent(event);
 }
-
 
 void
 SickGraphicsView::keyPressEvent(QKeyEvent *event)

@@ -3,10 +3,11 @@
 
 #include <QWidget>
 
+#include "coolutil/coolutil_logger.h"
 #include "destination_pane.h"
 #include "palette_viewer.h"
-#include "sick_export_opts.h"
-#include "sick_log_viewer.h"
+#include "sick/sick_export_opts.h"
+#include "sick/sick_log_viewer.h"
 #include "source_pane.h"
 
 // FIXME: This should be a QMainWindow ?? :sadpanda:
@@ -21,7 +22,7 @@ public slots:
     void setPaletteDisplaySize(int size);
     void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
-    void logMeHard(const QString msg, const SickLogSeverity sev);
+    void logMeHard(const QString msg, const CoolUtilLogSeverity sev);
     void exportPalette(const QString &path, SickExportOpts::ExportFormat fmt);
 
 private:

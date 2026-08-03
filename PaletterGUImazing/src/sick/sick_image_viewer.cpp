@@ -1,13 +1,14 @@
 #include "sick_image_viewer.h"
 
-SickImageViewer::SickImageViewer(QWidget *parent): QWidget(parent)
+SickImageViewer::SickImageViewer(QWidget *parent) : QWidget(parent)
 {
     myScene = new QGraphicsScene(this);
     myImageItem = nullptr;
 
     mySceneView = new SickGraphicsView(myScene, this);
 
-    // Disable drag-and-drop support otherwise the graphics view will eat all the DnD events.
+    // Disable drag-and-drop support otherwise the graphics view will eat all
+    // the DnD events.
     mySceneView->setAcceptDrops(false);
 
     QVBoxLayout *layout = new QVBoxLayout(this);

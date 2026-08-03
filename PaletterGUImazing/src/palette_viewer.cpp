@@ -2,11 +2,10 @@
 
 #include <QtWidgets>
 
+#include "coolutil/coolutil_logger.h"
 #include "palette_row.h"
-#include "sick_debug.h"
-#include "sick_fileio.h"
-#include "sick_logger.h"
-#include "sick_slider.h"
+#include "sick/sick_fileio.h"
+#include "sick/sick_slider.h"
 
 PaletteViewer::PaletteViewer(QWidget *parent) : QWidget(parent)
 {
@@ -56,7 +55,7 @@ PaletteViewer::exportPalette(
     const QString &path, SickExportOpts::ExportFormat fmt
 )
 {
-    SickLogger::log("Exporting Palette !");
+    CoolUtilLogger::log("Exporting Palette !");
     // QFileDialog dialog(this);
 
     // dialog.setWindowTitle(tr("Exporto Palettum !"));
@@ -66,7 +65,7 @@ PaletteViewer::exportPalette(
 
     // if (dialog.exec() != QDialog::Accepted)
     // {
-    //     SickLogger::log("Not doing nothing... Change of heart ?");
+    //     CoolUtilLogger::log("Not doing nothing... Change of heart ?");
     //     return;
     // }
 
@@ -82,12 +81,12 @@ PaletteViewer::exportPalette(
     if (!can_serialize)
     {
         // shit went south big time
-        SickLogger::log(
+        CoolUtilLogger::log(
             QString(
                 "Either you never generated a palette or shit went south big "
                 "time..."
             ),
-            SickLogSeverity::ERROR
+            CoolUtilLogSeverity::ERROR
         );
         return;
     }
@@ -95,7 +94,7 @@ PaletteViewer::exportPalette(
     SickJsonIO io(&json, &native_path);
     QString log;
     bool success = io.write(log);
-    SickLogger::log(
-        log, success ? SickLogSeverity::MSG : SickLogSeverity::ERROR
+    CoolUtilLogger::log(
+        log, success ? CoolUtilLogSeverity::MSG : CoolUtilLogSeverity::ERROR
     );
 }

@@ -1,6 +1,8 @@
 set(PROJECT_SOURCES
     destination_pane.cpp
     destination_pane.h
+    image_processor.h
+    image_processor.cpp
     main.cpp
     paletter_window.cpp
     paletter_window.h
@@ -12,8 +14,8 @@ set(PROJECT_SOURCES
     source_pane.h
 )
 
+add_subdirectory("coolutil")
 add_subdirectory("nerd")
-add_subdirectory("baller")
 add_subdirectory("sick")
 
 # Create the executable target
@@ -52,9 +54,8 @@ target_compile_options(PaletterGUImazing PRIVATE
     -Wno-gnu-anonymous-struct
 )
 
-target_link_libraries(PaletterGUImazing PUBLIC baller sick)
-
-target_link_libraries(PaletterGUImazing PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(PaletterGUImazing PUBLIC coolutil nerd sick)
+target_link_libraries(PaletterGUImazing PUBLIC Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
 if(USE_CUDA)
     target_link_libraries(PaletterGUImazing PRIVATE CUDA::cudart)

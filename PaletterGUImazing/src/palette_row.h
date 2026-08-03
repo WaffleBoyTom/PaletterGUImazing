@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "sick_export_opts.h"
+#include "sick/sick_export_opts.h"
 
 class PaletteRow : public QWidget
 {

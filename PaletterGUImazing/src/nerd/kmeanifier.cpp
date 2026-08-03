@@ -1,7 +1,5 @@
 #include "kmeanifier.h"
 
-#include "sick_logger.h"
-
 #ifdef USE_CUDA
 #include <cuda_runtime.h>
 #endif
@@ -25,20 +23,20 @@ KMeanifier::generatePalette(const QImage &image) const
 
     if (err == cudaSuccess && deviceCount > 0)
     {
-        SickLogger::log("Using CUDA !", SickLogSeverity::CUDA);
+        CoolUtilLogger::log("Using CUDA !", SickLogSeverity::CUDA);
         for (int dev = 0; dev < deviceCount; ++dev)
         {
             cudaDeviceProp deviceProp;
             cudaGetDeviceProperties(&deviceProp, dev);
             QString dev_name(deviceProp.name);
-            SickLogger::log(
+            CoolUtilLogger::log(
                 QString("Device %1").arg(dev_name), SickLogSeverity::CUDA
             );
         }
     }
     else
     {
-        SickLogger::log(
+        CoolUtilLogger::log(
             "Failed to find a CUDA device !!", SickLogSeverity::ERROR
         );
         /// FIXME

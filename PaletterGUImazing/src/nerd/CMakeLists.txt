@@ -53,6 +53,5 @@ else ()
 endif()
 
 add_library(nerd STATIC ${SOURCE})
-# this shouldn't include sick .......
-target_link_libraries(nerd PRIVATE Qt${QT_VERSION_MAJOR}::Widgets sick)
-target_include_directories(nerd PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${EXTERNAL_DIR}/metal-cpp)
+target_link_libraries(nerd PUBLIC coolutil)
+target_include_directories(nerd PUBLIC ${EXTERNAL_DIR}/metal-cpp coolutil)

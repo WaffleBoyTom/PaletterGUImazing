@@ -17,11 +17,12 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [x] BallerTask
 - [x] QuantizeTask (now GeneratePaletteTask)
 - [x] RemapTask
-- [ ] ImageProcessor as task manager
+- [x] Replace with QtConcurrent
 ## Logging
 - [x] SickLogger
 - [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
 - [x] Some sort of progress bar to show the user that we are cooking. Some image or something.
+- [x] Move into util library, rename CoolUtilLogger.
 ## UI
 - [x] Fix ImageViewer hierarchy
 - [x] Fix layout issues

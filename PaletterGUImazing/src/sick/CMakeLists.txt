@@ -16,13 +16,11 @@ set(SOURCE
     sick_log_viewer.cpp
     sick_export_opts.h
     sick_export_opts.cpp
-    sick_logger.h
-    sick_logger.cpp
     sick_slider.h
     sick_slider.cpp
     sick_utils.h
     sick_utils.cpp
 )
 add_library(sick STATIC ${SOURCE})
-target_link_libraries(sick PRIVATE Qt${QT_VERSION_MAJOR}::Widgets PUBLIC baller)
-target_include_directories(sick PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} baller)
+target_link_libraries(sick PUBLIC Qt${QT_VERSION_MAJOR}::Widgets coolutil)
+target_include_directories(sick PUBLIC coolutil)

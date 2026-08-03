@@ -4,9 +4,9 @@
 #include <QThread>
 #include <QtWidgets>
 
+#include "coolutil/coolutil_logger.h"
 #include "palette_viewer.h"
-#include "sick_log_viewer.h"
-#include "sick_logger.h"
+#include "sick/sick_log_viewer.h"
 
 static const int theMinSizeScaleFactor = 4;
 
@@ -84,8 +84,8 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogViewer = new SickLogViewer(this);
     connect(
-        SickLogger::getInstance(),
-        &SickLogger::tellBossToLog,
+        CoolUtilLogger::getInstance(),
+        &CoolUtilLogger::tellBossToLog,
         this,
         &PaletterGUI::logMeHard
     );
@@ -127,7 +127,7 @@ PaletterGUI::applyPaletteToSecondViewer()
 }
 
 void
-PaletterGUI::logMeHard(const QString msg, const SickLogSeverity sev)
+PaletterGUI::logMeHard(const QString msg, const CoolUtilLogSeverity sev)
 {
     myLogViewer->appendLine(msg, sev);
 }

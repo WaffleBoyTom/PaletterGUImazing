@@ -5,9 +5,9 @@
 #include <QMainWindow>
 #include <QWidget>
 
-#include "sick_dropdown.h"
-#include "sick_file_line_edit.h"
-#include "sick_image_viewer.h"
+#include "sick/sick_dropdown.h"
+#include "sick/sick_file_line_edit.h"
+#include "sick/sick_image_viewer.h"
 
 class DestinationPane : public QWidget
 {
@@ -45,7 +45,6 @@ private slots:
     void resetImage();
 
 private:
-
     SickFileLineEdit *myLineEdit;
 
     SickImageViewer *myImageViewer;
@@ -65,8 +64,8 @@ private:
     // Remap method.
     SickDropDown *myRemapMethodDropdown;
 
-    // Processing device.
-    SickDropDown *myDeviceDropdown;
+    // Execution provider.
+    SickDropDown *myExecutionProviderDropdown;
 };
 
 #endif  // DST_IMAGE_VIEWER_H

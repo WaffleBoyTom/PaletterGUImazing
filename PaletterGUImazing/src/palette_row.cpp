@@ -6,8 +6,8 @@
 #include <QToolTip>
 #include <QtWidgets>
 
-#include "sick_inspector.h"
-#include "sick_logger.h"
+#include "sick/sick_inspector.h"
+#include "coolutil/coolutil_logger.h"
 
 PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
@@ -168,7 +168,7 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(name_hex);
 
-        SickLogger::log(QString("Copied: %1").arg(name_hex));
+        CoolUtilLogger::log(QString("Copied: %1").arg(name_hex));
     }
     if (event->button() == Qt::MouseButton::RightButton)
     {
@@ -183,7 +183,7 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
 void
 PaletteRow::mouseMoveEvent(QMouseEvent *event)
 {
-    // FIXME ? : why does this not just return black when it fails instead of 
+    // FIXME ? : why does this not just return black when it fails instead of
     // returning a std::optional ?
     std::optional<QColor> color = findColor(event->position().toPoint());
 

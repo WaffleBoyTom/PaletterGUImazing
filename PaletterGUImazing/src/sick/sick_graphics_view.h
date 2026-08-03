@@ -11,7 +11,11 @@ public:
     SickGraphicsView(QGraphicsScene *scene, QWidget *parent);
 
     void frameItem(QGraphicsItem *item);
-    bool isBeingInspected() { return myIsBeingInspected; }
+    bool
+    isBeingInspected()
+    {
+        return myIsBeingInspected;
+    }
 
 protected:
     void mousePressEvent(QMouseEvent *event) override;
@@ -24,4 +28,4 @@ private:
     bool myIsBeingInspected;
 };
 
-#endif // SICK_GRAPHICS_VIEW_H
+#endif  // SICK_GRAPHICS_VIEW_H
