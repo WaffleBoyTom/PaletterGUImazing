@@ -68,6 +68,9 @@ KMeanifier::generatePalette(const QImage &image) const
         );
     }
 
+    // TODO: if we have an image that is just one uniform color
+    // then we shouldn't even run the kernel ...
+
     /// upload palette to device
     float3 *cu_palette;
     cudaMalloc(&cu_palette, v_palette.size() * sizeof(float3));

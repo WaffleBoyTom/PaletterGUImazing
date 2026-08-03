@@ -8,6 +8,7 @@ if(USE_CUDA)
     set(SOURCE
         cumeans.cuh
         cumeans.cu
+        cutils.cuh
         kmeanifier.h
         kmeanifier.cpp
         nerd_types.h
