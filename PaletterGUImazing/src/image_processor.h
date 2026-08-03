@@ -6,7 +6,7 @@
 #include <QList>
 #include <QPixmap>
 
-#include "nerd/nerd_types.h"
+#include "nerd/remapper.h"  // for CompareMethod
 
 enum class ExecutionProvider
 {
@@ -14,30 +14,36 @@ enum class ExecutionProvider
     GPU,
 };
 
+enum class PaletteAlgorithm
+{
+    MedianCut = 0,
+    KMeans
+};
+
 inline const char *
 executionProviderString(ExecutionProvider provider)
 {
     switch (provider)
     {
-        case ExecutionProvider::CPU:
-            return "CPU";
-        case ExecutionProvider::GPU:
-            return "GPU";
-        default:
-            Q_ASSERT("How did we get here !!");
+    case ExecutionProvider::CPU:
+        return "CPU";
+    case ExecutionProvider::GPU:
+        return "GPU";
+    default:
+        Q_ASSERT("How did we get here !!");
     }
     return "UNDEFINED";
 }
 
 QVector<QColor> imageProcessorCreateColorPalette(
-    const QImage &image, int palette_size, NerdPaletteAlgorithm algorithm
+    const QImage &image, int palette_size, PaletteAlgorithm algorithm
 );
 
 QImage imageProcessorApplyColorPalette(
     QImage image,
     QList<QColor> *palette,
     ExecutionProvider provider,
-    NerdCompareMethod method
+    CompareMethod method
 );
 
 #endif  // IMAGE_PROCESSOR_H

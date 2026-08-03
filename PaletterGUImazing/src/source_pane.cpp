@@ -127,7 +127,7 @@ SourcePane::generatePalette()
             return imageProcessorCreateColorPalette(
                 myImage,
                 myPaletteDisplaySize,
-                NerdPaletteAlgorithm(myAlgorithmDropdown->item())
+                PaletteAlgorithm(myAlgorithmDropdown->item())
             );
         }
     );

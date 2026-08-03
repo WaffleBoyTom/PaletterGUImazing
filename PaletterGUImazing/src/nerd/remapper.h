@@ -6,12 +6,18 @@
 #include <QList>
 #include <QPixmap>
 
-#include "nerd_types.h"
+enum class CompareMethod
+{
+    Distance = 0,
+    Luminance,
+    Hue,
+    Saturation
+};
 
 class Remapper
 {
 public:
-    Remapper(NerdCompareMethod method, const QList<QColor> &palette);
+    Remapper(CompareMethod method, const QList<QColor> &palette);
 
     void remap(QImage &image) const;
     void remapHost(QImage &image) const;
@@ -20,8 +26,7 @@ private:
     void remapCuda(QImage &image) const;
     void remapMetal(QImage &image) const;
 
-    [[maybe_unused]]
-    NerdCompareMethod myCompareMethod;
+    CompareMethod myCompareMethod;
     const QList<QColor> &myPalette;
 };
 

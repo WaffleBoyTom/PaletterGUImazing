@@ -6,7 +6,6 @@
 
 #include "cool/cool_logger.h"
 #include "image_processor.h"
-#include "nerd/nerd_types.h"
 #include "sick/sick_image_viewer.h"
 
 static const int theInitialScaleFactor = 2;
@@ -133,8 +132,8 @@ DestinationPane::applyPalette(QList<QColor> *palette)
         QString("Using: %1").arg(executionProviderString(provider))
     );
 
-    const NerdCompareMethod method =
-        NerdCompareMethod(myRemapMethodDropdown->item());
+    const CompareMethod method =
+        CompareMethod(myRemapMethodDropdown->item());
 
     QFuture<QImage> future = QtConcurrent::run(
         imageProcessorApplyColorPalette, myImage, palette, provider, method

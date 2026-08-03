@@ -11,7 +11,6 @@ if(USE_CUDA)
         cutils.cuh
         kmeanifier.h
         kmeanifier.cpp
-        nerd_types.h
         palette_generator.h
         palette_generator.cpp
         remapper.h
@@ -35,9 +34,8 @@ elseif(USE_METAL)
         metal_implementation.cpp
         metal_remapper.h
         metal_remapper.cpp
-        nerd_types.h
-        palette_generator.h
-        palette_generator.cpp
+        median_cut.h
+        median_cut.cpp
         remapper.h
         remapper.cpp
     )
@@ -46,9 +44,8 @@ else ()
     set(SOURCE
         kmeanifier.h
         kmeanifier.cpp
-        nerd_types.h
-        palette_generator.h
-        palette_generator.cpp
+        median_cut.h
+        median_cut.cpp
         remapper.h
         remapper.cpp
     )

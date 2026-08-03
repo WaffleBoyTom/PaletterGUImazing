@@ -1,26 +1,19 @@
-#ifndef PALETTE_GENERATOR_H
-#define PALETTE_GENERATOR_H
+#ifndef MEDIAN_CUT_H
+#define MEDIAN_CUT_H
 
 #include <QColor>
 #include <QImage>
 #include <QVector>
 
-#include "nerd_types.h"
-
-class PaletteGenerator
+class MedianCut
 {
 public:
-    /// TODO: This probably shouldn't take a method as it only runs
-    /// median cut anyways. I don't think we want to stuff
-    /// all the methods inside one class....
-    /// should all these classes inherit from a base class
-    /// would that be OOPing way too hard ??
-    PaletteGenerator(int palette_size, NerdPaletteAlgorithm algorithm);
+    MedianCut(int palette_size);
 
     /// NOTE: C++ should generate the default dtor for the class
     /// I don't think we need this
     /// halloooo >?
-    ~PaletteGenerator() = default;
+    ~MedianCut() = default;
 
     // Generates a palette for the given image using median cut.
     //
@@ -67,7 +60,6 @@ public:
 
 private:
     int myPaletteSize;
-    [[maybe_unused]] NerdPaletteAlgorithm myAlgorithm;
 };
 
-#endif  // PALETTE_GENERATOR_H
+#endif  // MEDIAN_CUT_H
