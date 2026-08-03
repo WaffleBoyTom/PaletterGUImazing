@@ -1,7 +1,7 @@
 #include "sick_log_viewer.h"
 
 #include <QtCore/qassert.h>
-#include "coolutil_logger.h"
+#include "cool_logger.h"
 
 SickLogViewer::SickLogViewer(QWidget *parent) : QPlainTextEdit(parent)
 {
@@ -25,7 +25,7 @@ SickLogViewer::append(QString message)
 }
 
 void
-SickLogViewer::appendLine(QString message, CoolUtilLogSeverity sev)
+SickLogViewer::appendLine(QString message, CoolLogSeverity sev)
 {
     QTextCursor cursor(textCursor());
     cursor.movePosition(QTextCursor::End);
@@ -33,7 +33,7 @@ SickLogViewer::appendLine(QString message, CoolUtilLogSeverity sev)
     QTextCharFormat format;
     switch (sev)
     {
-    case CoolUtilLogSeverity::MSG:
+    case CoolLogSeverity::MSG:
     {
         // Qt::cyan looks pretty cool
         // maybe we could give the user an option
@@ -41,7 +41,7 @@ SickLogViewer::appendLine(QString message, CoolUtilLogSeverity sev)
         format.setForeground(QBrush(Qt::white));
         break;
     }
-    case CoolUtilLogSeverity::SEL:
+    case CoolLogSeverity::SEL:
     {
         // Qt::cyan looks pretty cool
         // maybe we could give the user an option
@@ -49,22 +49,22 @@ SickLogViewer::appendLine(QString message, CoolUtilLogSeverity sev)
         format.setForeground(QBrush(QColorConstants::Svg::lightseagreen));
         break;
     }
-    case CoolUtilLogSeverity::CUDA:
+    case CoolLogSeverity::CUDA:
     {
         format.setForeground(QBrush(Qt::green));
         break;
     }
-    case CoolUtilLogSeverity::METAL:
+    case CoolLogSeverity::METAL:
     {
         format.setForeground(QBrush(Qt::lightGray));
         break;
     }
-    case CoolUtilLogSeverity::WARNING:
+    case CoolLogSeverity::WARNING:
     {
         format.setForeground(QBrush(Qt::yellow));
         break;
     }
-    case CoolUtilLogSeverity::ERROR:
+    case CoolLogSeverity::ERROR:
     {
         format.setForeground(QBrush(Qt::red));
         break;

@@ -14,7 +14,7 @@ set(PROJECT_SOURCES
     source_pane.h
 )
 
-add_subdirectory("coolutil")
+add_subdirectory("cool")
 add_subdirectory("nerd")
 add_subdirectory("sick")
 
@@ -54,7 +54,7 @@ target_compile_options(PaletterGUImazing PRIVATE
     -Wno-gnu-anonymous-struct
 )
 
-target_link_libraries(PaletterGUImazing PUBLIC coolutil nerd sick)
+target_link_libraries(PaletterGUImazing PUBLIC cool nerd sick)
 target_link_libraries(PaletterGUImazing PUBLIC Qt${QT_VERSION_MAJOR}::Concurrent Qt${QT_VERSION_MAJOR}::Widgets)
 
 if(USE_CUDA)

@@ -4,7 +4,7 @@
 #include <QtConcurrent>
 #include <QtWidgets>
 
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_logger.h"
 #include "image_processor.h"
 #include "nerd/nerd_types.h"
 #include "sick/sick_image_viewer.h"
@@ -93,7 +93,7 @@ DestinationPane::loadImage(const QString &file_path)
     if (!myUnfilteredImage.load(file_path))
     {
         QString message = "Failed to load image file";
-        CoolUtilLogger::log(message, CoolUtilLogSeverity::ERROR);
+        CoolLogger::log(message, CoolLogSeverity::ERROR);
         QMessageBox::information(
             this, QGuiApplication::applicationDisplayName(), message
         );
@@ -110,7 +110,7 @@ DestinationPane::loadImage(const QString &file_path)
     // send a message in log about image being loaded
     const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
-    CoolUtilLogger::log(message, CoolUtilLogSeverity::SEL);
+    CoolLogger::log(message, CoolLogSeverity::SEL);
 }
 
 void
@@ -124,12 +124,12 @@ DestinationPane::applyPalette(QList<QColor> *palette)
 {
     myApplyPaletteButton->setEnabled(false);
 
-    CoolUtilLogger::log("Applying color palette");
+    CoolLogger::log("Applying color palette");
 
     const ExecutionProvider provider =
         ExecutionProvider(myExecutionProviderDropdown->item());
 
-    CoolUtilLogger::log(
+    CoolLogger::log(
         QString("Using: %1").arg(executionProviderString(provider))
     );
 
@@ -174,7 +174,7 @@ DestinationPane::applyPalette(QList<QColor> *palette)
 void
 DestinationPane::onApplyPaletteFinished(QImage image)
 {
-    CoolUtilLogger::log("Done applying color palette");
+    CoolLogger::log("Done applying color palette");
 
     myImage = image.copy();
     myImageViewer->setImage(myImage);

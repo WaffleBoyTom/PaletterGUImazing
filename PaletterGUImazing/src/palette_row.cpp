@@ -7,7 +7,7 @@
 #include <QtWidgets>
 
 #include "sick/sick_inspector.h"
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_logger.h"
 
 PaletteRow::PaletteRow(QWidget *parent) : QWidget(parent), myBoxCount(6)
 {
@@ -168,7 +168,7 @@ PaletteRow::mousePressEvent(QMouseEvent *event)
         QClipboard *clipboard = QGuiApplication::clipboard();
         clipboard->setText(name_hex);
 
-        CoolUtilLogger::log(QString("Copied: %1").arg(name_hex));
+        CoolLogger::log(QString("Copied: %1").arg(name_hex));
     }
     if (event->button() == Qt::MouseButton::RightButton)
     {

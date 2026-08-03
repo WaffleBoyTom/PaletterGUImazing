@@ -2,8 +2,8 @@
 
 #include <QtWidgets>
 
-#include "coolutil/coolutil_fileio.h"
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_fileio.h"
+#include "cool/cool_logger.h"
 #include "palette_row.h"
 #include "sick/sick_slider.h"
 
@@ -55,7 +55,7 @@ PaletteViewer::exportPalette(
     const QString &path, SickExportOpts::ExportFormat fmt
 )
 {
-    CoolUtilLogger::log("Exporting Palette !");
+    CoolLogger::log("Exporting Palette !");
     // QFileDialog dialog(this);
 
     // dialog.setWindowTitle(tr("Exporto Palettum !"));
@@ -81,20 +81,20 @@ PaletteViewer::exportPalette(
     if (!can_serialize)
     {
         // shit went south big time
-        CoolUtilLogger::log(
+        CoolLogger::log(
             QString(
                 "Either you never generated a palette or shit went south big "
                 "time..."
             ),
-            CoolUtilLogSeverity::ERROR
+            CoolLogSeverity::ERROR
         );
         return;
     }
 
-    CoolUtilJsonIO io(&json, &native_path);
+    CoolJsonIO io(&json, &native_path);
     QString log;
     bool success = io.write(log);
-    CoolUtilLogger::log(
-        log, success ? CoolUtilLogSeverity::MSG : CoolUtilLogSeverity::ERROR
+    CoolLogger::log(
+        log, success ? CoolLogSeverity::MSG : CoolLogSeverity::ERROR
     );
 }

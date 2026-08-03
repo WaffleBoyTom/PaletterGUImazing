@@ -53,5 +53,5 @@ else ()
 endif()
 
 add_library(nerd STATIC ${SOURCE})
-target_link_libraries(nerd PUBLIC coolutil)
-target_include_directories(nerd PUBLIC ${EXTERNAL_DIR}/metal-cpp coolutil)
+target_link_libraries(nerd PUBLIC cool)
+target_include_directories(nerd PUBLIC ${EXTERNAL_DIR}/metal-cpp cool)

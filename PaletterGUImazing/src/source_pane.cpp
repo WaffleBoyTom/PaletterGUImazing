@@ -4,7 +4,7 @@
 #include <QtConcurrent>
 #include <QtWidgets>
 
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_logger.h"
 #include "image_processor.h"
 
 SourcePane::SourcePane(QWidget *parent) : QWidget(parent)
@@ -84,7 +84,7 @@ SourcePane::loadImage(const QString &file_path)
     if (!myImage.load(file_path))
     {
         QString message = "Failed to load image file";
-        CoolUtilLogger::log(message, CoolUtilLogSeverity::ERROR);
+        CoolLogger::log(message, CoolLogSeverity::ERROR);
         QMessageBox::information(
             this, QGuiApplication::applicationDisplayName(), message
         );
@@ -99,7 +99,7 @@ SourcePane::loadImage(const QString &file_path)
     // send a message in log about image being loaded
     const QString native_path = QDir::toNativeSeparators(file_path);
     QString message = QString("Loaded Image: %1").arg(native_path);
-    CoolUtilLogger::log(message, CoolUtilLogSeverity::SEL);
+    CoolLogger::log(message, CoolLogSeverity::SEL);
 }
 
 void
@@ -168,7 +168,7 @@ SourcePane::generatePalette()
 void
 SourcePane::onGeneratePaletteFinished(QList<QColor> palette)
 {
-    CoolUtilLogger::log("Filled color palette");
+    CoolLogger::log("Filled color palette");
 
     myPalette = std::move(palette);
     emit tellBossAboutPaletteFill(&myPalette);

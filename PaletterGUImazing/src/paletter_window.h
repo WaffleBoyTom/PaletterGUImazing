@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_logger.h"
 #include "destination_pane.h"
 #include "palette_viewer.h"
 #include "sick/sick_export_opts.h"
@@ -22,7 +22,7 @@ public slots:
     void setPaletteDisplaySize(int size);
     void setPalette(QList<QColor> *palette);
     void applyPaletteToSecondViewer();
-    void logMeHard(const QString msg, const CoolUtilLogSeverity sev);
+    void logMeHard(const QString msg, const CoolLogSeverity sev);
     void exportPalette(const QString &path, SickExportOpts::ExportFormat fmt);
 
 private:

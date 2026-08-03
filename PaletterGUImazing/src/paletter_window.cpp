@@ -4,7 +4,7 @@
 #include <QThread>
 #include <QtWidgets>
 
-#include "coolutil/coolutil_logger.h"
+#include "cool/cool_logger.h"
 #include "palette_viewer.h"
 #include "sick/sick_log_viewer.h"
 
@@ -84,8 +84,8 @@ PaletterGUI::PaletterGUI() : paletterLabel(new QLabel(this))
 
     myLogViewer = new SickLogViewer(this);
     connect(
-        CoolUtilLogger::getInstance(),
-        &CoolUtilLogger::tellBossToLog,
+        CoolLogger::getInstance(),
+        &CoolLogger::tellBossToLog,
         this,
         &PaletterGUI::logMeHard
     );
@@ -127,7 +127,7 @@ PaletterGUI::applyPaletteToSecondViewer()
 }
 
 void
-PaletterGUI::logMeHard(const QString msg, const CoolUtilLogSeverity sev)
+PaletterGUI::logMeHard(const QString msg, const CoolLogSeverity sev)
 {
     myLogViewer->appendLine(msg, sev);
 }

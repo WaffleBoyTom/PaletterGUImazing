@@ -1,13 +1,13 @@
-#ifndef SICK_FILEIO_H
-#define SICK_FILEIO_H
+#ifndef COOL_FILEIO_H
+#define COOL_FILEIO_H
 
 #include <QtWidgets>
 
 // NOTE: should this just have static methods instead ?
-class CoolUtilJsonIO
+class CoolJsonIO
 {
 public:
-    explicit CoolUtilJsonIO(const QJsonObject *json, const QString *path);
+    explicit CoolJsonIO(const QJsonObject *json, const QString *path);
 
     // if returns false, operation failed,
     // error message is written to err
@@ -21,4 +21,4 @@ private:
 
 // SickImageIO ??
 
-#endif
+#endif // COOL_FILEIO_H

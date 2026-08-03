@@ -3,7 +3,7 @@
 
 #include <QtWidgets>
 
-#include "coolutil_logger.h"
+#include "cool_logger.h"
 
 class SickLogViewer : public QPlainTextEdit
 {
@@ -15,7 +15,7 @@ public:
 public slots:
     void append(QString message);
     void appendLine(
-        QString message, CoolUtilLogSeverity sev = CoolUtilLogSeverity::MSG
+        QString message, CoolLogSeverity sev = CoolLogSeverity::MSG
     );
 
 protected:

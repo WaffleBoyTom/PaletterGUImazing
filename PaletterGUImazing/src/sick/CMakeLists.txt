@@ -19,5 +19,5 @@ set(SOURCE
     sick_utils.cpp
 )
 add_library(sick STATIC ${SOURCE})
-target_link_libraries(sick PUBLIC Qt${QT_VERSION_MAJOR}::Widgets coolutil)
-target_include_directories(sick PUBLIC coolutil)
+target_link_libraries(sick PUBLIC Qt${QT_VERSION_MAJOR}::Widgets cool)
+target_include_directories(sick PUBLIC cool)

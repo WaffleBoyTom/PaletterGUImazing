@@ -1,6 +1,6 @@
 #include "remapper.h"
 
-#include "coolutil_logger.h"
+#include "cool_logger.h"
 
 // THIS CAN'T BE INCLUDED BECAUSE NVCC DOESNT LIKE IT !!!!!!
 // #include <QDebug>
