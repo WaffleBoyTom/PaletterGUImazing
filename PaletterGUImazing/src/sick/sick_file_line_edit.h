@@ -29,6 +29,15 @@ public:
         return myLineEdit->text();
     }
 
+    void
+    updateText(QString text) const
+    {
+        myLineEdit->blockSignals(true);
+        myLineEdit->setText(std::move(text));
+        myLineEdit->setModified(false);
+        myLineEdit->blockSignals(false);
+    }
+
     SickFileLineEdit::Mode
     mode() const
     {
