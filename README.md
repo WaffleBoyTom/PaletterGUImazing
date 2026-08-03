@@ -2,7 +2,7 @@
 Palettize your favorite image and apply that palette to another image, or export that palette to use it for something else 
 ! All of that inside a GUI !!!
 
-To build in `PaletterGUImazing` and run:
+To build in `PaletterGUImazing`:
 
 ```bash
 cmake -H. -Bbuild
@@ -12,44 +12,30 @@ cmake --build .
 # oh yeah
 Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 
-# TODO
-## Baller library
-- [x] BallerTask
-- [x] QuantizeTask (now GeneratePaletteTask)
-- [x] RemapTask
-- [x] Replace with QtConcurrent
+# days since Ethan's commits gave Tom an aneurysm: 0
+
+# this is what still needs to be done
+## Nerd
+- [ ] K-Means in CUDA and in Metal. I may have nuked my Metal impl so I need to restart :vertically_shaking_head:
+- [ ] Merge Kmeanifier into PaletteGenerator.
 ## Logging
-- [x] SickLogger
-- [x] Logger singleton class with Logger::tellBoss and connect to LogViewer, call this from everywhere
-- [x] Some sort of progress bar to show the user that we are cooking. Some image or something.
-- [x] Move into util library, rename CoolUtilLogger.
+- [ ] "CUDA" and "Metal" aren't severities. Add a separate "tag" string argument for context. Color could be specified in a map. The severity is the fallback color.
+- [ ] BUG: Metal logs do not have a severity.
+## Async
+- [ ] Clean up use of QtConcurrent since there is some duplication going on. Could add a "busy handler" for the cursor.
 ## UI
-- [x] Fix ImageViewer hierarchy
-- [x] Fix layout issues
-- [x] Sick File Line Edit for all file choosers and writers !
-## GPU
-- [x] Use to apply palette to second image
-- [ ] Use to run K-Means for palette generation
-- [x] Metal support
-## Features
-- [x] Application method
-## Export
-- [x] JSON palette string
-- [ ] The image with the palette applied
-- [x] What do we do with SickViewer ? That was meant to be a base class for image_viewer because right now we have weird branching...
+- [ ] Add an "Export Image" button for saving the quantized image.
+- [ ] BUG: File path not populated on DnD.
+- [ ] BUG: Inspector doesn't persist across viewer.
+- [ ] BUG: Resolution text does not repaint on image load.
+- [ ] BUG: Inspector does not work with circles.
+- [ ] BUG: Resolution text should always be visible and aligned with the image.
 # Release
+- [ ] Bundle Qt.
+- [ ] Bundle Metal.
 - [ ] Make a release build.
 - [ ] Test.
-## Bugs
-- [x] Clicking Process Image to generate Palette seems to put focus in the left Sick File Line Edit like wtf >?!
-- [x] "Apply Palette" is still applying to the filtered image
-- [x] Logger scroll does not jump to bottom properly.
-- [ ] File path not populated on DnD.
-- [ ] Inspector doesn't persist across viewer.
-- [ ] Resolution text does not repaint on image load.
-- [ ] Inspector does not work with circles.
-- [ ] Resolution text should always be visible and aligned with the image.
-- [ ] Use SickLogSeverity::Metal.
+
 # creedentials
 IF THIS DOES NOT COMPILE TOM YOU IDIOT
 OPEN QTCREATOR AND LOAD THE PROJECT BY CLICKING THE CMAKELIST FILE
