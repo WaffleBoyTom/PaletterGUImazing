@@ -61,6 +61,7 @@ SickFileLineEdit::openNautilus()
     if (file_path.isEmpty())
         return;
 
-    myLineEdit->setText(file_path);
+    updateText(file_path);
+
     emit tellBossAboutFileLoaded(file_path);
 }
