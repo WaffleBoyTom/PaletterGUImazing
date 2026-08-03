@@ -25,7 +25,7 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 - [ ] Clean up use of QtConcurrent since there is some duplication going on. Could add a "busy handler" for the cursor.
 ## UI
 - [ ] Add an "Export Image" button for saving the quantized image.
-- [ ] BUG: File path not populated on DnD.
+- [x] BUG: File path not populated on DnD.
 - [ ] BUG: Inspector doesn't persist across viewer.
 - [ ] BUG: Resolution text does not repaint on image load.
 - [ ] BUG: Inspector does not work with circles.

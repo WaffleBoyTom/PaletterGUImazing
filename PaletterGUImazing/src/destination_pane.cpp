@@ -26,7 +26,7 @@ DestinationPane::DestinationPane(QWidget *parent) : QWidget(parent)
     // line edit
     connect(
         myLineEdit->lineEdit(),
-        &QLineEdit::editingFinished,
+        &QLineEdit::returnPressed,
         this,
         &DestinationPane::onLoadImageFromLineEdit
     );
@@ -222,6 +222,8 @@ DestinationPane::dropEvent(QDropEvent *event)
 
     const QUrl &url = urls.first();
     loadImage(url.path());
+
+    myLineEdit->updateText(url.path());
 }
 
 void
