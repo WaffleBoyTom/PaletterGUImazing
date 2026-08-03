@@ -19,13 +19,14 @@ executionProviderString(ExecutionProvider provider)
 {
     switch (provider)
     {
-    case ExecutionProvider::CPU:
-        return "CPU";
-    case ExecutionProvider::GPU:
-        return "GPU";
-    default:
-        Q_ASSERT("How did we get here !!");
+        case ExecutionProvider::CPU:
+            return "CPU";
+        case ExecutionProvider::GPU:
+            return "GPU";
+        default:
+            Q_ASSERT("How did we get here !!");
     }
+    return "UNDEFINED";
 }
 
 QVector<QColor> imageProcessorCreateColorPalette(

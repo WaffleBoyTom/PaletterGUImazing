@@ -1,7 +1,9 @@
 #include "kmeanifier.h"
+#include "cool_logger.h"
 
 #ifdef USE_CUDA
 #include <cuda_runtime.h>
+#include <QRandomGenerator>
 #endif
 
 KMeanifier::KMeanifier(int palette_size) : myPaletteSize(palette_size)
@@ -23,21 +25,21 @@ KMeanifier::generatePalette(const QImage &image) const
 
     if (err == cudaSuccess && deviceCount > 0)
     {
-        CoolUtilLogger::log("Using CUDA !", SickLogSeverity::CUDA);
+        CoolLogger::log("Using CUDA !", CoolLogSeverity::CUDA);
         for (int dev = 0; dev < deviceCount; ++dev)
         {
             cudaDeviceProp deviceProp;
             cudaGetDeviceProperties(&deviceProp, dev);
             QString dev_name(deviceProp.name);
-            CoolUtilLogger::log(
-                QString("Device %1").arg(dev_name), SickLogSeverity::CUDA
+            CoolLogger::log(
+                QString("Device %1").arg(dev_name), CoolLogSeverity::CUDA
             );
         }
     }
     else
     {
-        CoolUtilLogger::log(
-            "Failed to find a CUDA device !!", SickLogSeverity::ERROR
+        CoolLogger::log(
+            "Failed to find a CUDA device !!", CoolLogSeverity::ERROR
         );
         /// FIXME
         return QVector<QColor>();
