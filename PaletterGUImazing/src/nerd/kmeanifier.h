@@ -5,6 +5,10 @@
 #include <QImage>
 #include <QVector>
 
+#ifdef USE_CUDA
+#include <cuda_runtime.h>
+#endif
+
 class KMeanifier
 {
 public:
@@ -15,6 +19,13 @@ public:
     QVector<QColor> generatePalette(const QImage &image) const;
 
 private:
+    void palettize(
+        float3 *palette,
+        const uchar4 *img,
+        const int width,
+        const int height,
+        const int palette_size
+    ) const;
     int myPaletteSize;
 };
 

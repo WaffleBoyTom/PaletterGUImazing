@@ -1,4 +1,5 @@
 #include "zoom.cuh"
+#include "cutils.cuh"
 /// including this header causes nvcc to ragequit !!!
 // #include <QDebug>
 
@@ -40,25 +41,6 @@ float3ToUChar3(float3 color)
     );
 }
 
-inline __device__ float
-euclidDist(float3 a, float3 b)
-{
-    float rdiff = b.x - a.x;
-    float gdiff = b.y - a.y;
-    float bdiff = b.z - a.z;
-
-    return sqrtf(rdiff * rdiff + gdiff * gdiff + bdiff * bdiff);
-}
-
-inline __device__ float
-euclidDist2(float3 a, float3 b)
-{
-    float rdiff = b.x - a.x;
-    float gdiff = b.y - a.y;
-    float bdiff = b.z - a.z;
-
-    return rdiff * rdiff + gdiff * gdiff + bdiff * bdiff;
-}
 inline __device__ bool
 isEqual(float a, float b)
 {
@@ -140,7 +122,7 @@ applyPaletteByLengthKernel(
         for (int j = 0; j < palette_size; ++j)
         {
             float3 palette_col = palette[j];
-            float dist = euclidDist2(pixel, palette_col);
+            float dist = CUtils::dist2(pixel, palette_col);
             if (dist < delta)
             {
                 best = palette_col;

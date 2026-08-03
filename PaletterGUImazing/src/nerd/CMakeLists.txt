@@ -6,6 +6,8 @@ if(USE_CUDA)
     add_definitions(-DUSE_CUDA)
 
     set(SOURCE
+        cumeans.cuh
+        cumeans.cu
         kmeanifier.h
         kmeanifier.cpp
         nerd_types.h
