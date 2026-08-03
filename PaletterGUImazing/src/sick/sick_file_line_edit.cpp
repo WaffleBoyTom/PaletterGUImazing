@@ -9,6 +9,7 @@ SickFileLineEdit::SickFileLineEdit(
 {
     myLayout = new QHBoxLayout();
     myLineEdit = new QLineEdit(label);
+    myLineEdit->setModified(false);
     myLineEdit->setStyleSheet("color: cornsilk; background-color: #232323");
     myFileChooser = new QPushButton(
         QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen), tr("")
