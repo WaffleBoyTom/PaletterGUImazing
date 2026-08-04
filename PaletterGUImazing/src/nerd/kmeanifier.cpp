@@ -1,5 +1,6 @@
 #include "kmeanifier.h"
 #include "cool_logger.h"
+#include "metal_kmeans.h"
 #include <QDebug>
 
 #ifdef USE_CUDA
@@ -200,5 +201,6 @@ KMeanifier::generatePaletteCuda(const QImage &image) const
 QVector<QColor>
 KMeanifier::generatePaletteMetal(const QImage &image) const
 {
-    return {};
+    KMeansMetal kmeans = KMeansMetal(image, myPaletteSize);
+    return kmeans.cluster(10);
 }

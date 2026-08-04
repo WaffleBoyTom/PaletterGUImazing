@@ -201,3 +201,73 @@ kernel void remapValue(
     }
     result[index] = uchar4(rgbFloatToUchar(rgb_out), color_in.w);
 }
+
+struct ClusterAccumulator
+{
+    atomic_uint r;
+    atomic_uint g;
+    atomic_uint b;
+    atomic_uint count;
+};
+
+kernel void kmeansNaiveAccumulate(
+    device const uchar4* image,
+    device const uchar4* means,
+    device ClusterAccumulator* palette_accs,
+    constant uint& k,
+    uint index [[thread_position_in_grid]]
+)
+{
+    const uchar4 pixel_rgba = image[index];
+    const float3 rgb = rgbUcharToFloat(pixel_rgba.xyz);
+
+    float min_dist = INFINITY;
+    uint mean_index = 0;
+
+    for (uint i = 0; i < k; ++i)
+    {
+        const float3 mean_rgb = rgbUcharToFloat(means[i].xyz);
+        const float dist = distanceEuclidean(rgb, mean_rgb);
+        if (dist < min_dist)
+        {
+            min_dist = dist;
+            mean_index = i;
+        }
+    }
+
+    device ClusterAccumulator& palette_acc = palette_accs[mean_index];
+    
+    atomic_fetch_add_explicit(
+        &palette_acc.r, uint(pixel_rgba.x), memory_order_relaxed);
+    atomic_fetch_add_explicit(
+        &palette_acc.g, uint(pixel_rgba.y), memory_order_relaxed);
+    atomic_fetch_add_explicit(
+        &palette_acc.b, uint(pixel_rgba.z), memory_order_relaxed);
+    atomic_fetch_add_explicit(
+        &palette_acc.count, 1, memory_order_relaxed);
+}
+
+kernel void kmeansNaiveResolve(
+    device const ClusterAccumulator* palette_accs,
+    device uchar4* means,
+    uint index [[thread_position_in_grid]])
+{
+    device const ClusterAccumulator& palette_acc = palette_accs[index];
+
+    const uint count = atomic_load_explicit(&palette_acc.count, memory_order_relaxed);
+
+    uchar4 rgba = uchar4(0, 0, 0, 255);
+
+    if (count > 0)
+    {
+        const uint r = atomic_load_explicit(&palette_acc.r, memory_order_relaxed);
+        const uint g = atomic_load_explicit(&palette_acc.g, memory_order_relaxed);
+        const uint b = atomic_load_explicit(&palette_acc.b, memory_order_relaxed);
+
+        rgba.x = uchar(r / count);
+        rgba.y = uchar(g / count);
+        rgba.z = uchar(b / count);
+
+        means[index] = rgba;
+    }
+}
