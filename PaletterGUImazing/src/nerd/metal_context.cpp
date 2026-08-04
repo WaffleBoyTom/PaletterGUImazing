@@ -5,57 +5,16 @@
 #include <QDir>
 #include <QString>
 
-MetalContext::MetalContext()
+MetalContext::~MetalContext()
 {
-    const QString theExecutablePath = QCoreApplication::applicationDirPath();
-    const QString theMetalShaderLibraryPath =
-        theExecutablePath + "/shaders.metallib";
+    myPool->release();
+}
 
-    NS::Error *error;
-
-    myPool = NS::AutoreleasePool::alloc()->init();
-    myDevice = MTL::CreateSystemDefaultDevice();
-    if (myDevice == nullptr)
-    {
-        qDebug() << "Metal error: failed to create device.";
-        qApp->quit();
-    }
-
-    myCommandQueue = myDevice->newCommandQueue();
-    if (myCommandQueue == nullptr)
-    {
-        qDebug() << "Metal error: failed to create command queue.";
-        qApp->quit();
-    }
-
-    qDebug() << "Looking for metallib at: " << theMetalShaderLibraryPath;
-    if (!QFile::exists(theMetalShaderLibraryPath))
-    {
-        qDebug() << "Failed to find metallib file.";
-        qApp->quit();
-    }
-
-    NS::URL *url = NS::URL::fileURLWithPath(
-        NS::String::string(
-            theMetalShaderLibraryPath.toUtf8().constData(),
-            NS::ASCIIStringEncoding
-        )
-    );
-
-    myLibrary = myDevice->newLibrary(url, &error);
-    if (myLibrary == nullptr)
-    {
-        qDebug() << "Metal error: failed to load library.";
-        qApp->quit();
-    }
-    else if (error != nullptr)
-    {
-        qDebug() << QString("Metal error: %1")
-                        .arg(error->localizedDescription()->cString(
-                            NS::ASCIIStringEncoding
-                        ));
-        qApp->quit();
-    }
+MetalContext &
+MetalContext::instance()
+{
+    static MetalContext theContext;
+    return theContext;
 }
 
 MTL::ComputePipelineState *
@@ -118,7 +77,55 @@ MetalContext::createCommandBuffer()
     return command_buffer;
 }
 
-MetalContext::~MetalContext()
+MetalContext::MetalContext()
 {
-    myPool->release();
+    const QString theExecutablePath = QCoreApplication::applicationDirPath();
+    const QString theMetalShaderLibraryPath =
+        theExecutablePath + "/shaders.metallib";
+
+    NS::Error *error;
+
+    myPool = NS::AutoreleasePool::alloc()->init();
+    myDevice = MTL::CreateSystemDefaultDevice();
+    if (myDevice == nullptr)
+    {
+        qDebug() << "Metal error: failed to create device.";
+        qApp->quit();
+    }
+
+    myCommandQueue = myDevice->newCommandQueue();
+    if (myCommandQueue == nullptr)
+    {
+        qDebug() << "Metal error: failed to create command queue.";
+        qApp->quit();
+    }
+
+    qDebug() << "Looking for metallib at: " << theMetalShaderLibraryPath;
+    if (!QFile::exists(theMetalShaderLibraryPath))
+    {
+        qDebug() << "Failed to find metallib file.";
+        qApp->quit();
+    }
+
+    NS::URL *url = NS::URL::fileURLWithPath(
+        NS::String::string(
+            theMetalShaderLibraryPath.toUtf8().constData(),
+            NS::ASCIIStringEncoding
+        )
+    );
+
+    myLibrary = myDevice->newLibrary(url, &error);
+    if (myLibrary == nullptr)
+    {
+        qDebug() << "Metal error: failed to load library.";
+        qApp->quit();
+    }
+    else if (error != nullptr)
+    {
+        qDebug() << QString("Metal error: %1")
+                        .arg(error->localizedDescription()->cString(
+                            NS::ASCIIStringEncoding
+                        ));
+        qApp->quit();
+    }
 }

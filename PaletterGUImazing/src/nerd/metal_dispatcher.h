@@ -4,13 +4,16 @@
 #include <Foundation/Foundation.hpp>
 #include <Metal/Metal.hpp>
 
-#include "Metal/MTLComputePipeline.hpp"
-#include "metal_context.h"
+namespace MTL
+{
+class ComputePipelineState;
+class Buffer;
+}
 
 class MetalDispatcher
 {
 public:
-    MetalDispatcher(MetalContext &context, MTL::ComputePipelineState *pipeline);
+    MetalDispatcher(MTL::ComputePipelineState *pipeline);
 
     void bindBuffer(MTL::Buffer *buffer, std::size_t offset, std::size_t index);
     void bindBytes(const void *data, std::size_t length, std::size_t index);
@@ -23,4 +26,4 @@ private:
     MTL::ComputePipelineState *myPipelineState;
 };
 
-#endif // METAL_DISPATCHER_H
+#endif  // METAL_DISPATCHER_H

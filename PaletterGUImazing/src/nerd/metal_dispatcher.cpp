@@ -2,10 +2,14 @@
 
 #include <QApplication>
 #include <QDebug>
-#include "Foundation/NSTypes.hpp"
 
-MetalDispatcher::MetalDispatcher(MetalContext &context, MTL::ComputePipelineState *pipeline)
+#include "Foundation/NSTypes.hpp"
+#include "metal_context.h"
+
+MetalDispatcher::MetalDispatcher(MTL::ComputePipelineState *pipeline)
 {
+    MetalContext &context = MetalContext::instance();
+
     myCommandBuffer = context.createCommandBuffer();
 
     myCommandEncoder = myCommandBuffer->computeCommandEncoder();
@@ -20,7 +24,9 @@ MetalDispatcher::MetalDispatcher(MetalContext &context, MTL::ComputePipelineStat
 }
 
 void
-MetalDispatcher::bindBuffer(MTL::Buffer *buffer, std::size_t offset, std::size_t index)
+MetalDispatcher::bindBuffer(
+    MTL::Buffer *buffer, std::size_t offset, std::size_t index
+)
 {
     myCommandEncoder->setBuffer(
         buffer,
@@ -30,7 +36,9 @@ MetalDispatcher::bindBuffer(MTL::Buffer *buffer, std::size_t offset, std::size_t
 }
 
 void
-MetalDispatcher::bindBytes(const void *data, std::size_t length, std::size_t index)
+MetalDispatcher::bindBytes(
+    const void *data, std::size_t length, std::size_t index
+)
 {
     myCommandEncoder->setBytes(
         data,

@@ -9,12 +9,19 @@
 class MetalContext
 {
 public:
-    MetalContext();
-    ~MetalContext();
+    // TIL about Meyers Singleton (!)
+    static MetalContext &instance();
+
+    MetalContext(MetalContext &other) = delete;
+    MetalContext &operator=(MetalContext &other) = delete;
 
     MTL::ComputePipelineState *createPipelineState(const char *library_name);
     MTL::Buffer *createSharedBuffer(std::size_t size);
     MTL::CommandBuffer *createCommandBuffer();
+
+protected:
+    MetalContext();
+    ~MetalContext();
 
 private:
     // RAII object pool.
