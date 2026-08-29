@@ -2,6 +2,8 @@
 Palettize your favorite image and apply that palette to another image, or export that palette to use it for something else 
 ! All of that inside a GUI !!!
 
+To use the bundled version on Linux make sure to set LD_LIBRARY_PATH to app/lib
+
 To build in `PaletterGUImazing`:
 
 ```bash

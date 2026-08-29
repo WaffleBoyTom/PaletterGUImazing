@@ -112,4 +112,4 @@ qt_generate_deploy_app_script(
     NO_TRANSLATIONS
 )
 
-install(SCRIPT ${deploy_script})
+install(SCRIPT ${deploy_script} DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
