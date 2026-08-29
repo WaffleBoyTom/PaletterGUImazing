@@ -16,8 +16,8 @@ Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 
 # this is what still needs to be done
 ## Nerd
-- [ ] K-Means in CUDA
-- [ ] K-Means in Metal. I may have nuked my Metal impl so I need to restart :vertically_shaking_head:
+- [x] K-Means in CUDA
+- [x] K-Means in Metal.
 ## Logging
 - [ ] "CUDA" and "Metal" aren't severities. Add a separate "tag" string argument for context. Color could be specified in a map. The severity is the fallback color.
 - [ ] BUG: Metal logs do not have a severity.
