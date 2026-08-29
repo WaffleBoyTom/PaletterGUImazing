@@ -14,6 +14,11 @@ cmake --build .
 # oh yeah
 Shabbu Dabbu : Paletter GUImazing is the work of Ethan Da Broski and Tiny Tom !
 
+<p align="center">
+  <img src="help/sexy.jpg" alt="sexy gui" width="800"/>
+</p>
+
+
 # days since Ethan's commits gave Tom an aneurysm: 0
 
 # this is what still needs to be done
