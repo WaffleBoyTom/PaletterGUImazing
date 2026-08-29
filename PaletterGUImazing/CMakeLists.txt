@@ -45,9 +45,9 @@ if (CUDAToolkit_FOUND)
     set(CMAKE_CUDA_STANDARD_REQUIRED ON)
 
 elseif(APPLE)
-    find_library(METAL_LIB Metal)
-    find_library(FOUNDATION_LIB Foundation)
-    find_library(QUARTZCORE_LIB QuartzCore)
+    find_library(METAL_LIB Metal REQUIRED)
+    find_library(FOUNDATION_LIB Foundation REQUIRED)
+    find_library(QUARTZCORE_LIB QuartzCore REQUIRED)
 
     if (METAL_LIB)
         message(STATUS "Metal library found at: ${METAL_LIB}")

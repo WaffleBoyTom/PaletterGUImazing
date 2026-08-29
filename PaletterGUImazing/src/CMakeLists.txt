@@ -21,6 +21,7 @@ add_subdirectory("sick")
 # Create the executable target
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(PaletterGUImazing
+        MACOSX_BUNDLE
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
     )
@@ -37,6 +38,7 @@ else()
 #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else()
         add_executable(PaletterGUImazing
+            MACOSX_BUNDLE
             ${PROJECT_SOURCES}
         )
     endif()
@@ -94,7 +96,6 @@ set_target_properties(PaletterGUImazing PROPERTIES
     ${BUNDLE_ID_OPTION}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
 
@@ -106,5 +107,5 @@ install(TARGETS PaletterGUImazing
 )
 
 if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(PaletterGUImazing)
+    qt_finalize_target(PaletterGUImazing)
 endif()
