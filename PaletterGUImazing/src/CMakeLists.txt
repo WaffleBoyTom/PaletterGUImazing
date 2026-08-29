@@ -62,6 +62,23 @@ endif()
 if(APPLE)
     target_link_libraries(PaletterGUImazing PRIVATE OpenGL::GL)
     target_compile_options(PaletterGUImazing PRIVATE -Wno-deprecated-declarations)
+
+    get_target_property(QT_QTCORE_LOCATION Qt6::Core LOCATION)
+    get_filename_component(QT_BINARY_DIR "${QT_QTCORE_LOCATION}" DIRECTORY)
+    find_program(MACDEPLOYQT_EXECUTABLE macdeployqt HINTS "${QT_BINARY_DIR}")
+
+    if(MACDEPLOYQT_EXECUTABLE)
+        message(STATUS "macdeployqt found at: ${MACDEPLOYQT_EXECUTABLE}")
+
+        set(APP_BUNDLE_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PaletterGUImazing.app")
+
+        add_custom_command(TARGET PaletterGUImazing POST_BUILD
+            COMMAND ${MACDEPLOYQT_EXECUTABLE} "${APP_BUNDLE_PATH}" -verbose=1 -dmg
+            COMMENT "Running macdeployqt on ${APP_BUNDLE_PATH}"
+        )
+    else()
+        message(WARNING "macdeployqt not found, bundle will not be self-contained")
+    endif()
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})

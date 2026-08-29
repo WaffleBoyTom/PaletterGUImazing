@@ -20,10 +20,6 @@ if(APPLE)
     set(CMAKE_MACOSX_RPATH ON)
 endif()
 
-# TODO: bundle Qt lol. Then we can set the version; I had to go through some
-# headaches of updating Qt on my machine since it was very outdated. Also now
-# it expects to be built for MacOS 13.0 or greater; it would be nice if we
-# didn't need to manually adjust the target version in the future
 set(CMAKE_OSX_DEPLOYMENT_TARGET 13.0)
 
 # Compute backend
