@@ -19,30 +19,11 @@ add_subdirectory("nerd")
 add_subdirectory("sick")
 
 # Create the executable target
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(PaletterGUImazing
-        MACOSX_BUNDLE
-        MANUAL_FINALIZATION
-        ${PROJECT_SOURCES}
-    )
-# Define target properties for Android with Qt 6 as:
-#    set_property(TARGET PaletterGUImazing APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
-#                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
-# For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-else()
-    if(ANDROID)
-        add_library(PaletterGUImazing SHARED
-            ${PROJECT_SOURCES}
-        )
-# Define properties for Android with Qt 5 after find_package() calls as:
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-    else()
-        add_executable(PaletterGUImazing
-            MACOSX_BUNDLE
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+qt_add_executable(PaletterGUImazing
+    MACOSX_BUNDLE
+    MANUAL_FINALIZATION
+    ${PROJECT_SOURCES}
+)
 
 target_compile_options(PaletterGUImazing PRIVATE
     -g
@@ -106,6 +87,12 @@ install(TARGETS PaletterGUImazing
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_target(PaletterGUImazing)
-endif()
+qt_finalize_target(PaletterGUImazing)
+
+qt_generate_deploy_app_script(
+    TARGET PaletterGUImazing
+    OUTPUT_SCRIPT deploy_script
+    NO_TRANSLATIONS
+)
+
+install(SCRIPT ${deploy_script})
