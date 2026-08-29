@@ -19,15 +19,8 @@ public:
     QVector<QColor> generatePalette(const QImage &image) const;
 
 private:
-#ifdef USE_CUDA
-    void palettize(
-        float3 *palette,
-        const uchar4 *img,
-        const int width,
-        const int height,
-        const int palette_size
-    ) const;
-#endif
+    QVector<QColor> generatePaletteCuda(const QImage &image) const;
+    QVector<QColor> generatePaletteMetal(const QImage &image) const;
 
     int myPaletteSize;
 };

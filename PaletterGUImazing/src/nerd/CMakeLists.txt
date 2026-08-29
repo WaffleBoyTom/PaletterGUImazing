@@ -32,6 +32,8 @@ elseif(USE_METAL)
         metal_dispatcher.h
         metal_dispatcher.cpp
         metal_implementation.cpp
+        metal_kmeans.h
+        metal_kmeans.cpp
         metal_remapper.h
         metal_remapper.cpp
         median_cut.h

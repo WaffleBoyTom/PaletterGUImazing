@@ -8,18 +8,19 @@
 #include "metal_dispatcher.h"
 
 RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette)
-    : myResolution(image.size()), myPaletteLength(palette.length()), myContext()
+    : myResolution(image.size()), myPaletteLength(palette.length())
 {
-    myRemapEuclideanPipeline = myContext.createPipelineState("remapEuclidean");
-    myRemapHuePipeline = myContext.createPipelineState("remapHue");
-    myRemapSaturationPipeline =
-        myContext.createPipelineState("remapSaturation");
-    myRemapValuePipeline = myContext.createPipelineState("remapValue");
+    MetalContext &context = MetalContext::instance();
+
+    myRemapEuclideanPipeline = context.createPipelineState("remapEuclidean");
+    myRemapHuePipeline = context.createPipelineState("remapHue");
+    myRemapSaturationPipeline = context.createPipelineState("remapSaturation");
+    myRemapValuePipeline = context.createPipelineState("remapValue");
 
     // Create and load the image buffer.
     const std::size_t image_res = image.width() * image.height();
     const std::size_t image_size = image_res * sizeof(QRgb);
-    myImage = myContext.createSharedBuffer(image_size);
+    myImage = context.createSharedBuffer(image_size);
 
     QRgb *image_ptr = reinterpret_cast<QRgb *>(myImage->contents());
     Q_ASSERT(image_ptr != nullptr);
@@ -35,7 +36,7 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette)
 
     // Create and load the palette buffer.
     const std::size_t palette_size = palette.length() * sizeof(QRgb);
-    myPalette = myContext.createSharedBuffer(palette_size);
+    myPalette = context.createSharedBuffer(palette_size);
 
     QRgb *palette_ptr = reinterpret_cast<QRgb *>(myPalette->contents());
     Q_ASSERT(palette_ptr != nullptr);
@@ -47,7 +48,7 @@ RemapperMetal::RemapperMetal(QImage &image, const QList<QColor> &palette)
         palette_ptr[i] = rgb;
     }
 
-    myImageOut = myContext.createSharedBuffer(image_size);
+    myImageOut = context.createSharedBuffer(image_size);
 }
 
 QImage
@@ -77,7 +78,9 @@ RemapperMetal::remapValue()
 QImage
 RemapperMetal::remapInternal(MTL::ComputePipelineState *pipeline)
 {
-    MetalDispatcher dispatcher(myContext, pipeline);
+    MetalContext &context = MetalContext::instance();
+
+    MetalDispatcher dispatcher(pipeline);
 
     dispatcher.bindBuffer(myImage, 0, 0);
     dispatcher.bindBuffer(myPalette, 0, 1);

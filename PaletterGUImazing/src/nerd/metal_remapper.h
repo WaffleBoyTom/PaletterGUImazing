@@ -5,8 +5,6 @@
 #include <QImage>
 #include <QList>
 
-#include "metal_context.h"
-
 namespace MTL
 {
 class ComputePipelineState;
@@ -30,8 +28,6 @@ private:
     std::size_t myPaletteLength;
 
     // Metal-specific
-    MetalContext myContext;
-
     MTL::ComputePipelineState *myRemapEuclideanPipeline;
     MTL::ComputePipelineState *myRemapHuePipeline;
     MTL::ComputePipelineState *myRemapSaturationPipeline;

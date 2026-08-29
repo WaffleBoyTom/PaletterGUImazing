@@ -1,5 +1,6 @@
 #include "kmeanifier.h"
 #include "cool_logger.h"
+#include "metal_kmeans.h"
 #include <QDebug>
 
 #ifdef USE_CUDA
@@ -7,12 +8,81 @@
 #include "cumeans.cuh"
 #endif
 
+namespace
+{
+
+#ifdef USE_CUDA
+void 
+palettize(
+    float3 *palette,
+    const uchar4 *img,
+    const int width,
+    const int height,
+    const int palette_size
+) const
+{
+    int pixel_count = width * height;
+    
+    int *d_assignments;
+    float3 *d_sums;
+    int *d_counts;
+    
+    cudaMalloc(&d_assignments, pixel_count * sizeof(int));
+    cudaMalloc(&d_sums, palette_size * sizeof(float3));
+    cudaMalloc(&d_counts, palette_size * sizeof(int));
+    
+    const int MAX_ITERATIONS = 20;
+    
+    for (int iter = 0; iter < MAX_ITERATIONS; ++iter) 
+    {
+        // assign cluster by measuring distance
+        CuMeans::assignClusters(
+            img, palette, d_assignments, width, height, palette_size
+        );
+
+        // accumulate
+        cudaMemset(d_sums, 0, palette_size * sizeof(float3));
+        cudaMemset(d_counts, 0, palette_size * sizeof(int));
+        
+        CuMeans::accumulateClusters(
+            img, d_assignments, d_sums, d_counts, width, height);
+
+        // update centroids by averaging
+        CuMeans::updateCentroids(
+            palette, d_sums, d_counts, palette_size);
+        
+        cudaDeviceSynchronize();
+    }
+    
+    cudaFree(d_assignments);
+    cudaFree(d_sums);
+    cudaFree(d_counts);
+    // delete[] h_sums;
+    // delete[] h_counts;
+    // delete[] h_palette;
+}
+#endif // USE_CUDA
+
+}
+
 KMeanifier::KMeanifier(int palette_size) : myPaletteSize(palette_size)
 {
 }
 
 QVector<QColor>
 KMeanifier::generatePalette(const QImage &image) const
+{
+#if defined(USE_CUDA)
+    return generatePaletteCuda(image);
+#elif defined(USE_METAL)
+    return generatePaletteMetal(image);
+#else
+    return {};
+#endif
+}
+
+QVector<QColor>
+KMeanifier::generatePaletteCuda(const QImage &image) const
 {
 #ifdef USE_CUDA
 
@@ -128,54 +198,9 @@ KMeanifier::generatePalette(const QImage &image) const
 #endif // USE_CUDA
 }
 
-#ifdef USE_CUDA
-void 
-KMeanifier::palettize(
-    float3 *palette,
-    const uchar4 *img,
-    const int width,
-    const int height,
-    const int palette_size
-) const
+QVector<QColor>
+KMeanifier::generatePaletteMetal(const QImage &image) const
 {
-    int pixel_count = width * height;
-    
-    int *d_assignments;
-    float3 *d_sums;
-    int *d_counts;
-    
-    cudaMalloc(&d_assignments, pixel_count * sizeof(int));
-    cudaMalloc(&d_sums, palette_size * sizeof(float3));
-    cudaMalloc(&d_counts, palette_size * sizeof(int));
-    
-    const int MAX_ITERATIONS = 20;
-    
-    for (int iter = 0; iter < MAX_ITERATIONS; ++iter) 
-    {
-        // assign cluster by measuring distance
-        CuMeans::assignClusters(
-            img, palette, d_assignments, width, height, palette_size
-        );
-
-        // accumulate
-        cudaMemset(d_sums, 0, palette_size * sizeof(float3));
-        cudaMemset(d_counts, 0, palette_size * sizeof(int));
-        
-        CuMeans::accumulateClusters(
-            img, d_assignments, d_sums, d_counts, width, height);
-
-        // update centroids by averaging
-        CuMeans::updateCentroids(
-            palette, d_sums, d_counts, palette_size);
-        
-        cudaDeviceSynchronize();
-    }
-    
-    cudaFree(d_assignments);
-    cudaFree(d_sums);
-    cudaFree(d_counts);
-    // delete[] h_sums;
-    // delete[] h_counts;
-    // delete[] h_palette;
+    KMeansMetal kmeans = KMeansMetal(image, myPaletteSize);
+    return kmeans.cluster(10);
 }
-#endif // USE_CUDA
