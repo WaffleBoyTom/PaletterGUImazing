@@ -19,7 +19,7 @@ palettize(
     const int width,
     const int height,
     const int palette_size
-) const
+)
 {
     int pixel_count = width * height;
     

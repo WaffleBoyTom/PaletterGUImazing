@@ -11,8 +11,8 @@ if(USE_CUDA)
         cutils.cuh
         kmeanifier.h
         kmeanifier.cpp
-        palette_generator.h
-        palette_generator.cpp
+        median_cut.h
+        median_cut.cpp
         remapper.h
         remapper.cpp
         zoom.cuh
