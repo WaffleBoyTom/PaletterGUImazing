@@ -201,6 +201,10 @@ KMeanifier::generatePaletteCuda(const QImage &image) const
 QVector<QColor>
 KMeanifier::generatePaletteMetal(const QImage &image) const
 {
+#ifdef USE_METAL
     KMeansMetal kmeans = KMeansMetal(image, myPaletteSize);
     return kmeans.cluster(10);
+#else
+    return {};
+#endif // USE_METAL
 }
